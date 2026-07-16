@@ -1,0 +1,206 @@
+---
+title: 'Lab 10: Polygon Mapping in Leaflet'
+format:
+  html:
+    embed-resources: true
+editor: source
+knitr:
+  opts_chunk:
+    message: false
+    warning: false
+---
+
+```{r unnamed-chunk-1}
+#| document: show
+library(tidyverse)
+library(leaflet)
+library(sf)
+library(tigris)
+library(tidycensus)
+library(RColorBrewer)
+```
+###### Question 1
+
+Read the help pages for `get_decennial()`. Load census data at the county level for `variable` 'P1_004N' (Total Population: Population of one race: Black or African American alone). You should set the `state` to 'LA', the `geometry` to `TRUE`, and the `summary_var` to 'P1_001N' (Total Population). We will eventually use these two tables to calculate the percentage of the population that identifies as Black on the census. 
+
+Repeat and edit the code to get the same data at the tract level.
+
+
+```{r unnamed-chunk-2}
+#| eval: false
+census_counties <- get_decennial(geography = ______,
+                                 variables = ______,
+                                 state = _____,
+                                 summary_var = _____,
+                                 geometry = _____)
+
+
+census_tracts <- get_decennial(_____)
+
+```
+###### Question 2
+
+In the code block below, transform the CRS of both `census_counties` and `census_tracts` to 4326 using `st_transform()`. 
+
+
+```{r unnamed-chunk-5}
+#| eval: false
+
+census_counties <- #Fill code here
+
+census_tracts <- #Fill code here
+```
+###### Question 3
+
+I've initialized a map of Louisiana for you below with our basic base tiles. Set the group for these tiles to "Minimal". Note that we will call `addProviderTiles()` to add a second set of base tiles. Set these base tiles to `providers$Esri.WorldImagery` and the group to "Satellite". Add the `addLayersControl()` function and set the base groups to the names of the two groups you just established. 
+
+Your map should match mine below.
+
+
+```{r unnamed-chunk-10}
+#| eval: false
+
+la_map <- leaflet(width = "100%") %>%
+  setView(lat = 30.5191, lng = -91.5209, zoom = 6) %>%
+  addProviderTiles(providers$CartoDB.Positron, group = ______) %>%
+  addProviderTiles(______, group = ______) %>%
+  _____(
+    baseGroups = c("_____","_____"),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+
+la_map
+```
+###### Question 4
+
+Using a data wrangling verb, add a column to each census data frame that calculates the percentage of the population in each census county/tract that identifies as Black. To do so, you will need to divide the Black population stored in `value` by the total population `summary_value` and multiply by 100. 
+
+
+```{r unnamed-chunk-13}
+#| eval: false
+
+census_counties <- #Fill code here
+
+census_tracts <- #Fill code here
+  
+```
+###### Question 5
+
+Copy the palette and map that I created above, which colored counties by the total Black population. Adjust the code to color the counties by the variable you created to record the percent Black population. 
+
+
+```{r unnamed-chunk-15}
+#| eval: false
+
+pal_bin_census_county_perc <- #Create county palette here
+
+#Create county map here 
+  
+```
+###### Question 6
+
+Copy the palette and map that you created above. Create a second palette to color polygons by the percent Black population in census tracts. 
+
+Pipe a second `addPolygons()` function call and a second `addLegend()` function call onto your map. Copy arguments from the previous function calls and adjust them to color the polygons in this second call by the percent Black population in **census tracts**. 
+
+Finally, in change the `weight` of the **county** polygons to 2 so that we can differentiate the borders of our census counties from our census tracts. 
+
+
+
+
+```{r unnamed-chunk-17}
+
+# Copy the palette you created above for census counties here
+
+# Create palette for census tracts here
+
+# Copy the map you created above here and adjust according to the prompt
+
+```
+###### Question 7
+
+Copy the map that you created above into the code chunk below. Add a `group =` argument to each `addPolygons()` and `addLegend()` call; set the group for your county layers as "County" and the group for your tract layers as "Tract".
+
+Then pipe the `addLayersControl()` function onto your map. Within this function, set the `baseGroup = ` argument as we did above to `c("Minimal","Satellite")` so that we can toggle between basemaps. Then set the `overlayGroups =` argument to `c("County", "Tract")` so that we can toggle between overlay layers. Add `options = layersControlOptions(collapsed = FALSE)` so that the layer controls appear when we load the map. Add `position = "bottomleft"` so that the layer controls don't overlap with the legends. 
+
+Finally, pipe the function `hideGroup("Tract")` onto the end of your map. This will hide the "Tract" group when we load the map. 
+
+
+```{r unnamed-chunk-19}
+# Copy map here and adjust according to the prompt
+```
+###### Question 8
+
+Zoom in to the region along the Mississippi River between Baton Rouge and New Orleans. Then toggle the Tract layer on. Notice how there is a higher representation of Black residents residing along the Mississippi River compared to the rest of the counties. Below, explain how this is an example of the ecological fallacy.  
+
+
+```{r unnamed-chunk-21}
+#| document: show
+
+tri_la_2023 <- read_csv("https://raw.githubusercontent.com/SDS-192-Intro/public-website-fall-25/refs/heads/main/data/2023_la.csv", name_repair = make.names) |>
+  filter(X50..UNIT.OF.MEASURE == "Pounds") |>
+  arrange(desc(X107..TOTAL.RELEASES)) |>
+  mutate(chemical_total_text = paste(X37..CHEMICAL, X107..TOTAL.RELEASES, sep = ": ")) |>
+  group_by(X2..TRIFD) |>
+  summarize(X4..FACILITY.NAME = first(X4..FACILITY.NAME),
+            X12..LATITUDE = first(X12..LATITUDE),
+            X13..LONGITUDE = first(X13..LONGITUDE),
+            X23..INDUSTRY.SECTOR = first(X23..INDUSTRY.SECTOR),
+            X107..TOTAL.RELEASES = sum(X107..TOTAL.RELEASES),
+            X..CHEMICAL.TEXT = paste(chemical_total_text, collapse = " <br> "))
+
+tri_la_2023 <- tri_la_2023 %>%
+  st_as_sf(coords = c("X13..LONGITUDE", "X12..LATITUDE"), crs = 4269) %>%
+  st_transform(4326)
+
+pal_bin <- colorBin(palette="BuPu", 
+                    domain = tri_la_2023$X107..TOTAL.RELEASES,
+                    bins = 6)
+
+la_map %>%
+  addCircleMarkers(data = tri_la_2023, 
+                   weight = 0.5,
+                   radius = 3,
+                   color = "black",
+                   fillColor = ~pal_bin(X107..TOTAL.RELEASES), 
+                   fillOpacity = 0.8,
+                   popup = ~paste("<b>",
+                                  X4..FACILITY.NAME,
+                                  "</b><br><i>",
+                                  X23..INDUSTRY.SECTOR,
+                                  "</i><br><br>",
+                                  X..CHEMICAL.TEXT),
+                   popupOptions = popupOptions(maxHeight = 200, 
+                                               closeOnClick = TRUE)) %>%
+  addLegend(data = tri_la_2023,
+            title = "TRI Releases in Pounds", 
+            pal = pal_bin, 
+            values = ~X107..TOTAL.RELEASES)
+  
+```
+###### Question 9
+
+Copy the last map that you created above visualizing the percent Black population in LA counties and tracts. Then copy my code above to `addCircleMarkers()` for TRI facilities and `addLegend()` for TRI facilities. Pipe these functions onto your map after your `addPolygons()` function calls but before the `addLayersControl()` function call. 
+
+Set the `group = ` argument for the TRI circle markers and the TRI legend to "TRI". Then add "TRI" as an additional group in the `overlayGroups = ` argument in your `addLayersControl()` function. 
+
+
+```{r unnamed-chunk-22}
+# Copy map functions and adjust here
+```
+###### Question 10
+
+Copy the last map that you created above. At the beginning of your code right after calling `la_map`, pipe a `addMapPane()` function twice. In the first function call, set `name = ` argument to "circles" and the `zIndex = ` argument to 420. In the second function call, set `name = ` argument to "polygons" and the `zIndex = ` argument to 410. 
+
+Add the argument `options = pathOptions(pane = "polygons")` to both of your `addPolygons()` function calls, and add the argument `options = pathOptions(pane = "circles")` to your `addCircleMarkers()` function call. 
+
+Adjust your code to hide the "County" map by default.
+
+```{r unnamed-chunk-24}
+# Copy map here and adjust according to the prompt
+```
+###### Question 11
+
+Zoom in to the region along the Mississippi River between Baton Rouge and New Orleans. Notice how there are at least a few census tracts along the Mississippi River where high-polluting industrial facilities are located, but there is a lower percentage Black population. Explain how the modifiable aerial unit problem may be at play here and why we should consider it in relation to pollution data. 
+
+

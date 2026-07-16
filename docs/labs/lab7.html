@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.550">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Lindsay Poirier">
+
+<title>Lab 7: Tidying Data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+<link rel="stylesheet" href="../css/custom.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">SDS 192: Introduction to Data Science</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Syllabus</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../assignments.html"> 
+<span class="menu-text">Assignments</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../labs.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul class="collapse">
+  <li><a href="#learning-goals" id="toc-learning-goals" class="nav-link" data-scroll-target="#learning-goals">Learning Goals</a></li>
+  </ul></li>
+  <li><a href="#review-of-key-terms" id="toc-review-of-key-terms" class="nav-link" data-scroll-target="#review-of-key-terms">Review of Key Terms</a></li>
+  <li><a href="#huds-point-in-time-counts" id="toc-huds-point-in-time-counts" class="nav-link" data-scroll-target="#huds-point-in-time-counts">HUD’s Point-in Time Counts</a></li>
+  <li><a href="#setting-up-your-environment" id="toc-setting-up-your-environment" class="nav-link" data-scroll-target="#setting-up-your-environment">Setting Up Your Environment</a></li>
+  <li><a href="#our-goal" id="toc-our-goal" class="nav-link" data-scroll-target="#our-goal">Our Goal</a></li>
+  <li><a href="#data-cleaning" id="toc-data-cleaning" class="nav-link" data-scroll-target="#data-cleaning">Data Cleaning</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lab 7: Tidying Data</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Lindsay Poirier </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In this lab, we will create a few data visualizations documenting point-in-time counts of homelessness in the United States. Specifically, we are going visualize data collected in 2020 through various Continuums of Care (CoCs) programs. In order to produce these data visualizations, you will need to join homelessness data with census population data and develop and execute a plan for how to wrangle the dataset into a “tidy” format.</p>
+<section id="learning-goals" class="level3">
+<h3 class="anchored" data-anchor-id="learning-goals">Learning Goals</h3>
+<ul>
+<li>Recognize the differences between tidy and non-tidy data</li>
+<li>Pivot datasets both longer and wider</li>
+<li>Separate and unite columns</li>
+<li>Consider the ethical implications of analyzing homeless counts</li>
+</ul>
+</section>
+</section>
+<section id="review-of-key-terms" class="level2">
+<h2 class="anchored" data-anchor-id="review-of-key-terms">Review of Key Terms</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You may wish to reference this <a href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/tidyr.pdf">Tidy R Cheatsheet</a> when completing this lab.</p>
+</div>
+</div>
+<dl>
+<dt>Tidy data</dt>
+<dd>
+<p>A rectangular data table in which every row is an observation and every column is a variable describing something about that observation</p>
+</dd>
+<dt>Pivoting</dt>
+<dd>
+<p>Rotating data columns so that they are presented as rows or rotating data rows so that they are presented as columns</p>
+</dd>
+</dl>
+</section>
+<section id="huds-point-in-time-counts" class="level2">
+<h2 class="anchored" data-anchor-id="huds-point-in-time-counts">HUD’s Point-in Time Counts</h2>
+<p>The U.S. Department of Housing and Urban Development is responsible for monitoring and addressing housing affordability and homelessness throughout the country. One initiative that they oversee towards this end is the Continuum of Care Program. Continuums of Care (CoCs) are local planning organizations responsible for allocating resources and coordinating services to address homelessness in the United States. Every state has a number of CoCs that report to the Department of Housing and Urban Development.</p>
+<p>Every year, on a single night in the last 10 days of January, CoCs required to conduct a “point-in-time” count of sheltered and unsheltered homeless individuals. To generate the sheltered point-in-time count, CoCs coordinate with transitional housing centers or emergency shelters to record the number of people housed in that location on the selected night. There are a few different approaches to generating an unsheltered point-in-time count:</p>
+<ol type="1">
+<li><p>“Night of” street count: Volunteers are sent out to canvass either the entire geography of a random sample of areas in a CoC. While canvassing, they are expected to record the number of people they see currently residing in spaces not designed for sleeping accommodations.</p></li>
+<li><p>Service-based count: In the 7 days following the night of the designated PIT count, volunteers are dispatched to food kitchens, shelters, libraries and other services identified as spaces that unhoused individuals frequent. There, they are expected to survey individuals to determine if they were sheltered on the night of the count.</p></li>
+</ol>
+<p>Following the night of the count, the collected data points are shipped off to HUD where they are aggregated into the dataset we will be working with today.</p>
+<p>There are a number of limitations to this approach of estimating homelessness, which I encourage you to consider throughout this analysis and when responding to our Ethical Considerations question.</p>
+</section>
+<section id="setting-up-your-environment" class="level2">
+<h2 class="anchored" data-anchor-id="setting-up-your-environment">Setting Up Your Environment</h2>
+<ol type="1">
+<li>Run the code below to load today’s data frames into your environment.</li>
+</ol>
+<div class="cell" data-document="show">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>pit <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/main/website/data/pit_2015_2020.csv"</span>) </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Note for future reference how adding the following could remove unreliable counts:</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># mutate_at(vars(2:97), funs(case_when(. &lt; 20 ~ as.numeric(NA), TRUE ~ .)))</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>gender <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/main/website/data/gender_state_2015_2020.csv"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>race <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/main/website/data/race_state_2015_2020.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="our-goal" class="level2">
+<h2 class="anchored" data-anchor-id="our-goal">Our Goal</h2>
+<p>Today’s goal is to produce just two plots:</p>
+<ul>
+<li>A timeseries of rates of both sheltered and unsheltered homelessness by gender for a given state.</li>
+<li>A timeseries of rates of both sheltered and unsheltered homelessness by race for a given state.</li>
+</ul>
+<p>The first plot will look like this:</p>
+<p><img src="img/homeless_gender_plot_fl.png" class="img-fluid"></p>
+<p>…and the second plot will look like this.</p>
+<p><img src="img/homeless_race_plot_fl.png" class="img-fluid"></p>
+<p>To be able to produce these plots, we are going to have to do considerable amount of data wrangling and cleaning. This lab will walk you through those steps.</p>
+</section>
+<section id="data-cleaning" class="level2">
+<h2 class="anchored" data-anchor-id="data-cleaning">Data Cleaning</h2>
+<p>First, let’s consider each of our data frames. You have <code>pit</code>, which documents homelessness counts from 2015 to 2020 in each state along a number of categories (such as gender, race, sheltered vs.&nbsp;unsheltered, etc.). Note how in this data frame each row is a state, and each variable is a count associated with a particular category.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["State"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Sheltered Total Homeless - Female, 2015"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Male, 2015"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Transgender, 2015"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - White, 2015"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Black or African American, 2015"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Asian, 2015"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - American Indian or Alaska Native, 2015"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Native Hawaiian or Other Pacific Islander, 2015"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Multiple Races, 2015"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Female, 2015"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Male, 2015"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Transgender, 2015"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - White, 2015"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Black or African American, 2015"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Asian, 2015"],"name":[16],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - American Indian or Alaska Native, 2015"],"name":[17],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Native Hawaiian or Other Pacific Islander, 2015"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Multiple Races, 2015"],"name":[19],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Female, 2016"],"name":[20],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Male, 2016"],"name":[21],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Transgender, 2016"],"name":[22],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - White, 2016"],"name":[23],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Black or African American, 2016"],"name":[24],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Asian, 2016"],"name":[25],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - American Indian or Alaska Native, 2016"],"name":[26],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Native Hawaiian or Other Pacific Islander, 2016"],"name":[27],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Multiple Races, 2016"],"name":[28],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Female, 2016"],"name":[29],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Male, 2016"],"name":[30],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Transgender, 2016"],"name":[31],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - White, 2016"],"name":[32],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Black or African American, 2016"],"name":[33],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Asian, 2016"],"name":[34],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - American Indian or Alaska Native, 2016"],"name":[35],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Native Hawaiian or Other Pacific Islander, 2016"],"name":[36],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Multiple Races, 2016"],"name":[37],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Female, 2017"],"name":[38],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Male, 2017"],"name":[39],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Transgender, 2017"],"name":[40],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Gender Non-Conforming, 2017"],"name":[41],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - White, 2017"],"name":[42],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Black or African American, 2017"],"name":[43],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Asian, 2017"],"name":[44],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - American Indian or Alaska Native, 2017"],"name":[45],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Native Hawaiian or Other Pacific Islander, 2017"],"name":[46],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Multiple Races, 2017"],"name":[47],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Female, 2017"],"name":[48],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Male, 2017"],"name":[49],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Transgender, 2017"],"name":[50],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Gender Non-Conforming, 2017"],"name":[51],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - White, 2017"],"name":[52],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Black or African American, 2017"],"name":[53],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Asian, 2017"],"name":[54],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - American Indian or Alaska Native, 2017"],"name":[55],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Native Hawaiian or Other Pacific Islander, 2017"],"name":[56],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Multiple Races, 2017"],"name":[57],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Female, 2018"],"name":[58],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Male, 2018"],"name":[59],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Transgender, 2018"],"name":[60],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Gender Non-Conforming, 2018"],"name":[61],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - White, 2018"],"name":[62],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Black or African American, 2018"],"name":[63],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Asian, 2018"],"name":[64],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - American Indian or Alaska Native, 2018"],"name":[65],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Native Hawaiian or Other Pacific Islander, 2018"],"name":[66],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Multiple Races, 2018"],"name":[67],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Female, 2018"],"name":[68],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Male, 2018"],"name":[69],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Transgender, 2018"],"name":[70],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Gender Non-Conforming, 2018"],"name":[71],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - White, 2018"],"name":[72],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Black or African American, 2018"],"name":[73],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Asian, 2018"],"name":[74],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - American Indian or Alaska Native, 2018"],"name":[75],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Native Hawaiian or Other Pacific Islander, 2018"],"name":[76],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Multiple Races, 2018"],"name":[77],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Female, 2019"],"name":[78],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Male, 2019"],"name":[79],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Transgender, 2019"],"name":[80],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Gender Non-Conforming, 2019"],"name":[81],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - White, 2019"],"name":[82],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Black or African American, 2019"],"name":[83],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Asian, 2019"],"name":[84],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - American Indian or Alaska Native, 2019"],"name":[85],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Native Hawaiian or Other Pacific Islander, 2019"],"name":[86],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Multiple Races, 2019"],"name":[87],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Female, 2019"],"name":[88],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Male, 2019"],"name":[89],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Transgender, 2019"],"name":[90],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Gender Non-Conforming, 2019"],"name":[91],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - White, 2019"],"name":[92],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Black or African American, 2019"],"name":[93],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Asian, 2019"],"name":[94],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - American Indian or Alaska Native, 2019"],"name":[95],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Native Hawaiian or Other Pacific Islander, 2019"],"name":[96],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Multiple Races, 2019"],"name":[97],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Female, 2020"],"name":[98],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Male, 2020"],"name":[99],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Transgender, 2020"],"name":[100],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Gender Non-Conforming, 2020"],"name":[101],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - White, 2020"],"name":[102],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Black or African American, 2020"],"name":[103],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Asian, 2020"],"name":[104],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - American Indian or Alaska Native, 2020"],"name":[105],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Native Hawaiian or Other Pacific Islander, 2020"],"name":[106],"type":["dbl"],"align":["right"]},{"label":["Sheltered Total Homeless - Multiple Races, 2020"],"name":[107],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Female, 2020"],"name":[108],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Male, 2020"],"name":[109],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Transgender, 2020"],"name":[110],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Gender Non-Conforming, 2020"],"name":[111],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - White, 2020"],"name":[112],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Black or African American, 2020"],"name":[113],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Asian, 2020"],"name":[114],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - American Indian or Alaska Native, 2020"],"name":[115],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Native Hawaiian or Other Pacific Islander, 2020"],"name":[116],"type":["dbl"],"align":["right"]},{"label":["Unsheltered Homeless - Multiple Races, 2020"],"name":[117],"type":["dbl"],"align":["right"]}],"data":[{"1":"AK","2":"694","3":"943","4":"2","5":"625","6":"132","7":"17","8":"714","9":"59","10":"92","11":"79","12":"238","13":"0","14":"120","15":"12","16":"1","17":"169","18":"3","19":"12","20":"649","21":"846","22":"3","23":"577","24":"135","25":"41","26":"555","27":"51","28":"139","29":"159","30":"281","31":"2","32":"162","33":"12","34":"3","35":"231","36":"2","37":"32","38":"689","39":"857","40":"4","41":"1","42":"534","43":"132","44":"20","45":"630","46":"67","47":"168","48":"76","49":"218","50":"0","51":"0","52":"107","53":"15","54":"0","55":"140","56":"2","57":"30","58":"780","59":"920","60":"7","61":"0","62":"563","63":"152","64":"39","65":"725","66":"65","67":"163","68":"100","69":"209","70":"0","71":"0","72":"120","73":"4","74":"0","75":"153","76":"11","77":"21","78":"683","79":"943","80":"6","81":"2","82":"546","83":"152","84":"32","85":"656","86":"72","87":"176","88":"78","89":"194","90":"0","91":"1","92":"121","93":"12","94":"4","95":"108","96":"1","97":"27","98":"768","99":"950","100":"3","101":"4","102":"538","103":"133","104":"22","105":"779","106":"39","107":"214","108":"60","109":"164","110":"0","111":"0","112":"96","113":"4","114":"0","115":"111","116":"1","117":"12"},{"1":"AL","2":"1192","3":"1747","4":"4","5":"1430","6":"1470","7":"5","8":"12","9":"1","10":"25","11":"340","12":"680","13":"7","14":"383","15":"620","16":"0","17":"7","18":"0","19":"17","20":"1331","21":"1558","22":"4","23":"1244","24":"1535","25":"3","26":"40","27":"6","28":"65","29":"402","30":"808","31":"8","32":"470","33":"716","34":"1","35":"9","36":"2","37":"20","38":"964","39":"1684","40":"5","41":"3","42":"1095","43":"1448","44":"8","45":"14","46":"1","47":"90","48":"350","49":"769","50":"16","51":"2","52":"492","53":"616","54":"1","55":"7","56":"0","57":"21","58":"1044","59":"1376","60":"4","61":"0","62":"1205","63":"1089","64":"5","65":"14","66":"2","67":"109","68":"355","69":"649","70":"5","71":"1","72":"459","73":"515","74":"1","75":"9","76":"3","77":"23","78":"999","79":"1068","80":"3","81":"0","82":"845","83":"1138","84":"4","85":"34","86":"6","87":"43","88":"384","89":"805","90":"0","91":"2","92":"535","93":"603","94":"3","95":"21","96":"3","97":"26","98":"913","99":"1081","100":"2","101":"0","102":"850","103":"1121","104":"2","105":"15","106":"6","107":"47","108":"381","109":"907","110":"7","111":"4","112":"612","113":"634","114":"0","115":"22","116":"5","117":"26"},{"1":"AR","2":"693","3":"985","4":"0","5":"1045","6":"536","7":"5","8":"25","9":"28","10":"39","11":"285","12":"597","13":"0","14":"498","15":"367","16":"2","17":"7","18":"1","19":"7","20":"772","21":"843","22":"1","23":"990","24":"525","25":"8","26":"14","27":"7","28":"72","29":"275","30":"572","31":"0","32":"461","33":"369","34":"2","35":"7","36":"1","37":"7","38":"581","39":"691","40":"1","41":"0","42":"756","43":"441","44":"4","45":"13","46":"6","47":"53","48":"384","49":"808","50":"2","51":"0","52":"691","53":"451","54":"5","55":"11","56":"1","57":"35","58":"678","59":"773","60":"3","61":"1","62":"910","63":"453","64":"2","65":"25","66":"2","67":"63","68":"435","69":"820","70":"2","71":"0","72":"737","73":"463","74":"10","75":"11","76":"2","77":"34","78":"615","79":"683","80":"3","81":"1","82":"789","83":"431","84":"3","85":"26","86":"8","87":"45","88":"407","89":"1005","90":"1","91":"2","92":"862","93":"471","94":"1","95":"10","96":"16","97":"55","98":"436","99":"653","100":"3","101":"1","102":"599","103":"438","104":"2","105":"22","106":"10","107":"22","108":"362","109":"908","110":"2","111":"1","112":"754","113":"463","114":"2","115":"20","116":"11","117":"23"},{"1":"AS","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"NA","24":"NA","25":"NA","26":"NA","27":"NA","28":"NA","29":"NA","30":"NA","31":"NA","32":"NA","33":"NA","34":"NA","35":"NA","36":"NA","37":"NA","38":"NA","39":"NA","40":"NA","41":"NA","42":"NA","43":"NA","44":"NA","45":"NA","46":"NA","47":"NA","48":"NA","49":"NA","50":"NA","51":"NA","52":"NA","53":"NA","54":"NA","55":"NA","56":"NA","57":"NA","58":"NA","59":"NA","60":"NA","61":"NA","62":"NA","63":"NA","64":"NA","65":"NA","66":"NA","67":"NA","68":"NA","69":"NA","70":"NA","71":"NA","72":"NA","73":"NA","74":"NA","75":"NA","76":"NA","77":"NA","78":"NA","79":"NA","80":"NA","81":"NA","82":"NA","83":"NA","84":"NA","85":"NA","86":"NA","87":"NA","88":"NA","89":"NA","90":"NA","91":"NA","92":"NA","93":"NA","94":"NA","95":"NA","96":"NA","97":"NA","98":"NA","99":"NA","100":"NA","101":"NA","102":"NA","103":"NA","104":"NA","105":"NA","106":"NA","107":"NA","108":"NA","109":"NA","110":"NA","111":"NA","112":"NA","113":"NA","114":"NA","115":"NA","116":"NA","117":"NA"},{"1":"AZ","2":"3139","3":"3794","4":"6","5":"4444","6":"1481","7":"35","8":"522","9":"38","10":"419","11":"827","12":"2122","13":"8","14":"2253","15":"280","16":"22","17":"327","18":"19","19":"56","20":"2952","21":"3503","22":"8","23":"4114","24":"1491","25":"36","26":"442","27":"37","28":"343","29":"733","30":"2502","31":"9","32":"2448","33":"301","34":"17","35":"367","36":"30","37":"81","38":"2554","39":"3213","40":"13","41":"1","42":"3664","43":"1303","44":"44","45":"447","46":"24","47":"299","48":"777","49":"2379","50":"9","51":"1","52":"2422","53":"308","54":"7","55":"257","56":"22","57":"150","58":"2444","59":"3334","60":"20","61":"1","62":"3418","63":"1436","64":"36","65":"485","66":"30","67":"394","68":"1016","69":"3020","70":"14","71":"16","72":"3076","73":"470","74":"17","75":"351","76":"27","77":"125","78":"2495","79":"2966","80":"10","81":"4","82":"3012","83":"1293","84":"32","85":"490","86":"31","87":"617","88":"1188","89":"3331","90":"6","91":"7","92":"3304","93":"615","94":"16","95":"429","96":"28","97":"140","98":"2428","99":"3009","100":"19","101":"2","102":"3016","103":"1523","104":"46","105":"449","106":"28","107":"396","108":"1800","109":"3685","110":"24","111":"12","112":"3885","113":"766","114":"31","115":"578","116":"32","117":"229"},{"1":"CA","2":"17910","3":"23981","4":"148","5":"24165","6":"12436","7":"771","8":"1454","9":"628","10":"2585","11":"20766","12":"52564","13":"369","14":"40175","15":"19826","16":"1375","17":"3308","18":"597","19":"8418","20":"16765","21":"22822","22":"165","23":"23096","24":"11845","25":"711","26":"1200","27":"565","28":"2335","29":"22410","30":"55299","31":"681","32":"44573","33":"20589","34":"1125","35":"2979","36":"719","37":"8405","38":"18387","39":"23994","40":"221","41":"34","42":"23093","43":"13634","44":"772","45":"1377","46":"570","47":"3190","48":"24363","49":"63615","50":"572","51":"346","52":"45691","53":"28648","54":"1718","55":"4286","56":"889","57":"7664","58":"17599","59":"22579","60":"215","61":"36","62":"22659","63":"13301","64":"776","65":"1178","66":"645","67":"1870","68":"24892","69":"63231","70":"1037","71":"383","72":"50297","73":"24469","74":"1562","75":"4213","76":"907","77":"8095","78":"18737","79":"23807","80":"236","81":"66","82":"23276","83":"14339","84":"757","85":"1285","86":"567","87":"2622","88":"31730","89":"74597","90":"1528","91":"577","92":"58888","93":"29747","94":"1849","95":"5512","96":"1610","97":"10826","98":"20943","99":"26502","100":"330","101":"113","102":"26133","103":"16492","104":"948","105":"1417","106":"520","107":"2378","108":"32562","109":"79235","110":"1271","111":"592","112":"61306","113":"33118","114":"2292","115":"4969","116":"1264","117":"10711"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>This is an example of untidy data. The reason is that there is data we want to visualize (such as race, gender, year, and sheltered vs.&nbsp;unsheltered) that are stored in our column headers, not in cells of the data frame. To be able to visualize this data <em>by race</em>, <em>by gender</em>, or <em>by year</em> we need to pivot our data frames so that the values stored in column headers instead get restored in data cells.</p>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<div class="question">
+<p>Write code to pivot longer columns 2 through 117 (i.e.&nbsp;all columns except the first state column) in <code>pit</code>. Store the names in column called “Measure” and store the values in a column called “Value.” Store the resulting data frame in in <code>pit_pivoted</code>.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment below and write code to pivot dataset. Store the results in pit_pivoted</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pit_pivoted &lt;- pit |&gt; pivot_longer(_____)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="section" class="level7">
+<p class="heading"></p>
+<p>If you’ve done this correctly the first six rows of the resulting data frame should look like this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pit_pivoted)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["State"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Measure"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Value"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"AK","2":"Sheltered Total Homeless - Female, 2015","3":"694"},{"1":"AK","2":"Sheltered Total Homeless - Male, 2015","3":"943"},{"1":"AK","2":"Sheltered Total Homeless - Transgender, 2015","3":"2"},{"1":"AK","2":"Sheltered Total Homeless - White, 2015","3":"625"},{"1":"AK","2":"Sheltered Total Homeless - Black or African American, 2015","3":"132"},{"1":"AK","2":"Sheltered Total Homeless - Asian, 2015","3":"17"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Now you’ll notice that that we have some more cleaning to do because many separate variables are all stored in the <code>Measure</code> column. We have: the year, the demographic, whether the count is for Sheltered or Unsheltered individuals all stored in the column. We need to separate all of these distinct variables into different columns. We’re going to do this in a few steps.</p>
+</section>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<div class="question">
+<p>Write code to separate <code>Measure</code> into two columns. One column should be called <code>Shel_Unshel</code>, and the second should be called <code>Demographic</code>. Note what symbol separates these two pieces of data: space dash space (i.e.&nbsp;” - “). You will need to specify this in the <code>sep</code> argument for <code>separate()</code>. Store the resulting data frame in in <code>pit_separate_1</code>.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment below and complete the code to separate the Measure column. Store the results in pit_separate_1</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pit_separate_1 &lt;- pit_pivoted |&gt; separate(_____)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="section-1" class="level7">
+<p class="heading"></p>
+<p>If you’ve done this correctly the first six rows of the resulting data frame should look like this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pit_separate_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["State"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Shel_Unshel"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Demographic"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Value"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"AK","2":"Sheltered Total Homeless","3":"Female, 2015","4":"694"},{"1":"AK","2":"Sheltered Total Homeless","3":"Male, 2015","4":"943"},{"1":"AK","2":"Sheltered Total Homeless","3":"Transgender, 2015","4":"2"},{"1":"AK","2":"Sheltered Total Homeless","3":"White, 2015","4":"625"},{"1":"AK","2":"Sheltered Total Homeless","3":"Black or African American, 2015","4":"132"},{"1":"AK","2":"Sheltered Total Homeless","3":"Asian, 2015","4":"17"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>We still have some cleaning to do because we have demographic data and year data are stored in the same column.</p>
+</section>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<div class="question">
+<p>Write code to separate <code>Demographic</code> into two columns. One column should be called <code>Demographic</code>, and the second should be called <code>Year</code>. Note what symbol separates these two pieces of data: comma space (i.e.&nbsp;“,”). You will need to specify this in the <code>sep</code> argument for <code>separate()</code>. Store the resulting data frame in in <code>pit_separate_2</code>.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment below and complete the code to separate the Demographic column. Store the results in pit_separate_2</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pit_separate_2 &lt;- pit_separate_1 |&gt; separate(_____)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="section-2" class="level7">
+<p class="heading"></p>
+<p>If you’ve done this correctly the first six rows of the resulting data frame should look like this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pit_separate_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["State"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Shel_Unshel"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Demographic"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Year"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"AK","2":"Sheltered Total Homeless","3":"Female","4":"2015","5":"694"},{"1":"AK","2":"Sheltered Total Homeless","3":"Male","4":"2015","5":"943"},{"1":"AK","2":"Sheltered Total Homeless","3":"Transgender","4":"2015","5":"2"},{"1":"AK","2":"Sheltered Total Homeless","3":"White","4":"2015","5":"625"},{"1":"AK","2":"Sheltered Total Homeless","3":"Black or African American","4":"2015","5":"132"},{"1":"AK","2":"Sheltered Total Homeless","3":"Asian","4":"2015","5":"17"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>As a final cleaning step, let’s remove some unnecessary characters from the <code>Shel_Unshel</code> column. Specifically, let’s remove the string “Total” since we already know that these represent Total counts for these categories.</p>
+</section>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<div class="question">
+<p>Remove the string “Total” from the <code>Shel_Unshel</code> column. To do this you should use the <code>str_replace()</code> function. Replace the string “Total” with the empty string (i.e.&nbsp;““) to remove these characters. Store the results in <code>pit_str_cleaned</code>.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment below and complete the code to replace the string "Total " in Shel_Unshel with an empty string. Store the results in pit_str_cleaned</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pit_str_cleaned &lt;- pit_separate_2 |&gt; mutate(Shel_Unshel = _______)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="section-3" class="level7">
+<p class="heading"></p>
+<p>If you’ve done this correctly the first six rows of the resulting data frame should look like this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pit_str_cleaned)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["State"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Shel_Unshel"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Demographic"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Year"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"AK","2":"Sheltered Homeless","3":"Female","4":"2015","5":"694"},{"1":"AK","2":"Sheltered Homeless","3":"Male","4":"2015","5":"943"},{"1":"AK","2":"Sheltered Homeless","3":"Transgender","4":"2015","5":"2"},{"1":"AK","2":"Sheltered Homeless","3":"White","4":"2015","5":"625"},{"1":"AK","2":"Sheltered Homeless","3":"Black or African American","4":"2015","5":"132"},{"1":"AK","2":"Sheltered Homeless","3":"Asian","4":"2015","5":"17"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>The next issue is that there are multiple kinds of demographics in the demographic column. Specifically, we have both race represented in that column and gender represented in that column. Remember the rules of tidy data, according to <span class="citation" data-cites="wickhamTidyData2014a">Wickham (<a href="#ref-wickhamTidyData2014a" role="doc-biblioref">2014</a>)</span>:</p>
+<ol type="1">
+<li>Each variable forms a column.</li>
+<li>Each observation forms a row.</li>
+<li>Each type of observational unit forms a table.</li>
+</ol>
+<p>This issue violates the third rule. In one table, we have two observational units - a count of unhoused individuals by race and a count of unhoused individuals by gender. To clean this up, we need to separate this into different tables.</p>
+</section>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<div class="question">
+<p>Create two new data frames - one for <code>pit_by_gender</code> and one for <code>pit_by_race</code>. To do this you want to extract the rows with values in Demographic <code>%in%</code> the following vector of values: <code>c("Female", "Male", "Transgender")</code>, and store the result in <code>pit_by_gender</code>. Then you want to extract the rows with values in Demographic <code>%in%</code> the following vector of values:</p>
+<pre><code>c("Black or African American", 
+  "Asian", 
+  "American Indian or Alaska Native", 
+  "Native Hawaiian or Other Pacific Islander", 
+  "White", 
+  "Multiple Races")</code></pre>
+<p>and store the result in <code>pit_by_race</code>.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment below to create two new tables.</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pit_by_gender &lt;- pit_str_cleaned |&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pit_by_race &lt;- pit_str_cleaned |&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="section-4" class="level7">
+<p class="heading"></p>
+<p>If you’ve done this correctly the first six rows of the resulting data frame should look like this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pit_by_gender)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["State"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Shel_Unshel"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Demographic"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Year"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"AK","2":"Sheltered Homeless","3":"Female","4":"2015","5":"694"},{"1":"AK","2":"Sheltered Homeless","3":"Male","4":"2015","5":"943"},{"1":"AK","2":"Sheltered Homeless","3":"Transgender","4":"2015","5":"2"},{"1":"AK","2":"Unsheltered Homeless","3":"Female","4":"2015","5":"79"},{"1":"AK","2":"Unsheltered Homeless","3":"Male","4":"2015","5":"238"},{"1":"AK","2":"Unsheltered Homeless","3":"Transgender","4":"2015","5":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pit_by_race)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["State"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Shel_Unshel"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Demographic"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Year"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"AK","2":"Sheltered Homeless","3":"White","4":"2015","5":"625"},{"1":"AK","2":"Sheltered Homeless","3":"Black or African American","4":"2015","5":"132"},{"1":"AK","2":"Sheltered Homeless","3":"Asian","4":"2015","5":"17"},{"1":"AK","2":"Sheltered Homeless","3":"American Indian or Alaska Native","4":"2015","5":"714"},{"1":"AK","2":"Sheltered Homeless","3":"Native Hawaiian or Other Pacific Islander","4":"2015","5":"59"},{"1":"AK","2":"Sheltered Homeless","3":"Multiple Races","4":"2015","5":"92"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Now we have two significantly cleaned data tables. Let’s go ahead and remove some of the data frames we no longer need from our environmennt.</p>
+<div class="cell" data-document="show">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(pit, pit_pivoted, pit_separate_1, pit_separate_2, pit_str_cleaned)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With the final data, we could visualize counts of homelessness per state using each of these tables. Check out the plot below to see an example of what this might look like.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab7_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab7_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The problem now is that we don’t know if higher counts are a result of greater homelessness for that sub-group or a result of there being higher populations of that sub-group in each state. For instance, in the plot above, is the count of homelessness higher for unsheltered white individuals because white individuals are more likely to be homeless or because there is a higher population of white individuals in Florida? We ultimately want to consider the <em>rates</em> of homelessness per x number of people of that demographic in that state. To do that, we’re going to need to join this dataset with some census data documenting population.</p>
+<p>I’ve supplied you with two census tables:</p>
+<ul>
+<li><code>gender</code>: documents population estimates and margin of error (moe) for each gender in each state from 2015-2020</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gender)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["GEOID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["NAME"],"name":[2],"type":["chr"],"align":["left"]},{"label":["variable"],"name":[3],"type":["chr"],"align":["left"]},{"label":["estimate_2015"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["moe_2015"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["estimate_2016"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["moe_2016"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["estimate_2017"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["moe_2017"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["estimate_2018"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["moe_2018"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["estimate_2019"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["moe_2019"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["estimate_2020"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["moe_2020"],"name":[15],"type":["dbl"],"align":["right"]}],"data":[{"1":"01","2":"Alabama","3":"Male","4":"2341093","5":"1138","6":"2346193","7":"1216","8":"2350806","9":"1110","10":"2355799","11":"1011","12":"2359355","13":"1270","14":"2365734","15":"1090"},{"1":"01","2":"Alabama","3":"Female","4":"2489527","5":"1138","6":"2494971","7":"1216","8":"2499965","9":"1110","10":"2508881","11":"1011","12":"2516895","13":"1270","14":"2527452","15":"1089"},{"1":"02","2":"Alaska","3":"Male","4":"384160","5":"339","6":"385296","7":"355","8":"386319","9":"398","10":"385579","11":"465","12":"384915","13":"401","14":"384653","15":"448"},{"1":"02","2":"Alaska","3":"Female","4":"349215","5":"339","6":"351559","7":"355","8":"352246","9":"397","10":"352937","11":"465","12":"352153","13":"401","14":"352337","15":"448"},{"1":"04","2":"Arizona","3":"Male","4":"3299088","5":"845","6":"3344106","7":"449","8":"3385055","9":"428","10":"3453439","11":"497","12":"3504509","13":"349","14":"3564979","15":"458"},{"1":"04","2":"Arizona","3":"Female","4":"3342840","5":"845","6":"3384471","7":"449","8":"3424891","9":"428","10":"3493246","11":"497","12":"3545790","13":"349","14":"3609085","15":"458"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<ul>
+<li><code>race</code>: documents population estimates and margin of error (moe) for each race in each state from 2015-2020</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(race)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["GEOID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["NAME"],"name":[2],"type":["chr"],"align":["left"]},{"label":["variable"],"name":[3],"type":["chr"],"align":["left"]},{"label":["estimate_2015"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["moe_2015"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["estimate_2016"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["moe_2016"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["estimate_2017"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["moe_2017"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["estimate_2018"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["moe_2018"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["estimate_2019"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["moe_2019"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["estimate_2020"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["moe_2020"],"name":[15],"type":["dbl"],"align":["right"]}],"data":[{"1":"01","2":"Alabama","3":"White","4":"3325464","5":"2653","6":"3325037","7":"3152","8":"3317702","9":"3366","10":"3317453","11":"3345","12":"3320247","13":"3020","14":"3302834","15":"3712"},{"1":"01","2":"Alabama","3":"Black or African American","4":"1276544","5":"2499","6":"1282053","7":"2466","8":"1287167","9":"2157","10":"1293186","11":"2745","12":"1299048","13":"2738","14":"1301319","15":"3060"},{"1":"01","2":"Alabama","3":"American Indian or Alaska Native","4":"23850","5":"1026","6":"23919","7":"1369","8":"25098","9":"1253","10":"25576","11":"1335","12":"25565","13":"1231","14":"24764","15":"1203"},{"1":"01","2":"Alabama","3":"Asian","4":"59599","5":"1379","6":"60744","7":"1345","8":"62815","9":"1347","10":"64609","11":"1251","12":"66270","13":"1204","14":"67909","15":"1445"},{"1":"01","2":"Alabama","3":"Native Hawaiian or Other Pacific Islander","4":"2439","5":"742","6":"2008","7":"584","8":"2213","9":"592","10":"2182","11":"546","12":"2238","13":"544","14":"2042","15":"319"},{"1":"01","2":"Alabama","3":"Multiple Races","4":"81646","5":"2273","6":"85412","7":"2868","8":"88834","9":"2722","10":"91619","11":"3331","12":"92220","13":"2835","14":"119322","15":"3836"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Note that in these two data frames - just like above - we have values stored in our column headers, and we need to pivot our data longer and then clean it up. We’re going to complete this in three parts.</p>
+</section>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<div class="question">
+<p>Create two new tidy data frames - <code>gender_final</code> and <code>race_final</code>. For each, you should do this in 3 steps:</p>
+<p>Step 1: Pivot the columns <code>estimate_2015:moe_2020</code> longer, storing the column names in “Measure” and the values in “Values”. Step 2: Separate the values in Measure into two columns: “Measure”, “Year”. Note that these are separated by an underscore (“_“). Step 3: Pivot the Measure column wider, taking the values from the Values column.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fill in the blanks to clean up these data frames. </span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#gender_pivoted_longer &lt;- gender |&gt; pivot_longer(_____)</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co">#gender_separated &lt;- gender_pivoted_longer |&gt; separate(_____)</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">#gender_final &lt;- gender_separated |&gt; pivot_wider(_____)</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co">#race_pivoted_longer &lt;- race |&gt; pivot_longer(_____)</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co">#race_separated &lt;- race_pivoted_longer |&gt; separate(_____)</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="co">#race_final &lt;- race_separated |&gt; pivot_wider(_____)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="section-5" class="level7">
+<p class="heading"></p>
+<p>If you’ve done this correctly the first six rows of the resulting data frame should look like this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gender_final)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["GEOID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["NAME"],"name":[2],"type":["chr"],"align":["left"]},{"label":["variable"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Year"],"name":[4],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["moe"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"01","2":"Alabama","3":"Male","4":"2015","5":"2341093","6":"1138"},{"1":"01","2":"Alabama","3":"Male","4":"2016","5":"2346193","6":"1216"},{"1":"01","2":"Alabama","3":"Male","4":"2017","5":"2350806","6":"1110"},{"1":"01","2":"Alabama","3":"Male","4":"2018","5":"2355799","6":"1011"},{"1":"01","2":"Alabama","3":"Male","4":"2019","5":"2359355","6":"1270"},{"1":"01","2":"Alabama","3":"Male","4":"2020","5":"2365734","6":"1090"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gender_final)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["GEOID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["NAME"],"name":[2],"type":["chr"],"align":["left"]},{"label":["variable"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Year"],"name":[4],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["moe"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"01","2":"Alabama","3":"Male","4":"2015","5":"2341093","6":"1138"},{"1":"01","2":"Alabama","3":"Male","4":"2016","5":"2346193","6":"1216"},{"1":"01","2":"Alabama","3":"Male","4":"2017","5":"2350806","6":"1110"},{"1":"01","2":"Alabama","3":"Male","4":"2018","5":"2355799","6":"1011"},{"1":"01","2":"Alabama","3":"Male","4":"2019","5":"2359355","6":"1270"},{"1":"01","2":"Alabama","3":"Male","4":"2020","5":"2365734","6":"1090"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Now that we have cleaned up census data, let’s go ahead and remove some data frames that we no longer need in our environments</p>
+<div class="cell" data-document="show">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(gender, gender_pivoted_longer, gender_separated, race, race_pivoted_longer, race_separated)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Our next step is to join the census data with our point-in-time count data tables. Let’s just compare <code>pit_by_gender</code> to <code>gender_final</code> to discern the join key.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pit_by_gender)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["State"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Shel_Unshel"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Demographic"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Year"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"AK","2":"Sheltered Homeless","3":"Female","4":"2015","5":"694"},{"1":"AK","2":"Sheltered Homeless","3":"Male","4":"2015","5":"943"},{"1":"AK","2":"Sheltered Homeless","3":"Transgender","4":"2015","5":"2"},{"1":"AK","2":"Unsheltered Homeless","3":"Female","4":"2015","5":"79"},{"1":"AK","2":"Unsheltered Homeless","3":"Male","4":"2015","5":"238"},{"1":"AK","2":"Unsheltered Homeless","3":"Transgender","4":"2015","5":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gender_final)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["GEOID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["NAME"],"name":[2],"type":["chr"],"align":["left"]},{"label":["variable"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Year"],"name":[4],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["moe"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"01","2":"Alabama","3":"Male","4":"2015","5":"2341093","6":"1138"},{"1":"01","2":"Alabama","3":"Male","4":"2016","5":"2346193","6":"1216"},{"1":"01","2":"Alabama","3":"Male","4":"2017","5":"2350806","6":"1110"},{"1":"01","2":"Alabama","3":"Male","4":"2018","5":"2355799","6":"1011"},{"1":"01","2":"Alabama","3":"Male","4":"2019","5":"2359355","6":"1270"},{"1":"01","2":"Alabama","3":"Male","4":"2020","5":"2365734","6":"1090"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Notice that here, we need to join on three variables: the state, the year, and the demographic. …but you might have noticed a problem. In our census data table, states are written out, and in our point-in-time data table, states are abbreviated. The values need to match for the join to work, so we will need to create a new column with the full state name in our point-in-time count data table. I’ve written the code to do this below. You should run that code before moving on to the next step.</p>
+<div class="cell" data-document="show">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>pit_by_gender <span class="ot">&lt;-</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  pit_by_gender <span class="sc">|&gt;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">StateName =</span> state.name[<span class="fu">match</span>(State, state.abb)])</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>pit_by_race <span class="ot">&lt;-</span> </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  pit_by_race <span class="sc">|&gt;</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">StateName =</span> state.name[<span class="fu">match</span>(State, state.abb)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now our data frames are formatted in such a way that we can join <code>pit_by_gender</code> to <code>gender_final</code> and <code>pit_by_race</code> to <code>race_final</code>.</p>
+</section>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<div class="question">
+<p>Join <code>pit_by_gender</code> on the left to <code>gender_final</code> on the right and store the results in <code>pit_gender</code>. Join <code>pit_by_race</code> on the left to <code>race_final</code> on the right and store the results in <code>pit_race</code>. In both case, you will be joining by three variables: State, Demographic, and Year. We can set the left key variables to the right key variables by setting the <code>by</code> argument to this in the join: <code>c("StateName" = "NAME", "Demographic" = "variable", "Year" = "Year")</code></p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment below and write code to join pit_by_gender to gender_final and pit_by_race to race_final. Store the results in pit_gender and pit_race respectively.</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pit_gender &lt;- pit_by_gender |&gt;</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pit_race &lt;- pit_by_race |&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="section-6" class="level7">
+<p class="heading"></p>
+<p>If you’ve done this correctly the first six rows of the resulting data frames should look like this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pit_gender)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["State"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Shel_Unshel"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Demographic"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Year"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["StateName"],"name":[6],"type":["chr"],"align":["left"]},{"label":["GEOID"],"name":[7],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["moe"],"name":[9],"type":["dbl"],"align":["right"]}],"data":[{"1":"AK","2":"Sheltered Homeless","3":"Female","4":"2015","5":"694","6":"Alaska","7":"02","8":"349215","9":"339"},{"1":"AK","2":"Sheltered Homeless","3":"Male","4":"2015","5":"943","6":"Alaska","7":"02","8":"384160","9":"339"},{"1":"AK","2":"Unsheltered Homeless","3":"Female","4":"2015","5":"79","6":"Alaska","7":"02","8":"349215","9":"339"},{"1":"AK","2":"Unsheltered Homeless","3":"Male","4":"2015","5":"238","6":"Alaska","7":"02","8":"384160","9":"339"},{"1":"AK","2":"Sheltered Homeless","3":"Female","4":"2016","5":"649","6":"Alaska","7":"02","8":"351559","9":"355"},{"1":"AK","2":"Sheltered Homeless","3":"Male","4":"2016","5":"846","6":"Alaska","7":"02","8":"385296","9":"355"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pit_race)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["State"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Shel_Unshel"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Demographic"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Year"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["StateName"],"name":[6],"type":["chr"],"align":["left"]},{"label":["GEOID"],"name":[7],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["moe"],"name":[9],"type":["dbl"],"align":["right"]}],"data":[{"1":"AK","2":"Sheltered Homeless","3":"White","4":"2015","5":"625","6":"Alaska","7":"02","8":"484250","9":"1236"},{"1":"AK","2":"Sheltered Homeless","3":"Black or African American","4":"2015","5":"132","6":"Alaska","7":"02","8":"25022","9":"803"},{"1":"AK","2":"Sheltered Homeless","3":"Asian","4":"2015","5":"17","6":"Alaska","7":"02","8":"42921","9":"994"},{"1":"AK","2":"Sheltered Homeless","3":"American Indian or Alaska Native","4":"2015","5":"714","6":"Alaska","7":"02","8":"101313","9":"1735"},{"1":"AK","2":"Sheltered Homeless","3":"Native Hawaiian or Other Pacific Islander","4":"2015","5":"59","6":"Alaska","7":"02","8":"8841","9":"428"},{"1":"AK","2":"Sheltered Homeless","3":"Multiple Races","4":"2015","5":"92","6":"Alaska","7":"02","8":"61755","9":"2190"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>One final step before we can create our plots! We need to create a new column that calculates the rate of homelessness for this sub-group per 10,000 population of that sub-group in that state and year. You have all of the pieces you need to do this now.</p>
+</section>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<div class="question">
+<p>Use a data wrangling verb to create a new column in both <code>pit_gender</code> and <code>pit_race</code> that calculates the rate of homelessness per 10,000 population. Set that column name to <code>homeless_rate</code>. Hint: When creating that column, you’ll need to divide the homeless count by the population estimate and then multiply by 10000. Store the resulting data frames in <code>pit_gender_rates</code> and <code>pit_race_rates</code>.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment below and write code to create a new column for homelessness_rate in both pit_gender and pit_race</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pit_gender_rates &lt;- pit_gender |&gt;</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pit_race_rates &lt;- pit_race |&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="section-7" class="level7">
+<p class="heading"></p>
+<p>If you’ve done this correctly the first six rows of the resulting data frames should look like this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pit_gender_rates)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["State"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Shel_Unshel"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Demographic"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Year"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["StateName"],"name":[6],"type":["chr"],"align":["left"]},{"label":["GEOID"],"name":[7],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["moe"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["homeless_rate"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"AK","2":"Sheltered Homeless","3":"Female","4":"2015","5":"694","6":"Alaska","7":"02","8":"349215","9":"339","10":"19.873144"},{"1":"AK","2":"Sheltered Homeless","3":"Male","4":"2015","5":"943","6":"Alaska","7":"02","8":"384160","9":"339","10":"24.547064"},{"1":"AK","2":"Unsheltered Homeless","3":"Female","4":"2015","5":"79","6":"Alaska","7":"02","8":"349215","9":"339","10":"2.262217"},{"1":"AK","2":"Unsheltered Homeless","3":"Male","4":"2015","5":"238","6":"Alaska","7":"02","8":"384160","9":"339","10":"6.195335"},{"1":"AK","2":"Sheltered Homeless","3":"Female","4":"2016","5":"649","6":"Alaska","7":"02","8":"351559","9":"355","10":"18.460628"},{"1":"AK","2":"Sheltered Homeless","3":"Male","4":"2016","5":"846","6":"Alaska","7":"02","8":"385296","9":"355","10":"21.957145"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pit_race_rates)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["State"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Shel_Unshel"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Demographic"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Year"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["StateName"],"name":[6],"type":["chr"],"align":["left"]},{"label":["GEOID"],"name":[7],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["moe"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["homeless_rate"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"AK","2":"Sheltered Homeless","3":"White","4":"2015","5":"625","6":"Alaska","7":"02","8":"484250","9":"1236","10":"12.906557"},{"1":"AK","2":"Sheltered Homeless","3":"Black or African American","4":"2015","5":"132","6":"Alaska","7":"02","8":"25022","9":"803","10":"52.753577"},{"1":"AK","2":"Sheltered Homeless","3":"Asian","4":"2015","5":"17","6":"Alaska","7":"02","8":"42921","9":"994","10":"3.960765"},{"1":"AK","2":"Sheltered Homeless","3":"American Indian or Alaska Native","4":"2015","5":"714","6":"Alaska","7":"02","8":"101313","9":"1735","10":"70.474668"},{"1":"AK","2":"Sheltered Homeless","3":"Native Hawaiian or Other Pacific Islander","4":"2015","5":"59","6":"Alaska","7":"02","8":"8841","9":"428","10":"66.734532"},{"1":"AK","2":"Sheltered Homeless","3":"Multiple Races","4":"2015","5":"92","6":"Alaska","7":"02","8":"61755","9":"2190","10":"14.897579"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>If you’ve done everything correctly, you should be able to run the following code to generate the plots presented at the beginning of the lab. Feel free to swap out the <code>State</code> filter for different states to see how the rates compare across the US.</p>
+<div class="cell" data-document="show">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen=</span><span class="dv">999</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>pit_gender_rates <span class="sc">|&gt;</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(State <span class="sc">==</span> <span class="st">"FL"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Year, </span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> homeless_rate, </span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">col =</span> Demographic, </span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">group =</span> Demographic)) <span class="sc">+</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(Shel_Unshel)) <span class="sc">+</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Point in Time Homeless Rates in FL, 2015-2020"</span>,</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>, </span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Homeless per 10,000 Population"</span>,</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"Gender"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab7_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>pit_race_rates <span class="sc">|&gt;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(State <span class="sc">==</span> <span class="st">"FL"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Year, </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> homeless_rate, </span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">col =</span> Demographic, </span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">group =</span> Demographic)) <span class="sc">+</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(Shel_Unshel)) <span class="sc">+</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)) <span class="sc">+</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Point in Time Homeless Rates in FL, 2015-2020"</span>,</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>, </span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Homeless per 10,000 Population"</span>,</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"Race"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab7_files/figure-html/unnamed-chunk-33-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="section-8" class="level7">
+<p class="heading"></p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Ethical Considerations
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Over the past several years, the Department of Housing and Urban Development <a href="https://endhomelessness.org/wp-content/uploads/2024/10/Federal-Data-Demonstrates-the-Need-for-Safe-Supportive-and-Specific-Housing-for-Gender-Expansive-People_1-23-24-1.pdf">has been updating</a> how sex/gender gets classified when it comes to collecting data about the unhoused population. Recognizing the particular housing vulnerabilities of folks that do not identify as male or female, HUD felt it important to expand the way that gender was categorized in the data. In 2022, available options for recording gender in the dataset you analyzed today included “female,” “male,” “transgender,” “gender-questioning,” and “not singularly female or male.” While this expanded the way that gender could be recorded in this dataset, the US census has not similarly expanded their gender categories. In the US census, people are listed as either Male or Female. This poses a challenge. Without accounting for the overall population of each of these genders when analyzing this data, the total number of unhoused individuals that do not identify as male or female may appear very small when in fact the <em>proportion</em> of unhoused individuals that do not identify as male or female may be quite high. We can’t see this proportion without overall population data - data that would be very difficult to collect. On the other hand, if we were to try and map the more current data onto the existing census categories, we would literally clean folks that identify as “transgender,” “gender-questioning,” and “not singularly female or male” out of being represented in the data. With all of this in mind, what do you think is the most ethical or just way to display the most recent point in time count data? What would need to happen to make our data about the unhoused more representative? What are the some of the benefits to different communities to having their identities represented in this data? Are there any potential harms?</p>
+<p>To complicate this quesiton further,</p>
+<p>Share your ideas on our <code>sds-192-discussions</code> Slack channel.</p>
+</div>
+</div>
+
+
+
+</section>
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-wickhamTidyData2014a" class="csl-entry" role="listitem">
+Wickham, Hadley. 2014. <span>“Tidy <span>Data</span>.”</span> <em>Journal of Statistical Software</em> 59 (September): 1–23. <a href="https://doi.org/10.18637/jss.v059.i10">https://doi.org/10.18637/jss.v059.i10</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

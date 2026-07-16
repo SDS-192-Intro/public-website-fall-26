@@ -1,0 +1,415 @@
+---
+title: "Pivoting Data"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs: 
+    df-print: paged
+    scrollable: true
+    chalkboard:
+      theme: whiteboard
+      boardmarker-width: 5
+editor: source
+execute:
+  echo: true
+  messages: false
+  warnings: false
+---
+
+## For Today
+
+-   Pivoting longer
+-   Pivoting wider
+-   Separating 
+-   Uniting
+
+
+```{r}
+#| echo: false
+library(tidyverse)
+library(tidyverse)
+library(echor)
+library(DT)
+
+echo_air_ca <- 
+  echoAirGetFacilityInfo(p_st = "CA", 
+                         qcolumns = "1,4,5,8,107,108,109,110") |>
+  select(-SourceID)
+
+echo_water_ca <- 
+  echoWaterGetFacilityInfo(p_st = "CA", 
+                           qcolumns = "1,4,5,9,203,204,205,206") |>
+  select(-SourceID)
+
+echo_air_ca_agg <-
+  echo_air_ca |>
+  group_by(RegistryID) |>
+  summarize(
+    CurrSvFlag = max(CurrSvFlag),
+    ViolFlag = max(ViolFlag),
+    CurrVioFlag = max(CurrVioFlag),
+    Insp5yrFlag = max(Insp5yrFlag)
+  )
+
+echo_water_ca_agg <-
+  echo_water_ca |>
+  group_by(RegistryID) |>
+  summarize(
+    CurrSvFlag = max(CurrSvFlag),
+    ViolFlag = max(ViolFlag),
+    CurrVioFlag = max(CurrVioFlag),
+    Insp5yrFlag = max(Insp5yrFlag)
+  )
+
+echo_water_air_ca <- echo_water_ca_agg |> 
+  full_join(echo_air_ca_agg, by = "RegistryID") |>
+  rename(
+    CurrSvFlag_water = CurrSvFlag.x,
+    ViolFlag_water = ViolFlag.x, 
+    CurrVioFlag_water = CurrVioFlag.x,
+    Insp5yrFlag_water = Insp5yrFlag.x,
+    CurrSvFlag_air = CurrSvFlag.y,
+    ViolFlag_air = ViolFlag.y,
+    CurrVioFlag_air = CurrVioFlag.y,
+    Insp5yrFlag_air = Insp5yrFlag.y,
+  )
+
+rm(echo_air_ca, echo_water_ca, echo_air_ca_agg, echo_water_ca_agg)
+```
+
+--------
+
+## Tidy Data
+
+-   Every observation has its own row.
+-   Every variable has its own columns.
+-   Every value has its own cell. 
+
+------------------------------------------------------------------------
+
+
+## Is this tidy?
+
+> What variables are displayed on this plot?
+
+```{r}
+df <- data.frame(
+  date = c("10/27/2025","10/28/2025","10/29/2025"),
+  Northampton_AQI = c(16, 12, 9),
+  Easthampton_AQI = c(19, 13, 9),
+  Hatfield_AQI = c(17, 12, 9)
+)
+df
+```
+
+--------
+
+## Could I make this plot?
+
+```{r}
+#| echo: false
+df |> pivot_longer(-date, 
+                    names_to = "city", 
+                    values_to = "aqi") |>
+  ggplot(aes(x = date, y = aqi, col = city, group = city)) +
+  geom_line() +
+  ylim(0, 19)
+```
+
+
+-------
+
+## What will it look like when tidy?
+
+
+```{r}
+a <- df |> pivot_longer(-date, 
+                    names_to = "city", 
+                    values_to = "aqi")
+
+a
+```
+
+--------
+
+## Pivoting Longer 
+
+-   We use `pivot_longer()` to pivot a datasets from wider to longer format:
+-   `pivot_longer()` takes the following arguments: 
+  1. `cols = `: Identify a series of columns to pivot
+    -   The names of those columns will become repeated rows in the pivoted data frame, and the values in those columns will be stored in a new column.
+  2. `names_to = `: Identify a name for the column where the column names will be store
+  3. `values_to = `: Identify a name for the column were the values associated with those names will be stored
+  4. Various arguments to support transformations to names
+  
+-------
+
+## Example
+
+::: panel-tabset
+
+### Before
+
+```{r}
+#| echo: false
+
+df <- data.frame(
+  date = c("10/27/2025","10/28/2025","10/29/2025"),
+  Northampton_AQI = c(16, 12, 9),
+  Easthampton_AQI = c(19, 13, 9),
+  Hatfield_AQI = c(17, 12, 9)
+)
+
+df
+```
+
+### Code
+
+```{r}
+#| eval: false
+
+df |> pivot_longer(cols = ends_with("AQI"), 
+                    names_to = "city", 
+                    values_to = "aqi") |>
+  mutate(city = str_replace(city, "_AQI", ""))
+```
+
+### After
+
+```{r}
+#| echo: false
+
+a <- df |> pivot_longer(cols = ends_with("AQI"), 
+                    names_to = "city", 
+                    values_to = "aqi") |>
+  mutate(city = str_replace(city, "_AQI", ""))
+
+a
+```
+
+:::
+
+-----
+
+## Pivoting Wider 
+
+> Note: I use this far less often than `pivot_longer()`
+
+-   We use `pivot_wider()` to pivot a datasets from longer to wider format:
+-   `pivot_wider()` takes the following arguments: 
+  1. `names_from = `: Identify the column to get the new column names from
+  2. `values_from = `: Identify the column to get the cell values from
+  3. Various arguments to support transformations to names
+
+------------------------------------------------------------------------
+
+## Example
+
+::: panel-tabset
+
+### Before
+
+```{r}
+#| echo: false
+df <- data.frame(
+  date = c("10/27/2025","10/28/2025","10/29/2025"),
+  Northampton_AQI = c(16, 12, 9),
+  Easthampton_AQI = c(19, 13, 9),
+  Hatfield_AQI = c(17, 12, 9)
+) |> 
+  pivot_longer(cols = -date, 
+                    names_to = "city", 
+                    values_to = "aqi") |>
+  mutate(city = str_replace(city, "_AQI", ""))
+df
+```
+
+### Code
+
+```{r}
+#| eval: false
+df |> pivot_wider(names_from = "date", 
+                   values_from = "aqi", 
+                   names_repair = make.names)
+```
+
+### After
+
+```{r}
+#| echo: false
+a <- df |> pivot_wider(names_from = "date", 
+                   values_from = "aqi", 
+                   names_repair = make.names)
+
+a
+```
+
+:::
+
+
+------
+
+## Separating Columns
+
+-   We use `separate()` to split a column into multiple columns:
+-   `separate()` takes the following arguments: 
+  1. `col `: Identify the existing column to separate
+  2. `into = c()`: Identify the names of the new columns
+  3. `sep =`: Identify the characters or numeric position that indicate where to separate columns
+
+
+-----
+
+## Example
+
+::: panel-tabset
+
+### Before
+
+```{r}
+#| echo: false
+df <- data.frame(
+  date = c("10/27/2025","10/28/2025","10/29/2025"),
+  Northampton_AQI = c(16, 12, 9),
+  Easthampton_AQI = c(19, 13, 9),
+  Hatfield_AQI = c(17, 12, 9),
+  Northampton_temperature = c(53, 57, 55),
+  Easthampton_temperature = c(54, 58, 55),
+  Hatfield_temperature = c(53, 57, 55))
+
+df
+```
+
+
+### Code
+
+```{r}
+#| eval: false
+df |> pivot_longer(cols = -date,
+                   names_to = "city", 
+                   values_to = "values") |>
+  separate(city, into = c("city", "metric"), sep = "_")
+```
+
+### After
+
+```{r}
+#| echo: false
+a <- df |> pivot_longer(cols = -date,
+                   names_to = "city", 
+                   values_to = "values") |>
+  separate(city, into = c("city", "metric"), sep = "_")
+
+a
+```
+
+:::
+
+------
+
+## Uniting Columns
+
+-   We use `unit()` to join multiple columns into one column:
+-   `unite` takes the following arguments: 
+  1. `...`: Identify the existing columns to unite
+  2. `col`: Name of the new column
+  3. `sep =`: Identify the characters or numeric position that indicate where to separate columns
+
+
+-----
+
+## Example
+
+::: panel-tabset
+
+### Before
+
+```{r}
+#| echo: false
+
+df <- data.frame(
+  month_day = c("10/27","10/28","10/29"),
+  year = c("2025", "2025", "2025"),
+  Northampton_AQI = c(16, 12, 9),
+  Easthampton_AQI = c(19, 13, 9),
+  Hatfield_AQI = c(17, 12, 9))
+
+df
+```
+
+
+### Code
+
+```{r}
+#| eval: false
+df |> unite(month_day, year, col = "date", sep = "/")
+```
+
+### After
+
+```{r}
+#| echo: false
+a <- df |> unite(month_day, year, col = "date", sep = "/")
+
+a
+```
+
+:::
+
+
+-----
+
+## Let's practice!
+
+```{r}
+#| echo: false
+
+echo_water_air_ca |>
+  pivot_longer(cols = c(CurrSvFlag_water:Insp5yrFlag_air),
+               names_to = "flag_type",
+               values_to = "flag") |>
+  mutate(flag = na_if(flag, 0)) |>
+  separate(col = flag_type, 
+           into = c("violation", "medium"), 
+           sep = "_") |>
+  group_by(violation, medium) |>
+  summarize(total_flagged = sum(flag, 
+                                na.rm = TRUE)) |>
+  mutate(violation =   recode(
+    violation, 
+    "CurrSvFlag" = "Current Significant Violation", 
+    "CurrVioFlag" = "Current Violation", 
+    "Insp5yrFlag" = "Inspection Last Five Years",
+    "ViolFlag" = "Violation",
+    .default = NA_character_
+  )) |>
+  ggplot(aes(x = medium, 
+             y = total_flagged)) +
+  geom_col() +
+  facet_wrap(vars(violation)) +
+  theme_minimal() +
+  labs(title = "California Cities in Violation of the Clean Air Act or Clean Water Act", 
+       x = "Medium", 
+       y = "Number of Facilities")
+```
+
+
+---------------------
+
+```{r}
+#| echo: false
+echo_water_air_ca
+```
+
+
+------------------------------------------------------------------------
+
+## Steps 
+
+1. Brainstorm the ggplot code (i.e. what goes on the x and y axis).
+2. Sketch out what the data frame should look like (i.e. what columns and rows).
+3. List the cleaning functions that you will need to to create the data frame. 
+4. Write pseudo-code to create the data frame. 
+
+------------------------------------------------------------------------
+

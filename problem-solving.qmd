@@ -1,0 +1,17 @@
+---
+title: "Problem Solving with Data"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+1. Read problem carefully.
+2. Take a deep breath!
+3. Read the problem again.
+4. Determine the unit of observation in your available data and its relevance to the question. 
+5. Determine which variables in the available data are relevant to your question. 
+6. Draw what your final data frame might look like. 
+7. Get your data frame down to size! Compare the scope of what is requested in the question to what is requested in your data and subset accordingly. 
+8. Wrangle! (This is the most variable step, and you'll need to have a handle on our data wrangling verbs.)
+9. Select the most relevant variables for final presentation. 

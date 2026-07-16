@@ -1,0 +1,54 @@
+---
+title: R Fundamentals
+editor: source
+format:
+  html:
+    embed-resources: true
+---
+
+```{r unnamed-chunk-1}
+#| message: false
+#| warning: false
+#| document: show
+
+library(tidyverse)
+nyc_urban_ranger <- 
+  read_csv("https://data.cityofnewyork.us/api/views/fuhs-xmg2/rows.csv",
+           name_repair = make.names) |>
+  mutate_if(is.character, na_if, c("")) |>
+  mutate_if(is.character, na_if, c("N/A"))
+```
+###### Question 1
+
+1. Apply a function below to determine the number of rows in the data frame.
+
+
+```{r unnamed-chunk-2}
+# Write code here
+```
+###### Question 2
+2. Apply a function below to determine the data frame's column names.
+
+```{r unnamed-chunk-3}
+# Write code here
+```
+###### Question 3
+
+3. Apply a function below to determine the unique values in the `Species.Status` column.
+
+```{r unnamed-chunk-4}
+# Write code here
+```
+###### Question 4
+4. Apply a function below to determine the sum of the `X..of.Animals` column. Be sure to account for `NA` values. What does this represent?
+
+```{r unnamed-chunk-5}
+# Write code here
+```
+###### Question 5
+5. Apply a function below to determine the number of missing values in the `Animal Condition` column.
+
+
+```{r unnamed-chunk-6}
+# Write code here
+```

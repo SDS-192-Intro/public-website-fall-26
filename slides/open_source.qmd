@@ -1,0 +1,92 @@
+---
+title: "Open Source"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs:
+    scrollable: true
+    chalkboard:
+      theme: whiteboard
+      boardmarker-width: 5
+editor: source
+execute:
+  echo: true
+  messages: false
+  warnings: false
+---
+
+## For Today
+
+-   Introduction Open Source
+-   Practice with remote repository
+-   Design a README with project groups
+
+------------------------------------------------------------------------
+
+## Open Source vs. Free Software
+
+-   *Free software* refers to software that doesn't cost you anything to use
+-   *Open source software* refers to software whose source code has been shared publicly so that others can re-use and/or remix it
+
+------------------------------------------------------------------------
+
+# Why might someone choose to make software open source?
+
+------------------------------------------------------------------------
+
+## Licensing
+
+-   Licenses identify the conditions under which other individuals may re-use or remix source code
+-   Without specifying a license, code published on Github.com is copyrighted. 
+-   Copyleft: an alternative to copyright laws that indicates that code *must* remain free and open
+-   There are many existing licenses; resources like [this](https://www.tldrlegal.com/) can be helpful.
+
+------------------------------------------------------------------------
+
+## License Considerations
+
+- Can I use, modify, or redistribute this content? Can I do any of this for commercial purposes?
+- Can I modify the license when I redistribute the original? Do I have to include the full text of the original license when I redistribute it?
+- Am I required to distribute a copy of the original content when I distribute the content?
+- Do I need to disclose where my source code came from?
+- Do I need to describe changes I made to the source code when I redistribute it?
+
+------------------------------------------------------------------------
+
+## Documentation
+
+-   README files are files that outline what others need to know about a project.
+-   Good README files often include:
+    -   A project description
+    -   Project contributors
+    -   A roadmap/overview of the repo's organization
+    -   An explanation of how others can install/configure the code
+    -   An overview of how to contribute to the project
+    -   Information on how to ask questions or request changes to the code
+- Here is a great resource for [README templates](https://www.readme-templates.com/) 
+
+
+------------------------------------------------------------------------
+
+## Issues
+
+- Support project planning by allowing you to create a wishlist of project changes
+- Space for reporting bugs, requesting features, or asking questions
+- Issues have labels like "good first issue" to track good issues to start contributing to.
+- An example of a robust issue queue is [here](https://github.com/facebook/react/issues).
+
+------------------------------------------------------------------------
+
+## Contributing Guides
+
+- Guides for contributing to open source projects are often outlined in a `contributing.md` file. 
+- May include a code of conduct, requirements for project set-up, a development workflow, how to submit your changes, and how to style your code
+
+------------------------------------------------------------------------
+
+## Forking an Open Source Project
+
+- Code licensed with a copyleft license and made available on github.com can be **forked**.
+- **Forking** involves copying a project's source code so that you can use it as the basis for your own project. 
+- It is possible to make edits and request that the original creators of the code merge those changes into their project. 
+

@@ -1,0 +1,190 @@
+---
+title: Review + APIs
+format:
+  html:
+    embed-resources: true
+editor: source
+knitr:
+  opts_chunk:
+    message: false
+    warning: false
+---
+
+```{r unnamed-chunk-1}
+#| document: show
+library(httr)
+library(tidyverse)
+library(leaflet)
+library(sf)
+```
+###### Question 1
+Write an API query to access data at the endpoint <https://data.cityofnewyork.us/resource/erm2-nwe9> in a CSV format. Let's not worry about adding parameters yet. The resulting data frame should look something like my data frame below.
+
+```{r unnamed-chunk-4}
+# Code below!
+
+#nyc_311 <- read_csv(<URL HERE!>)
+#head(nyc_311)
+```
+###### Question 2
+Let's say I wanted to access data at the endpoint <https://data.cityofnewyork.us/resource/erm2-nwe9> in a CSV format. Let's not worry about adding parameters yet. Adjust your call above to limit the results to 20 rows of 311 data. The resulting data frame should look something like my data frame below.
+
+```{r unnamed-chunk-6}
+# Code below!
+
+#nyc_311 <- read_csv(<URL HERE!>)
+#head(nyc_311)
+```
+###### Question 3
+Create an API call to return the unique keys and complaint types for the latest 30 entries in NYC's 311 open dataset. In other words, translate the following `dplyr` call into a `SoSQL` query:
+
+```
+nyc_311 %>% 
+  select(unique_key, complaint_type) %>% 
+  head(30)
+```
+
+Plot the counts of complaint types as a barplot. It should look something like my plot below. 
+
+
+```{r unnamed-chunk-8}
+# Code below!
+# nyc_311_unique_keys <- read_csv(<URL HERE!>)
+# Plot here!
+```
+###### Question 4
+Create an API call to return the unique keys, created dates, incident addresses, and BBLs (this is a unique ID for the tax lot of a building in NYC) for rows with complaint type "Food Poisoning" in Manhattan's community district 5 (which hosts Times Square and other major NYC tourist attractions). Limit the results to 3000 entries in NYC's 311 open dataset. In other words, translate the following `dplyr` call into a `SoSQL` query:
+
+```
+    nyc_311 %>% 
+      select(unique_key, created_date, incident_address, bbl) %>% 
+      filter(complaint_type == "Food Poisoning" & 
+              community_board == "05 MANHATTAN") %>% 
+      head(3000)
+      
+```
+
+Wrangle the resulting data frame to determine the 5 addresses with the most food poisoning complaints in this community district. It will look something like my data frame below.
+
+
+```{r unnamed-chunk-12}
+# Code below!
+# nyc_311_food_poisoning <- read_csv(<URL HERE!>)
+```
+###### Question 5
+Order the previous result in descending order by created date, and the subset to the 500 most recent complaints. In other words, translate the following `dplyr` call into a `SoSQL` query:
+
+```
+    nyc_311 %>% 
+      select(unique_key, created_date, incident_address, bbl) %>% 
+      filter(complaint_type == "Food Poisoning" & 
+              community_board == "05 MANHATTAN") %>% 
+      arrange(desc(created_date)) %>%
+      head(500)
+```
+
+Wrangle the resulting data frame to determine the count of complaints at each BBL, and order the results by the count. Store the data frame in `nyc_311_food_poisoning_ordered_counts`. 
+
+I've written an API query to return most recent restaurant grades for restaurants in Manhattan's community district 5. Join the two data frames by the `bbl`. 
+
+> Note that there can be more than one restaurant on a particular tax lot. This means that, if there were x number of Food Poisoning complaints at a particular lot, those complaints may have been associated with any number of restaurants at that lot. BBL is the most specific field we have available for identifying the location associated with a complaint in 311. This means that we are most likely going to have a one-to-many join, and we need to be careful when making assumptions about associations across the datasets.
+
+Your resulting data frame should look something like mine below. 
+
+
+```{r unnamed-chunk-14}
+# Code below!
+# nyc_311_food_poisoning_ordered <- read_csv(<URL HERE!>)
+# nyc_311_food_poisoning_ordered_counts <- <WRANGLE HERE!>
+
+restaurant_inspections <- read_csv("https://data.cityofnewyork.us/resource/43nn-pn8j.csv?$where=community_board=%27105%27%20AND%20grade%20IS%20NOT%20NULL&$select=camis,dba,bbl,grade,max(grade_date)&$group=camis,dba,bbl,grade&$limit=3000")
+
+# Join datasets here!
+```
+###### Question 6
+Create an API call to return the unique keys, incident addresses, and created dates for rows with complaint type "Construction Lead Dust" that were created in July 2025. In other words, translate the following `dplyr` call into a `SoSQL` query:
+
+```
+    nyc_311 %>% 
+      select(unique_key, created_date, incident_address)
+      filter(complaint_type == 'Construction Lead Dust' & 
+              created_date >= '2025-07-01' &     
+              created_date <= '2025-07-31')
+```
+
+Once you get this working, write a function called `get_construction_lead_dust_complaints`. This function will take a `borough` as an argument, and should construct a string URL that will further filter the data to a given borough (hint: you will need the function `paste0` to construct this string). In your function, read the data frame using `read_csv`, print the number of rows in the data frame, and return the data frame. 
+
+I've created a vector of three NYC boroughs for you. Iterate your function over this vector, returning the results as a data frame with rows bound. Your resulting data frame should look something like mine below. 
+
+              
+
+```{r unnamed-chunk-16}
+# Code below!
+# nyc_311_construction_lead_dust <- read_csv(<URL HERE!>) 
+# get_construction_lead_dust_complaints <- <FUNCTION HERE!>
+
+boroughs <- c("MANHATTAN", "BROOKLYN", "BRONX")
+
+# Write code to iterate function here!
+```
+###### Question 7
+Create an API call to return the counts per descriptor and borough for the complaint type "Consumer Complaint." In other words, translate the following `dplyr` call into a `SoSQL` query:
+
+```
+    nyc_311 %>% 
+      filter(complaint_type == "Consumer Complaint") %>% 
+      group_by(descriptor,borough) %>% 
+      summarize(count = n())
+
+```
+Pivot the data so that there are separate columns indicating counts for each borough in the dataset. Your data frame will look something like mine below.
+      
+
+```{r unnamed-chunk-19}
+# Code below!
+# nyc_311_consumer_complaint <- read_csv(<URL HERE!>)
+# Pivot here!
+```
+###### Question 8
+Create an API call to return the counts of complaints with the descriptor "Gender Pricing" in each borough, along with the count of distinct incident addresses for these complaints in each borough. In other words, translate the following `dplyr` call into a `SoSQL` query:
+
+```
+    nyc_311 %>% 
+      filter(complaint_type == "Gender Pricing") %>% 
+      group_by(borough) %>% 
+      summarize(count = n(),
+                count_distinct_incident_address = length(unique(incident_address)) )
+
+```
+
+Pivot and plot the data to match my plot below.
+      
+
+```{r unnamed-chunk-21}
+# Code below!
+# nyc_311_gender_pricing <- read_csv(<URL HERE!>)
+# Plot here!
+```
+###### Question 9
+Create an API call to return the latitude, longitude, and counts per BBL for the complaint type "HEAT/HOT WATER." Filter out rows where the BBL is '0000000000', and sort the counts in descending order. Filter the results to the rows where the count of heat and hot water complaints is greater than 1000. In other words, translate the following `dplyr` call into a `SoSQL` query:
+
+```
+    nyc_311 %>%
+      filter(complaint_type == "HEAT/HOT WATER" & 
+              bbl != "0000000000") %>% 
+      group_by(bbl, latitude, longitude) %>% 
+      summarize(count = n()) %>% 
+      arrange(desc(count)) %>%
+      ungroup() %>%
+      filter(count > 1000)
+```
+
+Convert the result into a geom object, create a palette using the `counts` variable, and map the points via leaflet to match my map below. 
+
+
+```{r unnamed-chunk-23}
+# Code below!
+# nyc_311_heat_counts <- read_csv(<URL HERE!>) |> st_as_sf()
+# Palette here!
+# Map here!
+```

@@ -1,0 +1,81 @@
+---
+title: 'Lab 1: Understanding Datasets'
+format:
+  html:
+    embed-resources: true
+editor: source
+knitr:
+  opts_chunk:
+    message: false
+---
+
+```{r import}
+#| warning: false
+#| document: show
+library(tidyverse)
+library(rscorecard)
+sc_key(Sys.getenv("SCORECARD_KEY")) # Replace Sys.getenv("SCORECARD_KEY") here with your API Key in quotation marks
+
+scorecard <- sc_init() |>
+  sc_year(2022) |>                 #Note how we are looking at only 2022 data here!
+  sc_filter(stabbr == "MA") |>     #Note how we are looking at only Massachusetts data here!
+  sc_select(unitid, instnm, city, highdeg, control, ugds, adm_rate, costt4_a, costt4_p, pcip27, pctfloan, admcon7, wdraw_orig_yr2_rt, cdr3) |>
+  sc_get()
+```
+```{r unnamed-chunk-1}
+#| document: show
+head(scorecard)
+```
+```{r unnamed-chunk-2}
+#| document: show
+str(scorecard)
+```
+###### Question 1
+See if you can identify a unique key for this dataset. Write some lines of code to determine whether the column you've identified can act as unique key for the data. Hint: You need to check whether the values in the column ever repeat.
+
+```{r unnamed-chunk-3}
+# Write code to calculate number of rows in scorecard
+
+# Write code to calculate the number of unique values in the column you've identified as a unique key 
+
+# Do these numbers match?
+```
+###### Question 2
+At this point, you've probably figured out that each row in this dataset is a higher education institution. ...but there are many different ways that we can define higher education institutions, and that will impact what gets included and excluded in our data. Referencing the Technical Documentation, locate a definition for the unit of observation in this dataset. What institutions are included, and what institutions are excluded? Summarize a definition below.
+
+###### Question 3
+For each of the variable names in the `scorecard` data frame, look up the associated name in the data dictionary. You will need to search for the variable name in the sixth column of the data dictionary (I recommend using Ctrl-F/Cmd-F to quickly locate the variable name in the spreadsheet.) Once you've found the variable name, reference column 1 to determine what this variable means, and reference columns 7 and 8 to see what possible values will appear in that column.
+
+Identify one nominal variable, one ordinal variable, one discrete variable, and one continuous variable in the `scorecard` data frame and list their variable names below. Then uncomment the lines below and use the `typeof()` function to see how `R` determined their data types. Did any surprise you?
+
+```{r unnamed-chunk-5}
+#typeof(scorecard$_____)
+#typeof(scorecard$_____)
+#typeof(scorecard$_____)
+#typeof(scorecard$_____)
+```
+###### Question 4
+Write code below to recode the `admcon7` variable and store the results in a new variable in `scorecard` called `admcon7_text`. You'll need to look up the values in the data dictionary. If you've done this correctly, running this code should produce a barplot that displays multiple bars.
+
+```{r unnamed-chunk-11}
+#| eval: false
+#| code-fold: false
+scorecard$admcon7_text <-
+  recode(
+    scorecard$admcon7, 
+    #Fill replacements here
+    .default = NA_character_
+  )
+
+ggplot(scorecard, aes(x = admcon7_text)) +
+  geom_bar() +
+  coord_flip()
+```
+###### Question 5
+In a code chunk below, calculate the number of missing values in both the `costt4_a` and the `costt4_p` columns. Reference the NOTES column in the data dictionary to determine why there are so many `NA` values in these columns. Add a comment to the code chunk below, explaining the reason for missing values in these columns.
+
+```{r unnamed-chunk-15}
+# Write code here
+
+# Add comment here
+```

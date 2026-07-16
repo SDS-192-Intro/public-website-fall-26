@@ -1,0 +1,101 @@
+---
+title: "ggplot"
+editor: source
+---
+
+
+
+```{r}
+#| message: false
+#| warning: false
+#| document: show
+
+library(tidyverse)
+pioneer_valley_census_data <- read_csv("https://raw.githubusercontent.com/SDS-192-Intro/public-website-fall-25/refs/heads/main/data/pioneer_valley_census_2022.csv")
+
+pioneer_valley_census_data_dictionary <- pioneer_valley_census_data |> 
+  select(VAR_CAT, VAR, VAR_NAME) |>
+  distinct()
+
+pioneer_valley_census_data <- pioneer_valley_census_data |>
+  select(-VAR_CAT, -VAR) |>
+  pivot_wider(names_from = VAR_NAME,
+              values_from = VALUE) |>
+  filter(LEVEL_CD_NAME != "Region")
+  
+hampshire_census_data <- pioneer_valley_census_data %>% 
+  filter(COUNTY == "Hampshire")
+```
+
+
+```{r}
+#Add practice code from lecture here.
+```
+
+
+###### Question
+
+::: question
+
+Check the column names for `pioneer_valley_census_data`. View what column names refer to via `pioneer_valley_census_data_dictionary`.
+
+:::
+
+```{r}
+# Write code here
+```
+
+###### Question
+
+::: question
+Recreate this image using the `ggplot()` function. 
+:::
+
+![](img/ggplot_img1.png)
+
+```{r}
+#Code here.
+```
+
+###### Question
+
+::: question
+
+Recreate this image using the `ggplot()` function. 
+:::
+
+![](img/ggplot_img2.png)
+
+```{r}
+#Code here.
+```
+
+###### Question
+
+::: question
+Recreate this image using the `ggplot()` function. 
+:::
+
+![](img/ggplot_img3.png)
+
+```{r}
+#Code here.
+```
+
+###### Question
+
+::: question
+Which of the following does each point on this plot indicate?
+
+A person
+
+A municipality
+
+A commute
+
+A county
+
+:::
+
+
+

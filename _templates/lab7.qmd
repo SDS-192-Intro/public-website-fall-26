@@ -1,0 +1,191 @@
+---
+title: 'Lab 7: Tidying Data'
+format:
+  html:
+    embed-resources: true
+editor: source
+knitr:
+  opts_chunk:
+    message: false
+    warning: false
+---
+
+```{r import}
+#| document: show
+library(tidyverse)
+pit <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/main/website/data/pit_2015_2020.csv") 
+
+#Note for future reference how adding the following could remove unreliable counts:
+# mutate_at(vars(2:97), funs(case_when(. < 20 ~ as.numeric(NA), TRUE ~ .)))
+
+gender <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/main/website/data/gender_state_2015_2020.csv")
+race <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/main/website/data/race_state_2015_2020.csv")
+```
+###### Question 1
+
+Write code to pivot longer columns 2 through 117 (i.e. all columns except the first state column) in `pit`. Store the names in column called "Measure" and store the values in a column called "Value." Store the resulting data frame in in `pit_pivoted`.
+
+
+```{r unnamed-chunk-2}
+# Uncomment below and write code to pivot dataset. Store the results in pit_pivoted
+
+# pit_pivoted <- pit |> pivot_longer(_____)
+```
+###### Question 2
+
+Write code to separate `Measure` into two columns. One column should be called `Shel_Unshel`, and the second should be called `Demographic`. Note what symbol separates these two pieces of data: space dash space (i.e. " - "). You will need to specify this in the `sep` argument for `separate()`. Store the resulting data frame in in `pit_separate_1`.
+
+
+```{r unnamed-chunk-5}
+# Uncomment below and complete the code to separate the Measure column. Store the results in pit_separate_1
+
+# pit_separate_1 <- pit_pivoted |> separate(_____)
+```
+###### Question 3
+
+Write code to separate `Demographic` into two columns. One column should be called `Demographic`, and the second should be called `Year`. Note what symbol separates these two pieces of data: comma space (i.e. ", "). You will need to specify this in the `sep` argument for `separate()`. Store the resulting data frame in in `pit_separate_2`.
+
+
+```{r unnamed-chunk-8}
+# Uncomment below and complete the code to separate the Demographic column. Store the results in pit_separate_2
+
+# pit_separate_2 <- pit_separate_1 |> separate(_____)
+```
+###### Question 4
+
+Remove the string "Total " from the `Shel_Unshel` column. To do this you should use the `str_replace()` function. Replace the string "Total" with the empty string (i.e. "") to remove these characters. Store the results in `pit_str_cleaned`.
+
+
+```{r unnamed-chunk-11}
+# Uncomment below and complete the code to replace the string "Total " in Shel_Unshel with an empty string. Store the results in pit_str_cleaned
+
+# pit_str_cleaned <- pit_separate_2 |> mutate(Shel_Unshel = _______)
+```
+###### Question 5
+
+Create two new data frames - one for `pit_by_gender` and one for `pit_by_race`. To do this you want to extract the rows with values in Demographic `%in%` the following vector of values: `c("Female", "Male", "Transgender")`, and store the result in `pit_by_gender`. Then you want to extract the rows with values in Demographic `%in%` the following vector of values: 
+
+```
+c("Black or African American", 
+  "Asian", 
+  "American Indian or Alaska Native", 
+  "Native Hawaiian or Other Pacific Islander", 
+  "White", 
+  "Multiple Races")
+```
+
+and store the result in `pit_by_race`.
+
+
+```{r unnamed-chunk-14}
+# Uncomment below to create two new tables.
+
+# pit_by_gender <- pit_str_cleaned |>
+# pit_by_race <- pit_str_cleaned |>
+```
+```{r unnamed-chunk-17}
+#| document: show
+
+rm(pit, pit_pivoted, pit_separate_1, pit_separate_2, pit_str_cleaned)
+```
+###### Question 6
+
+Create two new tidy data frames - `gender_final` and `race_final`. For each, you should do this in 3 steps:
+
+Step 1: Pivot the columns `estimate_2015:moe_2020` longer, storing the column names in "Measure" and the values in "Values".
+Step 2: Separate the values in Measure into two columns: "Measure", "Year". Note that these are separated by an underscore ("_").
+Step 3: Pivot the Measure column wider, taking the values from the Values column. 
+
+```{r unnamed-chunk-21}
+# Fill in the blanks to clean up these data frames. 
+
+# Step 1
+#gender_pivoted_longer <- gender |> pivot_longer(_____)
+
+# Step 2
+#gender_separated <- gender_pivoted_longer |> separate(_____)
+
+# Step 3
+#gender_final <- gender_separated |> pivot_wider(_____)
+
+# Step 1
+#race_pivoted_longer <- race |> pivot_longer(_____)
+
+# Step 2
+#race_separated <- race_pivoted_longer |> separate(_____)
+
+# Step 3
+#race_final <- race_separated |> pivot_wider(_____)
+```
+```{r unnamed-chunk-24}
+#| document: show
+rm(gender, gender_pivoted_longer, gender_separated, race, race_pivoted_longer, race_separated)
+```
+```{r unnamed-chunk-26}
+#| document: show
+pit_by_gender <- 
+  pit_by_gender |>
+  mutate(StateName = state.name[match(State, state.abb)])
+  
+pit_by_race <- 
+  pit_by_race |>
+  mutate(StateName = state.name[match(State, state.abb)])
+```
+###### Question 7
+
+Join `pit_by_gender` on the left to `gender_final` on the right and store the results in `pit_gender`. Join `pit_by_race` on the left to `race_final` on the right and store the results in `pit_race`. In both case, you will be joining by three variables: State, Demographic, and Year. We can set the left key variables to the right key variables by setting the `by` argument to this in the join: `c("StateName" = "NAME", "Demographic" = "variable", "Year" = "Year")`
+
+
+```{r unnamed-chunk-27}
+# Uncomment below and write code to join pit_by_gender to gender_final and pit_by_race to race_final. Store the results in pit_gender and pit_race respectively.
+
+# pit_gender <- pit_by_gender |>
+# pit_race <- pit_by_race |>
+```
+###### Question 8
+
+Use a data wrangling verb to create a new column in both `pit_gender` and `pit_race` that calculates the rate of homelessness per 10,000 population. Set that column name to `homeless_rate`. Hint: When creating that column, you'll need to divide the homeless count by the population estimate and then multiply by 10000. Store the resulting data frames in `pit_gender_rates` and `pit_race_rates`.
+
+
+```{r unnamed-chunk-30}
+# Uncomment below and write code to create a new column for homelessness_rate in both pit_gender and pit_race
+
+# pit_gender_rates <- pit_gender |>
+# pit_race_rates <- pit_race |>
+```
+```{r unnamed-chunk-33}
+#| document: show
+options(scipen=999)
+
+pit_gender_rates |>
+  filter(State == "FL") |>
+  ggplot(aes(x = Year, 
+             y = homeless_rate, 
+             col = Demographic, 
+             group = Demographic)) +
+  geom_line() +
+  facet_wrap(vars(Shel_Unshel)) +
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  labs(title = "Point in Time Homeless Rates in FL, 2015-2020",
+       x = "Year", 
+       y = "Homeless per 10,000 Population",
+       col = "Gender")
+
+pit_race_rates |>
+  filter(State == "FL") |>
+  ggplot(aes(x = Year, 
+             y = homeless_rate, 
+             col = Demographic, 
+             group = Demographic)) +
+  geom_line() +
+  facet_wrap(vars(Shel_Unshel)) +
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 3, byrow = TRUE)) +
+  labs(title = "Point in Time Homeless Rates in FL, 2015-2020",
+       x = "Year", 
+       y = "Homeless per 10,000 Population",
+       col = "Race")
+
+```

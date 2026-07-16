@@ -1,0 +1,172 @@
+---
+title: 'Lab 9: Mapping with Leaflet'
+format:
+  html:
+    embed-resources: true
+editor: source
+knitr:
+  opts_chunk:
+    message: false
+    warning: false
+---
+
+```{r unnamed-chunk-1}
+#| document: show
+library(tidyverse)
+library(leaflet)
+library(RColorBrewer)
+library(sf)
+
+tri_la_2023 <- read_csv("https://raw.githubusercontent.com/SDS-192-Intro/public-website-fall-25/refs/heads/main/data/2023_la.csv", name_repair = make.names) |>
+  filter(X50..UNIT.OF.MEASURE == "Pounds") |>
+  arrange(desc(X107..TOTAL.RELEASES)) |>
+  mutate(chemical_total_text = paste(X37..CHEMICAL, X107..TOTAL.RELEASES, sep = ": ")) |>
+  group_by(X2..TRIFD) |>
+  summarize(X4..FACILITY.NAME = first(X4..FACILITY.NAME),
+            X12..LATITUDE = first(X12..LATITUDE),
+            X13..LONGITUDE = first(X13..LONGITUDE),
+            X23..INDUSTRY.SECTOR = first(X23..INDUSTRY.SECTOR),
+            X107..TOTAL.RELEASES = sum(X107..TOTAL.RELEASES),
+            X..CHEMICAL.TEXT = paste(chemical_total_text, collapse = " <br> "))
+```
+```{r unnamed-chunk-2}
+#| document: show
+map1 <- leaflet(width = "100%") %>%
+  setView(lat = 0.00, lng = 0.00, zoom = 0) %>%
+  addProviderTiles(providers$Stamen.Toner)
+
+map1
+```
+###### Question 1
+
+Adjust the code below to center the map on Louisiana. You'll need to look up the coordinates for LA, keeping in mind that South and West coordinates will be negative. Adjust the `zoom` to keep the whole state in view (setting the zoom level between 1 and 16). When you are happy with the View, switch out the provider tiles to a base map that won't distract from the data points we will layer on top of this map. Keep in mind our discussions regarding *Visualization Aesthetics* here. 
+
+
+```{r unnamed-chunk-3}
+la_map <- leaflet(width = "100%") %>%
+  setView(lat = 0.00, lng = 0.00, zoom = 0) %>%
+  addProviderTiles(providers$Stamen.Toner)
+
+# Uncomment below to view the map!
+# la_map
+```
+###### Question 2
+
+In the code block below, create a new `geometry` column with the given coordinates, using the function `st_as_sf()`. The column for longitude will go in the first coordinate position, and latitude will go in the second. Be sure to set the data's current CRS (4269) in that function. 
+Then transform the CRS to 4326 using `st_transform()`. 
+
+
+
+```{r unnamed-chunk-5}
+# Uncomment and fill in the blanks below. The column for longitude will go in the first coordinate position, and latitude will go in the second. 
+
+#tri_la_2023 <- tri_la_2023 %>%
+#  st_as_sf(coords = c("____", "____"), crs = ____) %>%
+#  st_transform(____)
+```
+###### Question 3
+
+In the code block below, pipe `addCircleMarkers()` onto the basemap and list `data = tri_la_2023` as an argument in that function. It should look like my map below. 
+
+
+
+```{r unnamed-chunk-7}
+# Uncomment and add the function
+
+#la_map %>%
+```
+###### Question 4
+
+Copy the map you just created into the code chunk below, and pipe the `addCircleMarkers()` function onto your code. Check out the help pages for the `addCircleMarkers()` function, and add some arguments to help with the map's legibility. At the very least, you should adjust the `radius`, `weight`, `color`, `fillColor`, and `fillOpacity`, and understand how each of these arguments will change the style of the map. For now you can set the `color` to "black" and the `fillColor` to "white". See if you can get your map to match mine below. 
+
+
+```{r unnamed-chunk-9}
+# Copy previous map here! 
+```
+###### Question 5
+
+Copy and paste the last map that you created below. We are going to size each circle by the total chemical releases at that facility. Total releases is stored in the column `X107..TOTAL.RELEASES` in our dataset, so we could size the circles by setting the radius to `~X107..TOTAL.RELEASES`. However, this would lead to some massive circles on our map as certain facilities have released hundreds of thousands of pounds in emissions, and the value we supply to radius will determine the pixels of the circle on our map. To deal with this, we are going to divide the total releases by 1000000. Set the radius to `~X107..TOTAL.RELEASES/1000000` below.
+
+```{r unnamed-chunk-11}
+# Copy map colored by bins here!
+```
+###### Question 6
+
+Create a categorical palettes below using `colorFactor()`, setting the `palette` to "Set2", and the domain to `tri_la_2023$X23..INDUSTRY.SECTOR`. 
+
+
+```{r unnamed-chunk-13}
+#Uncomment below to create the palette
+
+#pal_fact <- 
+
+
+```
+###### Question 7
+
+Copy and paste the last map you created into the code chunk below. We are going to adjust the `fillColor` by setting it to the variable from the dataset that we wish to color (`X23.INDUSTRY.SECTOR`), colored by one of the palettes that we created. We can do this by setting the fill color argument equal to `~pal_fact(X23.INDUSTRY.SECTOR)`. 
+
+We also need to add a legend to explain the colors. Add a pipe to the end of the `addCircleMarkers()` and then add the function `addLegend()`. Consult the help pages for the `addLegend()` function to determine how to add a legend for the meaning of the colors represented on the map. At the very least, you will need an argument for `data`, `pal`, and `values`.
+
+Your map should look like mine below. 
+
+
+```{r unnamed-chunk-15}
+# Copy the map here!
+```
+###### Question 8
+
+Create three palettes below (one using each function `colorNumeric()`, `colorBin()`, and `colorQuantile()`), setting the `palette` to "BuPu", and the domain to `tri_la_2023$X107..TOTAL.RELEASES`. For `colorBin()`, set the `bins` to 6, and for `colorQuantile()`, set `n` to 4.
+
+
+```{r unnamed-chunk-17}
+pal_num <- colorNumeric(palette="BuPu", 
+                        domain = tri_la_2023$X107..TOTAL.RELEASES)
+#Uncomment below to create the other two palettes.
+
+#pal_bin <- 
+
+#pal_quant <- 
+
+```
+###### Question 9
+
+Copy and paste the last map you created into the code chunk below, three times. For each, we are going to adjust the `fillColor` by setting it to the variable from the dataset that we wish to color (`X107..TOTAL.RELEASES`), colored by one of the palettes that we created. We can do this by setting the fill color argument equal to:
+
+-   `~pal_num(X107..TOTAL.RELEASES)`: for coloring the points according the `pal_num()` palette we created on the `X107..TOTAL.RELEASES` variable
+-   `~pal_bin(X107..TOTAL.RELEASES)`: for coloring the points according the `pal_bin()` palette we created on the `X107..TOTAL.RELEASES` variable
+-   `~pal_quant(X107..TOTAL.RELEASES)`: for coloring the points according the `pal_quant` palette we created on the `X107..TOTAL.RELEASES()` variable
+
+Adjust the legends for each of the maps.
+
+Your maps should look like mine below. 
+
+
+```{r unnamed-chunk-19}
+# Copy map first time here!
+
+# Copy map second time here!
+
+# Copy map third time here!
+```
+###### Question 10
+
+Below explain the following: Why do the colors appear differently on each map? Which map best represents the distribution of values in `X107..TOTAL.RELEASES`?
+
+
+
+###### Question 11
+
+Now, we are going to add popups on the map. Copy and paste the code from the previous step into the code chunk below. Then do the following:
+
+1. Add the `popup` argument to the `addCircleMarkers()` function. Using the `paste()` function, create a popup that includes the facility's name (in bold), the facility's industry sector (in italics), and the chemicals released by the facility. (Note that the last the data point is stored in `X..CHEMICAL.TEXT`). Note that you will need to place a `~` in front of the `paste()` function to communicate that there are variables in your argument. 
+
+2. Add the `popupOptions` argument to the `addCircleMarkers()` function. Set the `popupOptions` to `popupOptions(maxHeight = 200, closeOnClick = TRUE))`. This will ensure that really tall popups will scroll vertically rather than taking up an entire page. 
+
+Your popups should look like mine in the map below. 
+
+
+
+```{r unnamed-chunk-21}
+# Copy previous map here!
+```

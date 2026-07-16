@@ -1,0 +1,18 @@
+---
+title: "How to Lie with Maps"
+editor: source
+---
+
+Today, we're going to take a look at some maps online, and examine choices in how the maps were designed. You should work in your Project 3 groups and be prepared to share your findings with the class.
+
+1. Navigate to the [Our World in Data](https://ourworldindata.org/search). Select a **world map**. Take no more than 2 minutes for this! Drop a link to the map in a thread in `sds-192-discussions`.
+
+2. What, if anything, do you notice about the map's *projection*? 
+
+3. Is the numeric data presented on this map *normalized*? How?
+
+4. How is the data *aggregated* into geospatial units? How do you expect the map might look differently if aggregated into smaller geospatial units? (You might think about the U.S. specifically or other countries that you are familiar with when answering this question.)
+
+5. How does the map use color to classify quantities? Are the bin widths equal or the bin sizes equal?
+
+6. How meaningful are the geographic boundaries to the metric you are examining? In what ways do the administrative and other features within that boundary impact that metric, and in what ways does the issue represented by the metric extend beyond the individual boundaries shown on the map?

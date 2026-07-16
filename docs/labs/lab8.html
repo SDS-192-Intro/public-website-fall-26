@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.550">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Lindsay Poirier">
+
+<title>Lab 8: Programming with Data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+<link rel="stylesheet" href="../css/custom.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">SDS 192: Introduction to Data Science</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Syllabus</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../assignments.html"> 
+<span class="menu-text">Assignments</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../labs.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul class="collapse">
+  <li><a href="#learning-goals" id="toc-learning-goals" class="nav-link" data-scroll-target="#learning-goals">Learning Goals</a></li>
+  </ul></li>
+  <li><a href="#review-of-key-terms" id="toc-review-of-key-terms" class="nav-link" data-scroll-target="#review-of-key-terms">Review of Key Terms</a></li>
+  <li><a href="#cmss-open-payments-dataset" id="toc-cmss-open-payments-dataset" class="nav-link" data-scroll-target="#cmss-open-payments-dataset">CMS’s Open Payments Dataset</a></li>
+  <li><a href="#setting-up-your-environment" id="toc-setting-up-your-environment" class="nav-link" data-scroll-target="#setting-up-your-environment">Setting Up Your Environment</a></li>
+  <li><a href="#cleaning-up-this-data-frame" id="toc-cleaning-up-this-data-frame" class="nav-link" data-scroll-target="#cleaning-up-this-data-frame">Cleaning up this Data Frame</a></li>
+  <li><a href="#data-analysis" id="toc-data-analysis" class="nav-link" data-scroll-target="#data-analysis">Data Analysis</a>
+  <ul class="collapse">
+  <li><a href="#what-kind-of-payments-did-ma-based-doctors-receive-in-2024" id="toc-what-kind-of-payments-did-ma-based-doctors-receive-in-2024" class="nav-link" data-scroll-target="#what-kind-of-payments-did-ma-based-doctors-receive-in-2024">What kind of payments did MA-based doctors receive in 2024?</a></li>
+  <li><a href="#when-were-payments-made-to-each-of-these-doctors-in-2024" id="toc-when-were-payments-made-to-each-of-these-doctors-in-2024" class="nav-link" data-scroll-target="#when-were-payments-made-to-each-of-these-doctors-in-2024">When were payments made to each of these doctors in 2024?</a></li>
+  <li><a href="#which-manufacturers-paid-ma-based-doctors-in-2024-and-through-what-forms-of-payment" id="toc-which-manufacturers-paid-ma-based-doctors-in-2024-and-through-what-forms-of-payment" class="nav-link" data-scroll-target="#which-manufacturers-paid-ma-based-doctors-in-2024-and-through-what-forms-of-payment">Which manufacturers paid MA-based doctors in 2024, and through what forms of payment?</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lab 8: Programming with Data</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Lindsay Poirier </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In this lab, we will program some custom <code>R</code> functions that allow us to analyze data related to medical conflicts of interest. Specifically, we will determine which ten Massachusetts-based doctors received the most money from pharmaceutical or medical device manufacturers in 2024. Then we will leverage our custom functions to produce a number of tables and plots documenting information about the payments made to each of these doctors. In doing so, we will update a similar analysis produced by ProPublica in 2018 called <a href="https://projects.propublica.org/docdollars/"><em>Dollars for Docs</em></a>.</p>
+<section id="learning-goals" class="level3">
+<h3 class="anchored" data-anchor-id="learning-goals">Learning Goals</h3>
+<ul>
+<li>Write custom <code>R</code> functions</li>
+<li>Iterate a function over the values in a vector, using the family of map functions</li>
+<li>Practice data cleaning and wrangling</li>
+</ul>
+</section>
+</section>
+<section id="review-of-key-terms" class="level2">
+<h2 class="anchored" data-anchor-id="review-of-key-terms">Review of Key Terms</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You may wish to reference this <a href="https://github.com/rstudio/cheatsheets/blob/main/purrr.pdf">purrr Cheatsheet</a> when completing this lab.</p>
+</div>
+</div>
+<dl>
+<dt>Function</dt>
+<dd>
+<p>a series of statements that returns a value or performs a task</p>
+</dd>
+<dt>Iteration</dt>
+<dd>
+<p>repeating a task over a series of values, vectors, or lists</p>
+</dd>
+</dl>
+</section>
+<section id="cmss-open-payments-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="cmss-open-payments-dataset">CMS’s Open Payments Dataset</h2>
+<p>In 2010, the the Physician Payments Sunshine Act (2010) was passed, requiring medical drug and device manufacturers to disclose payments and other transfers of value made to physicians, non-physician practitioners, and teaching hospitals. This law was put into place to promote transparency in our medical system - enabling the U.S. government and citizens to monitor for potential medical conflicts of interest. Today, every time a drug or medical device manufacturer makes a payment to a covered recipient, they must disclose the nature of that payment and the amount to the U.S. Centers for Medicare &amp; Medicaid. Data about payments is then aggregated, reviewed by (and sometimes disputed by) recipients, corrected, and then published as an open government dataset.</p>
+<p>Definitions for what counts as a reporting entity, a covered recipient, and a reportable activity have been expanding since the passing of the Physician Payments Sunshine Act as legislators have raised concerns over the degree of transparency of diversifying financial arrangements in the healthcare system. In 2020, the first settlement for violations to the Sunshine Act was announced, requiring Medtronic Inc.&nbsp;to pay $9.2 million to resolve allegations for failure to report. This served as a signal that enforcement is ramping up in the coming years. In 2022, the state of California passed a law requiring that medical practitioners disclose to patients that this data resource exists.</p>
+</section>
+<section id="setting-up-your-environment" class="level2">
+<h2 class="anchored" data-anchor-id="setting-up-your-environment">Setting Up Your Environment</h2>
+<ol type="1">
+<li>Run the code below to load today’s data frames into your environment.</li>
+</ol>
+<div class="cell" data-document="show">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>open_payments_original <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://openpaymentsdata.cms.gov/api/1/datastore/query/e6b17c6a-2534-4207-a4a1-6746a14911ff/0/download?conditions%5B0%5D%5Bproperty%5D=recipient_state&amp;conditions%5B0%5D%5Bvalue%5D=MA&amp;conditions%5B0%5D%5Boperator%5D=%3D&amp;format=csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Covered_Recipient_NPI,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>         Covered_Recipient_First_Name<span class="sc">:</span>Covered_Recipient_Last_Name,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>         Applicable_Manufacturer_or_Applicable_GPO_Making_Payment_ID,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>         Applicable_Manufacturer_or_Applicable_GPO_Making_Payment_Name,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>         Recipient_City,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>         Recipient_State,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>         Covered_Recipient_Specialty_1,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>         Total_Amount_of_Payment_USDollars,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>         Indicate_Drug_or_Biological_or_Device_or_Medical_Supply_1,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>         Product_Category_or_Therapeutic_Area_1,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>         Name_of_Drug_or_Biological_or_Device_or_Medical_Supply_1,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>         Date_of_Payment,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>         Nature_of_Payment_or_Transfer_of_Value,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>         Number_of_Payments_Included_in_Total_Amount,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>         Form_of_Payment_or_Transfer_of_Value,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>         Dispute_Status_for_Publication,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>         Payment_Publication_Date) <span class="sc">|&gt;</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Covered_Recipient_NPI))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="cleaning-up-this-data-frame" class="level2">
+<h2 class="anchored" data-anchor-id="cleaning-up-this-data-frame">Cleaning up this Data Frame</h2>
+<p>Eventually we are going to plot some timelines of payments to specific doctors, and we will need the <code>Date_of_Payment</code> column to be in a date-time format to do so. Right now however, these columns are strings. To get started with cleaning up this dataset, let’s convert the date columns in <code>open_payments_original</code> to a date-time format.</p>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<div class="question">
+<p>Write code to convert the <code>Date_of_Payment</code> and the <code>Payment_Publication_Date</code> column to date-time format. You should first determine the format of the date in <code>Date_of_Payment</code> and <code>Payment_Publication_Date</code> and then reference the <a href="https://evoldyn.gitlab.io/evomics-2018/ref-sheets/R_lubridate.pdf">lubridate</a> to determine the corresponding function for parsing that date format. Finally, you will mutate the two columns.</p>
+<blockquote class="blockquote">
+<p>Optional challenge: Rather than mutating each column, see if you can <code>mutate()</code> <code>across()</code> the two columns to complete this step.</p>
+</blockquote>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment below to write code to convert to date-time format here. </span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># open_payments_dates_cleaned &lt;- open_payments_original |&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="section" class="level7">
+<p class="heading"></p>
+<p>To confirm that we’ve done this right, we can check whether both of the dates are in the date-time format.</p>
+</section>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<div class="question">
+<p>The <code>is.Date</code> function returns <code>TRUE</code> if a vector is in date-time format, and <code>FALSE</code> if it is not. Below, I’ve selected the two columns in <code>open_payments</code> that contain the word “date” in the column header. Determine which <code>map()</code> function to use in order to return a <strong>vector</strong> that indicates whether these columns are in a date-time format. If you’ve done everything correctly, you should get the output below.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select the appropriate map function below</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>open_payments_dates_cleaned <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">contains</span>(<span class="st">"date"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">_____</span>(is.Date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-document="solutions">
+<div class="cell-output cell-output-stdout">
+<pre><code>         Date_of_Payment Payment_Publication_Date 
+                    TRUE                     TRUE </code></pre>
+</div>
+</div>
+<section id="section-1" class="level7">
+<p class="heading"></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Check out what happens if you swap out your map function above for <code>map</code>, <code>map_chr</code>, or <code>map_int</code>. Can you figure out the relationship between these values and the original values?</p>
+</div>
+</div>
+<p>It’s important to note that the unit of observation in this dataset is not one medical practitioner, and it is not one manufacturer. Instead it is one payment from a manufacturer to a medical practitioner. That means that a medical practitioner can appear multiple times in the dataset if they’ve received multiple payments, and a medical drug or device manufacturer can appear multiple times in the dataset if they’ve disbursed multiple payments. We can identify medical practitioners with the <code>Covered_Recipient_NPI</code> column and manufacturers with the <code>Applicable_Manufacturer_or_Applicable_GPO_Making_Payment_ID</code> column.</p>
+<p>…but we want to know more than just the ID of a medical practitioner. To identify which doctors are receiving the most money, we also want to know that practitioner’s name, location, specialty, etc. Because practitioners’ names are manually entered into a database every time a payment is made to them, sometimes the formatting of a practitioner’s name entered for one payment can differ from how that same practitioner’s name is formatted when entered for another payment. The same goes for other variables related to that practitioner. For instance, check out how the capitalization differs for the practitioner below. In some cases, there is a middle initial, while in others, there is a full middle name; in some cases, the practitioner’s name is all capitalized, and in other cases it is not.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>open_payments_dates_cleaned <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Covered_Recipient_NPI <span class="sc">==</span> <span class="dv">1003047473</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Covered_Recipient_First_Name, Covered_Recipient_Middle_Name, Covered_Recipient_Last_Name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Covered_Recipient_First_Name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Covered_Recipient_Middle_Name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Covered_Recipient_Last_Name"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"Sherine","2":"M","3":"Hassey"},{"1":"Sherine","2":"M","3":"Hassey"},{"1":"Sherine","2":"M","3":"Hassey"},{"1":"Sherine","2":"M","3":"Hassey"},{"1":"Sherine","2":"M","3":"Hassey"},{"1":"SHERINE","2":"Mary","3":"HASSEY"},{"1":"SHERINE","2":"Mary","3":"HASSEY"},{"1":"SHERINE","2":"Mary","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"NA","3":"HASSEY"},{"1":"SHERINE","2":"MARY","3":"HASSEY-HALLIGAN"},{"1":"SHERINE","2":"MARY","3":"HASSEY-HALLIGAN"},{"1":"SHERINE","2":"MARY","3":"HASSEY-HALLIGAN"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"MARY","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"},{"1":"SHERINE","2":"M","3":"HASSEY"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>This issue with formatting exists across this entire dataset. To ensure that similar entities appear in the right buckets when we aggregate the data, we are going to standardize capitalization across the whole dataset. We’re also going to leave out the practitioner’s middle initial since it is not always included (or included in the same way).</p>
+</section>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<div class="question">
+<p>Write code to <code>mutate</code> <code>across</code> all <em>character</em> columns such that strings in these columns are converted to <strong>title case</strong>. Title case refers to casing where the first letter in each word is capitalized and all other letters are lowercase. Strings can be converted to title case with the function <code>str_to_title</code>.</p>
+<p>After you’ve done this, mutate a new column called <code>Covered_Recipient_Full_Name</code> that concatenates (hint: i.e.&nbsp;<code>paste()</code>) together <code>Covered_Recipient_First_Name</code> and <code>Covered_Recipient_Last_Name</code>.</p>
+<p>Store the resulting data frame in <code>open_payments</code>.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment below to clean up strings</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># open_payments &lt;- open_payments_dates_cleaned |&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="section-2" class="level7">
+<p class="heading"></p>
+<p>As we saw before, one <code>Covered_Recipient_NPI</code> was associated with multiple names if the names were capitalized in some cases and not others. Now that we’ve standardized the formatting of these names, there ideally should be one full name associated with every <code>Covered_Recipient_NPI</code>. Let’s compare the length of unique <code>Covered_Recipient_NPI</code> values to the length of unique <code>Covered_Recipient_Full_Name</code> values to check whether this is the case.</p>
+</section>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<div class="question">
+<p>Write a function below called <code>num_unique</code>. The function should calculate the length of unique values in the vector passed to the argument <code>x</code>.</p>
+<p>Below, I’ve selected the two columns in <code>open_payments</code> that we want to iterate this function over. Determine which <code>map()</code> function to use in order to return a <strong>numeric vector</strong> that indicates the length of unique values in each of these columns. If you’ve done everything correctly, you should get the output below.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>num_unique <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a> <span class="co"># Write function here.</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>open_payments <span class="sc">|&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Covered_Recipient_NPI, Covered_Recipient_Full_Name) <span class="sc">|&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">_____</span>(_____) <span class="co"># Determine which map function to call here.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-document="solutions">
+<div class="cell-output cell-output-stdout">
+<pre><code>      Covered_Recipient_NPI Covered_Recipient_Full_Name 
+                      19609                       19686 </code></pre>
+</div>
+</div>
+<section id="section-3" class="level7">
+<p class="heading"></p>
+<p>Notice that there are still more full names than <code>Covered_Recipient_NPI</code>s, which means that certain doctors have multiple names in this dataset. Below I’ve written some code to calculate the number unique full names listed for each <code>Covered_Recipient_NPI</code> and filter to the rows with more than one name. Can you identify some reasons why we might have multiple names listed for this same medical practitioner in this data frame?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>open_payments <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Covered_Recipient_NPI) <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">num_names =</span> <span class="fu">length</span>(<span class="fu">unique</span>(Covered_Recipient_Full_Name))) <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(num_names <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Covered_Recipient_NPI, Covered_Recipient_Full_Name) <span class="sc">|&gt;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">|&gt;</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Covered_Recipient_NPI))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Covered_Recipient_NPI"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Covered_Recipient_Full_Name"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"1992991657","2":"Lana Schumacher- Beal"},{"1":"1992991657","2":"Lana Schumacher-Beal"},{"1":"1992991657","2":"Lana Schumacher"},{"1":"1992932453","2":"Jessica Ravikoff"},{"1":"1992932453","2":"Jessica Allegretti"},{"1":"1992788160","2":"Jonathan Slater"},{"1":"1992788160","2":"John Slater"},{"1":"1992712178","2":"Pasi Janne"},{"1":"1992712178","2":"Pasi Antero Janne"},{"1":"1992059679","2":"Carolyn Bagley"},{"1":"1992059679","2":"Carolyn Rooney"},{"1":"1982655643","2":"C Douglas Evans"},{"1":"1982655643","2":"Charles Evans"},{"1":"1982632006","2":"Lucyna Czarnota Dolliver"},{"1":"1982632006","2":"Lucyna Czarnota-Dolliver"},{"1":"1972935476","2":"Abd Almonem Abdelrahman"},{"1":"1972935476","2":"Abd Abdelrahman"},{"1":"1972553121","2":"Barbara Stricker-Friedman"},{"1":"1972553121","2":"Barbara Stricker"},{"1":"1962818757","2":"Cyntia Saenz Saenz"},{"1":"1962818757","2":"Cyntia Saenz"},{"1":"1962516757","2":"Dougals Grogan"},{"1":"1962516757","2":"Douglas Grogan"},{"1":"1962100446","2":"Caitlyn Murray"},{"1":"1962100446","2":"Caitlyn O'brien"},{"1":"1962005835","2":"Kyle Beres"},{"1":"1962005835","2":"Kyle Marie Beres"},{"1":"1952680209","2":"Mary-Ann Zappala"},{"1":"1952680209","2":"Mary Ann Zappala"},{"1":"1952657462","2":"Jaffar Ahmad Al Hilli"},{"1":"1952657462","2":"Jaffar Hilli"},{"1":"1952364523","2":"Krzysztof Kacprzak"},{"1":"1952364523","2":"Krxysztof Kacprzak"},{"1":"1942933247","2":"Emily Janse Van Rensburg"},{"1":"1942933247","2":"Emily Leach"},{"1":"1942618061","2":"Kelly Shin"},{"1":"1942618061","2":"Kelly Britton"},{"1":"1942296108","2":"Mary Jo Farmer"},{"1":"1942296108","2":"Mary Farmer"},{"1":"1932717816","2":"Amy Fraser"},{"1":"1932717816","2":"Amy Lane"},{"1":"1932582178","2":"Nathan Frenk"},{"1":"1932582178","2":"Nathan Elie Frenk"},{"1":"1922188580","2":"David D'alessandro"},{"1":"1922188580","2":"David D Alessandro"},{"1":"1912978644","2":"Christoph Bechara"},{"1":"1912978644","2":"Christopher Bechara"},{"1":"1912971284","2":"Renata Ratusznik Martin"},{"1":"1912971284","2":"Renata Ratusznik-Martin"},{"1":"1912535436","2":"Richmond Woodward"},{"1":"1912535436","2":"Richmond Manning Woodward"},{"1":"1912341330","2":"Lianne Bartlett-Frye"},{"1":"1912341330","2":"Lianne Bartlett Frye"},{"1":"1912257627","2":"Kimberly O Neil"},{"1":"1912257627","2":"Kimberly Oneil"},{"1":"1912164583","2":"Ali Poyan Mehr"},{"1":"1912164583","2":"Alice Poyan Mehr"},{"1":"1912157009","2":"Hormoz Esmailzadeh"},{"1":"1912157009","2":"Hormoz Solomon"},{"1":"1902635295","2":"Rebecca Blackmore"},{"1":"1902635295","2":"Rebecca Lambert"},{"1":"1902411820","2":"Stephanie Reyes"},{"1":"1902411820","2":"Stephanie Valdivia"},{"1":"1902076102","2":"Leah Fiorante"},{"1":"1902076102","2":"Leah Petrosino"},{"1":"1891845830","2":"Carl Kahn"},{"1":"1891845830","2":"C Kahn"},{"1":"1891729554","2":"Paul Robert Sklarew"},{"1":"1891729554","2":"Paul Sklarew"},{"1":"1891314506","2":"Kaylie Murphy"},{"1":"1891314506","2":"Kaylie Cronin"},{"1":"1891285409","2":"Sarah Williams"},{"1":"1891285409","2":"Sarah Miller"},{"1":"1881771376","2":"Mengche Chung"},{"1":"1881771376","2":"Harry Chung"},{"1":"1881751394","2":"Margaret Vallen Mashik"},{"1":"1881751394","2":"Margaret Vallen Mashikian"},{"1":"1881751394","2":"Margaret Vallen-Mashikian"},{"1":"1881709111","2":"Andre Davila"},{"1":"1881709111","2":"Andreluiz D'avila"},{"1":"1881709111","2":"Andre D'avila"},{"1":"1881696375","2":"James Lin"},{"1":"1881696375","2":"Jamie Lin"},{"1":"1881653905","2":"Erica Dee"},{"1":"1881653905","2":"Erica Puglielli"},{"1":"1871978502","2":"Josie Bazemore"},{"1":"1871978502","2":"Josie Montegaard"},{"1":"1871889428","2":"Laura Voicu"},{"1":"1871889428","2":"Laura Vickers"},{"1":"1871226217","2":"Navya Reddy Perkit"},{"1":"1871226217","2":"Navya Perkit"},{"1":"1871153205","2":"Patrick O'neil"},{"1":"1871153205","2":"Patrick Oneil"},{"1":"1871150151","2":"Manali Shah"},{"1":"1871150151","2":"Manali Sheth"},{"1":"1861903403","2":"Carla Vertentes"},{"1":"1861903403","2":"Carla Mcinerney"},{"1":"1861734949","2":"Bridget Burgess"},{"1":"1861734949","2":"Bridget Driscoll"},{"1":"1861156663","2":"Sherry Duggan-Torrisi"},{"1":"1861156663","2":"Sherry Duggan"},{"1":"1851300230","2":"Angela Ahuja"},{"1":"1851300230","2":"Angel Ahuja"},{"1":"1851008130","2":"Jonnathan Reyes Luna"},{"1":"1851008130","2":"Johnathan Reyes Luna"},{"1":"1841716503","2":"Rachel Stadelmann"},{"1":"1841716503","2":"Rachel Lehouillier"},{"1":"1841217411","2":"Patti Anne Richard"},{"1":"1841217411","2":"Patti Richard"},{"1":"1831668243","2":"Ashley Baptista"},{"1":"1831668243","2":"Ashley Laranjo"},{"1":"1831656958","2":"Brittney Tarantino"},{"1":"1831656958","2":"Brittney Armour"},{"1":"1831283118","2":"Maria Dayaw"},{"1":"1831283118","2":"Maria Pilar Elisa Dayaw"},{"1":"1821578584","2":"Laurena Valente"},{"1":"1821578584","2":"Laurena Nicolo"},{"1":"1821478496","2":"Swati Kumar"},{"1":"1821478496","2":"Swati Mandleywala"},{"1":"1821309188","2":"Laith Al Rabadi"},{"1":"1821309188","2":"Laith Farah Al Rabadi"},{"1":"1821258179","2":"Bryon Gentile Ii"},{"1":"1821258179","2":"Bryon Gentile"},{"1":"1821227661","2":"Maria Gayanilo"},{"1":"1821227661","2":"Maria Aurora Lim"},{"1":"1821103896","2":"Fred Shapiro"},{"1":"1821103896","2":"Freddie Shapiro"},{"1":"1821045550","2":"Abdulfata Elshaar"},{"1":"1821045550","2":"Abdulfatah Elshaar"},{"1":"1811961196","2":"Hamedreza Danesh"},{"1":"1811961196","2":"Hamid Danesh"},{"1":"1811459837","2":"Kelsey Honshideler"},{"1":"1811459837","2":"Kelsey Shideler"},{"1":"1811277163","2":"Renee Gomez Chlebica"},{"1":"1811277163","2":"Renee Gomez"},{"1":"1811242985","2":"Burcu Gul"},{"1":"1811242985","2":"Burcu Gul Weiner"},{"1":"1801887997","2":"Shih-Te Wen"},{"1":"1801887997","2":"Shih Te Wen"},{"1":"1801506985","2":"Wendy Haynes"},{"1":"1801506985","2":"Wendy Dixon"},{"1":"1801403043","2":"Stephanie Nader"},{"1":"1801403043","2":"Stephanie Semaan"},{"1":"1801048921","2":"Kate Obrien"},{"1":"1801048921","2":"Katie O'brien"},{"1":"1790728889","2":"Leah Mckinnon Howe"},{"1":"1790728889","2":"Leah Mckinnon-Howe"},{"1":"1780849943","2":"Jacques Hagop Sulahian"},{"1":"1780849943","2":"Jacques Sulahian"},{"1":"1780624213","2":"William Fiske"},{"1":"1780624213","2":"William Wyman Fiske"},{"1":"1780613935","2":"Jeffrey Gorodetsky"},{"1":"1780613935","2":"Jeffery Gorodetsky"},{"1":"1780060889","2":"Kristen Meiggs"},{"1":"1780060889","2":"Kristen Russell"},{"1":"1780034371","2":"Jennifer Stjean"},{"1":"1780034371","2":"Jennifer St.jean"},{"1":"1770987448","2":"Erica Bruehlmann"},{"1":"1770987448","2":"Erica Lundgren"},{"1":"1770108037","2":"Mohammad El Kilany"},{"1":"1770108037","2":"Mohammad Elkilany"},{"1":"1770009490","2":"Leah Soll"},{"1":"1770009490","2":"Leah Franzone"},{"1":"1760589147","2":"Shiao-Ang Shih"},{"1":"1760589147","2":"Shiao Ang Shih"},{"1":"1760589147","2":"Shiao - Ang Shih"},{"1":"1760006431","2":"Amanda Baltazar Sezer"},{"1":"1760006431","2":"Amanda Baltazar"},{"1":"1750599700","2":"Sidney Kahn"},{"1":"1750599700","2":"Sidney Kahn Iv"},{"1":"1750357430","2":"Ronnie Alterman"},{"1":"1750357430","2":"Ron Alterman"},{"1":"1750328290","2":"Mariel Del Rio-Cadorette"},{"1":"1750328290","2":"Mariel Del Rio Cadorette"},{"1":"1750114518","2":"Emily Guptill"},{"1":"1750114518","2":"Emily Powers"},{"1":"1730926510","2":"Jillian Macle"},{"1":"1730926510","2":"Jillian Bunis"},{"1":"1730781915","2":"Emily Weibel"},{"1":"1730781915","2":"Emily Kitchen"},{"1":"1730591504","2":"Ainsley Mccowan"},{"1":"1730591504","2":"Ainsley Jones"},{"1":"1730316936","2":"Ama Okey Igwe"},{"1":"1730316936","2":"Ama Okey-Igwe"},{"1":"1730186693","2":"Padraic Mccahill"},{"1":"1730186693","2":"Pat Mccahill"},{"1":"1730179623","2":"Andrew David Simkin"},{"1":"1730179623","2":"Andrew Simkin"},{"1":"1730130568","2":"Susan Phillips Gray"},{"1":"1730130568","2":"Susan Phillips-Gray"},{"1":"1710969050","2":"Kala Seetharaman"},{"1":"1710969050","2":"Kala Seetharman"},{"1":"1710547385","2":"Amanda Diffin"},{"1":"1710547385","2":"Amanda Gustafson"},{"1":"1710155114","2":"Mary Fitzhugh"},{"1":"1710155114","2":"Mary Day Fitzhugh"},{"1":"1700864303","2":"James Oholleran"},{"1":"1700864303","2":"James O'holleran"},{"1":"1700853231","2":"Minnietta Pilgrim"},{"1":"1700853231","2":"Minniet Pilgrim"},{"1":"1700394590","2":"Ashley Brown"},{"1":"1700394590","2":"Ashley Pickering Brown"},{"1":"1700040516","2":"Seung Jae Lee"},{"1":"1700040516","2":"Seung Lee"},{"1":"1689665309","2":"Christoph Kwolek"},{"1":"1689665309","2":"Christopher Kwolek"},{"1":"1689653800","2":"Sara Kleiner-Goudey"},{"1":"1689653800","2":"Sara Kleiner Goudey"},{"1":"1689166126","2":"Kaila Sinclair"},{"1":"1689166126","2":"Kaila Gottlick"},{"1":"1689015539","2":"Shahrzad Sims"},{"1":"1689015539","2":"Shahrzad Rahbar"},{"1":"1679666564","2":"Sherri St Pierre"},{"1":"1679666564","2":"Sherri St. Pierre"},{"1":"1679539506","2":"James Bleiler"},{"1":"1679539506","2":"Jamie Bleiler"},{"1":"1679044218","2":"Lily Sylvia"},{"1":"1679044218","2":"Lily Mulcahy"},{"1":"1669865242","2":"Hans Van Lancker"},{"1":"1669865242","2":"Hans Vanlancker"},{"1":"1669768164","2":"Robert Oconnor"},{"1":"1669768164","2":"Robert O'connor"},{"1":"1669639811","2":"July Lau-Deza"},{"1":"1669639811","2":"July Lau Deza"},{"1":"1669600482","2":"Racheal Tagoe"},{"1":"1669600482","2":"Rachel Tagoe"},{"1":"1669538591","2":"Steven Spiegel"},{"1":"1669538591","2":"Stephen Spiegel"},{"1":"1669177556","2":"Alyssa Heiser"},{"1":"1669177556","2":"Alyssa, Heiser"},{"1":"1659667673","2":"Kshitukumar Agrawal"},{"1":"1659667673","2":"Kshitijkumar Agrawal"},{"1":"1659548303","2":"Katie Mcbrine"},{"1":"1659548303","2":"Katie Duncker"},{"1":"1659540664","2":"Maria Clarinda Buencamino Francisco"},{"1":"1659540664","2":"Maria Clarinda Buencamino-Francisco"},{"1":"1649533928","2":"Kristin Dorsi"},{"1":"1649533928","2":"Kristin D'orsi"},{"1":"1649240755","2":"Mohammad Mostafavi"},{"1":"1649240755","2":"Muhammad Mostafavi"},{"1":"1639200256","2":"Anton Shcherbenia"},{"1":"1639200256","2":"Anton Shcherbina"},{"1":"1629561170","2":"John Benjamin Arevalo"},{"1":"1629561170","2":"John Arevalo"},{"1":"1629206214","2":"Finnian Mc Causland"},{"1":"1629206214","2":"Finnian Mccausland"},{"1":"1629198189","2":"Christopher Baugh"},{"1":"1629198189","2":"Chris Baugh"},{"1":"1629098496","2":"Mohamed Och"},{"1":"1629098496","2":"Mohamad Och"},{"1":"1629024617","2":"Kathryn Donesa-Zuzak"},{"1":"1629024617","2":"Kathryn Donesa Zuzak"},{"1":"1619963592","2":"John O'neil"},{"1":"1619963592","2":"John Oneil"},{"1":"1619297124","2":"Nicole Landzberg"},{"1":"1619297124","2":"Nicole Grossman"},{"1":"1609935725","2":"Elise Damiano"},{"1":"1609935725","2":"Elise D'amiano"},{"1":"1609851476","2":"Roxanne Gardner"},{"1":"1609851476","2":"Roxane Gardner"},{"1":"1609186410","2":"Andrea Gibson"},{"1":"1609186410","2":"Andrea Llosa"},{"1":"1609048909","2":"Hector Tamez Aguilar"},{"1":"1609048909","2":"Hector Aguilar"},{"1":"1598711160","2":"Karl Dsilva"},{"1":"1598711160","2":"Karl D'silva"},{"1":"1598261745","2":"Aileen Souza"},{"1":"1598261745","2":"Aileen Caceres"},{"1":"1588722979","2":"Adnan El Amine"},{"1":"1588722979","2":"Adnan El-Amine"},{"1":"1588616775","2":"Kimberly Mcnulty"},{"1":"1588616775","2":"Kimberly Mooney-Mcnulty"},{"1":"1588616775","2":"Kimberly Mooney Mcnulty"},{"1":"1588351217","2":"Jacklyn Beynor"},{"1":"1588351217","2":"Jacklyn Snow"},{"1":"1588336564","2":"Dawn Kirsch"},{"1":"1588336564","2":"Dawn Resurreccion"},{"1":"1578995866","2":"Lin Chia"},{"1":"1578995866","2":"Lin Ma"},{"1":"1578902243","2":"Anthony Jordan"},{"1":"1578902243","2":"Antonio Giordano"},{"1":"1578815387","2":"Allie Smith"},{"1":"1578815387","2":"Allie Shea"},{"1":"1578721049","2":"Mariann Padron"},{"1":"1578721049","2":"Mariann Padron Gleich"},{"1":"1578225520","2":"Ileana Quaglietta"},{"1":"1578225520","2":"Ileana Mather"},{"1":"1578153599","2":"Jessica Naruka"},{"1":"1578153599","2":"Jessica Brown"},{"1":"1578080651","2":"Catherine Chace"},{"1":"1578080651","2":"Catherine Luz"},{"1":"1578067021","2":"Andrew Wall"},{"1":"1578067021","2":"Anew Wall"},{"1":"1568566420","2":"Robert Obrien"},{"1":"1568566420","2":"Robert O'brien"},{"1":"1568409936","2":"Rasmia Ahmed"},{"1":"1568409936","2":"Rasmia Khalid"},{"1":"1568039949","2":"Stephanie Hardy"},{"1":"1568039949","2":"Stephanie San Giovanni"},{"1":"1558636373","2":"Jennifer Difalco"},{"1":"1558636373","2":"Jennifer Hall Difalco"},{"1":"1558532689","2":"Allen Hwang"},{"1":"1558532689","2":"Allen L Hwang"},{"1":"1548577471","2":"Nicole Sopp"},{"1":"1548577471","2":"Nicole Psaltis"},{"1":"1548227960","2":"Christoph Cannon"},{"1":"1548227960","2":"Christopher Cannon"},{"1":"1548203219","2":"Jose Monteiro"},{"1":"1548203219","2":"Joseph Monteiro"},{"1":"1538415526","2":"Krzysztof Rosadzinsk"},{"1":"1538415526","2":"Krzysztof Rosadzinski"},{"1":"1538105903","2":"Sharon Cicchetti"},{"1":"1538105903","2":"Sharon Rousseau"},{"1":"1528589462","2":"Tonya O'neil"},{"1":"1528589462","2":"Tonya Oneil"},{"1":"1528320975","2":"Jessica Lin"},{"1":"1528320975","2":"Jessica Kim"},{"1":"1528265824","2":"Kathyrn Masselam Hatch"},{"1":"1528265824","2":"Kathryn Hatch"},{"1":"1528094372","2":"Vanessa Van Stee"},{"1":"1528094372","2":"Vanessa Vanstee"},{"1":"1518279702","2":"Andrea Leigh Shah"},{"1":"1518279702","2":"Andrea Shah"},{"1":"1518278290","2":"Laura Amorese-O'connell"},{"1":"1518278290","2":"Laura Amorese-Oconnell"},{"1":"1508838525","2":"Viraj Shroff-Mehta"},{"1":"1508838525","2":"Viraj Shroff Mehta"},{"1":"1508824475","2":"Nina Blumenthal"},{"1":"1508824475","2":"Nina Carol Blumenthal"},{"1":"1508437492","2":"Maria Alejandra Luna Cuadros"},{"1":"1508437492","2":"Maria Luna Cuadros"},{"1":"1508252123","2":"May Jean Counsilman"},{"1":"1508252123","2":"May Counsilman"},{"1":"1508107806","2":"Ary Lex Auguste"},{"1":"1508107806","2":"Ary-Lex Auguste"},{"1":"1497898316","2":"Alexander Pang"},{"1":"1497898316","2":"Alex Pang"},{"1":"1497808802","2":"Pamela Develis"},{"1":"1497808802","2":"Pamela Devellis"},{"1":"1497746010","2":"Patrick Blomberg"},{"1":"1497746010","2":"Pat Blomberg"},{"1":"1497163661","2":"Suman Bhushan Koganti"},{"1":"1497163661","2":"Suman Koganti"},{"1":"1487107769","2":"Chih Kang David Liou"},{"1":"1487107769","2":"Chih Kang Liou"},{"1":"1487107769","2":"Chih David Liou"},{"1":"1487002614","2":"Rivka Ihejirika Lomedico"},{"1":"1487002614","2":"Rivka Ihejirika"},{"1":"1477535896","2":"Douglas E Peterson"},{"1":"1477535896","2":"Douglas Peterson"},{"1":"1477014884","2":"Heinrich-Karl Greenblatt"},{"1":"1477014884","2":"Heinrich Karl Greenblatt"},{"1":"1467637884","2":"Miret Ibrahim"},{"1":"1467637884","2":"Miret Habashy Ibrahim"},{"1":"1467637884","2":"Miret Habashy-Ibrahim"},{"1":"1457796484","2":"Tony Tong"},{"1":"1457796484","2":"Haoyu Tong"},{"1":"1457311821","2":"Neil Oregan"},{"1":"1457311821","2":"Neil O'regan"},{"1":"1447861281","2":"Meghan Habershaw"},{"1":"1447861281","2":"Meghan Heald"},{"1":"1447758735","2":"Yen Vu"},{"1":"1447758735","2":"Yen Lauer"},{"1":"1447733894","2":"Olivia Smith"},{"1":"1447733894","2":"Olivia Alpert"},{"1":"1447258470","2":"Michael Curran"},{"1":"1447258470","2":"Michael Currie"},{"1":"1447248042","2":"Ann Marie Joyce"},{"1":"1447248042","2":"Ann Joyce"},{"1":"1437802659","2":"Mariya Demyanchuk"},{"1":"1437802659","2":"Mariya Kirik"},{"1":"1437704707","2":"Rachel Loring"},{"1":"1437704707","2":"Rachel Pimental"},{"1":"1437652138","2":"Karima Brahim"},{"1":"1437652138","2":"Karima Peretti"},{"1":"1437637535","2":"Fnu Avinashsingh Eswarsingh"},{"1":"1437637535","2":"Fnu Eswarsingh"},{"1":"1437413242","2":"Jerry Chi Chuan Fang"},{"1":"1437413242","2":"Chi Chuan Fang"},{"1":"1437413242","2":"Jerry Fang"},{"1":"1437118627","2":"Maryellen Taplin"},{"1":"1437118627","2":"Mary-Ellen Taplin"},{"1":"1427600238","2":"Chole Stanko"},{"1":"1427600238","2":"Chloe Stanko"},{"1":"1427499615","2":"Jae Lee"},{"1":"1427499615","2":"Jaeyoung Lee"},{"1":"1427379825","2":"Sophia Airhart"},{"1":"1427379825","2":"Sophia Lahusen Bair"},{"1":"1427292861","2":"Reiner See"},{"1":"1427292861","2":"Reiner Henson See"},{"1":"1427288091","2":"Julia Sinclair"},{"1":"1427288091","2":"Julie Sinclair"},{"1":"1427198787","2":"Vimal Patel"},{"1":"1427198787","2":"Vimalkumar Patel"},{"1":"1427080191","2":"Florence Bahtiarian"},{"1":"1427080191","2":"Florence Bejian"},{"1":"1427056795","2":"Kelly Ocallahan"},{"1":"1427056795","2":"Kelly O Callahan"},{"1":"1417262015","2":"Pascal Scemama De Gialluly"},{"1":"1417262015","2":"Pascal Scemama Degialluly"},{"1":"1417262015","2":"Pascal Scemama-De-Gialluly"},{"1":"1417256314","2":"Heidi Anderson"},{"1":"1417256314","2":"Heidi Anderson-Dockter"},{"1":"1417218215","2":"Nithya Minnah"},{"1":"1417218215","2":"Nithya Chickmagalur"},{"1":"1417118621","2":"Haeseong Park"},{"1":"1417118621","2":"Haesong Park"},{"1":"1407955172","2":"Maureen Achebe"},{"1":"1407955172","2":"Maureen Okam"},{"1":"1407879679","2":"Nancyann Walsh"},{"1":"1407879679","2":"Nancy Ann Walsh"},{"1":"1407810906","2":"Rosemary Bill Fleury"},{"1":"1407810906","2":"Rosemary Bill- Fleury"},{"1":"1407803299","2":"Vani Reddi"},{"1":"1407803299","2":"Vani Sree Reddi"},{"1":"1407348683","2":"Jerusa Cabral-Deoliveira"},{"1":"1407348683","2":"Jerusa Deoliveira"},{"1":"1407313026","2":"Meghan Keegan"},{"1":"1407313026","2":"Meghan Stephen"},{"1":"1396985768","2":"Chi Hung Lee"},{"1":"1396985768","2":"Chi-Hung Lee"},{"1":"1396452702","2":"Jessica Robinson"},{"1":"1396452702","2":"Jessica Merriel"},{"1":"1386887487","2":"Bobbie Jo Casey"},{"1":"1386887487","2":"Bobbie Casey"},{"1":"1386639946","2":"Lucille Shore Schein"},{"1":"1386639946","2":"Lucille Shore - Schein"},{"1":"1386321149","2":"Khristine Morin"},{"1":"1386321149","2":"Khristine Roxo"},{"1":"1386202281","2":"Amanda Stebbins"},{"1":"1386202281","2":"Amanda Grasso"},{"1":"1386185874","2":"Ana Garrido Castro"},{"1":"1386185874","2":"Ana Garrido-Castro"},{"1":"1376525063","2":"Gloriane Afonso Fede"},{"1":"1376525063","2":"Gloriane Afonso-Fede"},{"1":"1376505222","2":"Gloria Moussa Gabour"},{"1":"1376505222","2":"Gloria Moussa-Gabour"},{"1":"1376196600","2":"Kendal Lin"},{"1":"1376196600","2":"Kendal Haddad"},{"1":"1366670770","2":"Martin Dib"},{"1":"1366670770","2":"Martin Dib Marambio"},{"1":"1366440794","2":"Mohamad El Zaru"},{"1":"1366440794","2":"Mohamad El-Zaru"},{"1":"1366440794","2":"Muhammad El Zaru"},{"1":"1366003865","2":"Kristen Corcoran"},{"1":"1366003865","2":"Kristen Higgins"},{"1":"1356490163","2":"Lauren Alberta Wszolek"},{"1":"1356490163","2":"Lauren Alberta-Wszolek"},{"1":"1356401871","2":"Domenic Dangelo"},{"1":"1356401871","2":"Domenic D'angelo"},{"1":"1346760394","2":"Adriana Medeiros"},{"1":"1346760394","2":"Adrianna Medeiros"},{"1":"1346693413","2":"Syed Mohsin Mazhar"},{"1":"1346693413","2":"Syed Mazhar"},{"1":"1346682556","2":"Brittany Holmes"},{"1":"1346682556","2":"Brittany Murray"},{"1":"1326611385","2":"Tanya Lamoureux"},{"1":"1326611385","2":"Tanya Markos"},{"1":"1326448036","2":"John Michael Cycz"},{"1":"1326448036","2":"John-Michael Cycz"},{"1":"1326085366","2":"Michelle Odonoghue"},{"1":"1326085366","2":"Michelle O'donoghue"},{"1":"1316919400","2":"Cheryl D'souza"},{"1":"1316919400","2":"Cheryl Dsouza"},{"1":"1316919400","2":"Cheryl D Souza"},{"1":"1316189269","2":"Cyrus Yazdi"},{"1":"1316189269","2":"Cyrus Ahmadi Yazdi"},{"1":"1306419536","2":"Housam Eddin Alhariri"},{"1":"1306419536","2":"Housam Eddine Alhariri"},{"1":"1295921120","2":"Melanie Araujo"},{"1":"1295921120","2":"Melanie Araujo-Sampaio"},{"1":"1295114775","2":"Alexander Young"},{"1":"1295114775","2":"Alex Young"},{"1":"1285884395","2":"Diane Ah-Kine Ng Poon Hing"},{"1":"1285884395","2":"Diane Ah Kine Ng Poon Hing"},{"1":"1285828798","2":"Paula Ugalde"},{"1":"1285828798","2":"Paula Ugalde Figueroa"},{"1":"1285817494","2":"Pablo Pinzon"},{"1":"1285817494","2":"Pablo Quintero Pinzon"},{"1":"1285691238","2":"Julie Baker"},{"1":"1285691238","2":"Julie Geary"},{"1":"1285608398","2":"Carlos Del Rio"},{"1":"1285608398","2":"Carlos Delrio"},{"1":"1285258236","2":"Cris Martin Jacoba"},{"1":"1285258236","2":"Cris Jacoba"},{"1":"1285036434","2":"Sarimer Sanchez Gorbea"},{"1":"1285036434","2":"Sarimer Sanchez"},{"1":"1275976995","2":"Cynthia Kelley Grady"},{"1":"1275976995","2":"Cynthia Kelley-Grady"},{"1":"1275886285","2":"Barbara St John"},{"1":"1275886285","2":"Barbara Stjohn"},{"1":"1275683021","2":"Anna Simon-Villalba"},{"1":"1275683021","2":"Anna Simon-Villaloa"},{"1":"1275570228","2":"Lori Laffel"},{"1":"1275570228","2":"Lori Michelle Laffel"},{"1":"1275108722","2":"Shudeshna Chen"},{"1":"1275108722","2":"Shudeshna Bashir"},{"1":"1275102667","2":"Stephanie Hendley"},{"1":"1275102667","2":"Stephanie Doherty"},{"1":"1275089377","2":"Leanne Veary"},{"1":"1275089377","2":"Leanne Waksman"},{"1":"1265882708","2":"Amanda Saini"},{"1":"1265882708","2":"Amanda Nyisztor"},{"1":"1265866032","2":"Emrey Moskowitz-Porath"},{"1":"1265866032","2":"Emrey Moskowitz Porath"},{"1":"1265861769","2":"Jonathan Benitez-Gonzalez"},{"1":"1265861769","2":"Jonathan Beni"},{"1":"1265424758","2":"Stephanie Paris Whitney"},{"1":"1265424758","2":"Stephanie Paris-Whitney"},{"1":"1265164511","2":"Kayla Delle Chiaie"},{"1":"1265164511","2":"Kayla Dasilva"},{"1":"1265092696","2":"Kaylee Henriques"},{"1":"1265092696","2":"Kaylee Wampler"},{"1":"1255680997","2":"Saif Alenizi"},{"1":"1255680997","2":"Saif Muhsin"},{"1":"1255064747","2":"Madhan Srinivasan Kumar"},{"1":"1255064747","2":"Madhan Kumar"},{"1":"1245613751","2":"Oluwatobi Ogbechie"},{"1":"1245613751","2":"Oluwatobi Ogbechie-Godec"},{"1":"1245483965","2":"Adeeb Al-Quthami"},{"1":"1245483965","2":"Adeeb Alquthami"},{"1":"1245298157","2":"Ya Tze Tong"},{"1":"1245298157","2":"Ya Tong"},{"1":"1235423260","2":"David Sola-Del Valle"},{"1":"1235423260","2":"David Valle"},{"1":"1235105792","2":"Mary Mattei"},{"1":"1235105792","2":"Mary-Lee Mattei"},{"1":"1225192552","2":"Anne Kelly"},{"1":"1225192552","2":"Anne Marie Kelly"},{"1":"1215542964","2":"Nancy Moniz"},{"1":"1215542964","2":"Nancy Morais"},{"1":"1215469861","2":"Hector Lopez Marquez"},{"1":"1215469861","2":"Hector Marquez"},{"1":"1215199542","2":"Erin Kate Dooley"},{"1":"1215199542","2":"Erin Dooley"},{"1":"1205489390","2":"Sara Murphy"},{"1":"1205489390","2":"Sara Cataldo"},{"1":"1205179777","2":"Narjust Florez"},{"1":"1205179777","2":"Narjust Duma"},{"1":"1194221713","2":"Margaret Shields"},{"1":"1194221713","2":"Margaret Pennington"},{"1":"1184756934","2":"Youjin Jeong"},{"1":"1184756934","2":"Youjin Natalie Jeong"},{"1":"1184730012","2":"Gracia Perez Lirio"},{"1":"1184730012","2":"Gracia Perez-Lirio"},{"1":"1184690711","2":"Sukran Ergin-Yanmaz"},{"1":"1184690711","2":"Sukran Ergin"},{"1":"1184690711","2":"Sukran Ergin Yanmaz"},{"1":"1184682759","2":"Deepthi De Silva"},{"1":"1184682759","2":"Deepthi Desilva"},{"1":"1174905665","2":"Fabiola Martinez"},{"1":"1174905665","2":"Fabiola Ramirez Martinez"},{"1":"1174818363","2":"Maureen Spring"},{"1":"1174818363","2":"Maureen Dziura"},{"1":"1174510465","2":"Kimberly Browne Martin"},{"1":"1174510465","2":"Kimberly Browne-Martin"},{"1":"1164850475","2":"Grace Da Cunha"},{"1":"1164850475","2":"Grace Dacunha"},{"1":"1164823365","2":"Afsaneh Rad"},{"1":"1164823365","2":"Afsaneh Shahrokhi Rad"},{"1":"1164531422","2":"Bhalchandra Parulkar"},{"1":"1164531422","2":"Bhalchand Parulkar"},{"1":"1164076899","2":"Julia Feldman"},{"1":"1164076899","2":"Julia Sylvia"},{"1":"1164075768","2":"Zeeshan Gulam Hussain"},{"1":"1164075768","2":"Zeeshan Hussain"},{"1":"1154820421","2":"Brithny Dolcius"},{"1":"1154820421","2":"Brithny Imafidon"},{"1":"1154557650","2":"Aparna Raj"},{"1":"1154557650","2":"Aparna Parikh"},{"1":"1144398645","2":"Sonya Patel"},{"1":"1144398645","2":"Sonya Sheth"},{"1":"1144289166","2":"Geetanjali Akerkar"},{"1":"1144289166","2":"Geetanjal Akerkar"},{"1":"1134850902","2":"Marie Renee Lucien-Jean"},{"1":"1134850902","2":"Marie-Renee Lucien-Jean"},{"1":"1134787294","2":"Courtney Coppola"},{"1":"1134787294","2":"Courtney Welch"},{"1":"1134298540","2":"Smita Kherde"},{"1":"1134298540","2":"Smita Chaudhari"},{"1":"1124251657","2":"Rebecca Posner"},{"1":"1124251657","2":"Rebecca Mueller"},{"1":"1114982402","2":"Syed Asad Rizvi"},{"1":"1114982402","2":"Syed Rizvi"},{"1":"1114973872","2":"Deborah Giardina"},{"1":"1114973872","2":"Deborah Mchugh"},{"1":"1114971694","2":"Tai Lee Temple"},{"1":"1114971694","2":"Tai Temple"},{"1":"1114904497","2":"Jay Fleitman"},{"1":"1114904497","2":"Jason Fleitman"},{"1":"1114787298","2":"Jessica Ryther"},{"1":"1114787298","2":"Jessica Stoyle"},{"1":"1114455102","2":"Jessica Awerman"},{"1":"1114455102","2":"Jessica Gonzalez"},{"1":"1104085505","2":"Sujata Holman"},{"1":"1104085505","2":"Sujata Ramamurthy"},{"1":"1093944332","2":"Jiri Brabec"},{"1":"1093944332","2":"George Brabec"},{"1":"1093821092","2":"Nora Schwartz Martin"},{"1":"1093821092","2":"Nora Schwartz-Martin"},{"1":"1093754780","2":"Simon Melnick"},{"1":"1093754780","2":"Vsevolod Melnikov"},{"1":"1093426306","2":"Marie-Christine Nadon"},{"1":"1093426306","2":"Marie Christine Nadon"},{"1":"1083788277","2":"Arturo Villarreal Verdecia"},{"1":"1083788277","2":"Arturo Villarreal-Verdecia"},{"1":"1083719371","2":"Cheryl Depaolo Jost"},{"1":"1083719371","2":"Cheryl Jost"},{"1":"1083154710","2":"Jennifer Bento"},{"1":"1083154710","2":"Jennifer Byrnes"},{"1":"1083096358","2":"Syed M Khurram Owais"},{"1":"1083096358","2":"Syed M. Khurram Owais"},{"1":"1083096358","2":"Syed Owais"},{"1":"1073949061","2":"Andrea Farber"},{"1":"1073949061","2":"Andrea Reppucci"},{"1":"1073789079","2":"Antje Barreveld"},{"1":"1073789079","2":"Antje Herlyn"},{"1":"1073594123","2":"Jurgen Craig Muller"},{"1":"1073594123","2":"Jurgen Craig-Mueller"},{"1":"1073594123","2":"Jurgen Craig-Muller"},{"1":"1073521753","2":"S Kajencki"},{"1":"1073521753","2":"Stephen Kajencki"},{"1":"1073503603","2":"Alexandra Kimball"},{"1":"1073503603","2":"Alexa Kimball"},{"1":"1063853968","2":"Audra Henley"},{"1":"1063853968","2":"Audra Lafleur"},{"1":"1063662799","2":"Christine Taliercio"},{"1":"1063662799","2":"Christine Castro"},{"1":"1063461572","2":"Saraswathi Devi Muppana"},{"1":"1063461572","2":"Saraswathi Muppana"},{"1":"1063024693","2":"Naomi Weitz"},{"1":"1063024693","2":"Naomi Errath"},{"1":"1053529453","2":"Rose Bernal-Larioza"},{"1":"1053529453","2":"Rose Bernal Larioza"},{"1":"1053368324","2":"Rebecca Osullivan Hunnewell"},{"1":"1053368324","2":"Rebecca O'sullivan-Hunnewell"},{"1":"1053304469","2":"Lindsay Philip"},{"1":"1053304469","2":"Linsey Philip"},{"1":"1043669591","2":"Sara Rose-Sauld"},{"1":"1043669591","2":"Sara Rose"},{"1":"1043510423","2":"Marilyne Jones Jenkins"},{"1":"1043510423","2":"Marilyne Jones-Jenkins"},{"1":"1043409451","2":"Steven Ross"},{"1":"1043409451","2":"Stephen Ross"},{"1":"1033472352","2":"Erin O'shea"},{"1":"1033472352","2":"Erin O'shea-Paudel"},{"1":"1033472352","2":"Erin O'shea Paudel"},{"1":"1033194048","2":"Paul Dambrosio"},{"1":"1033194048","2":"Paul D'ambrosio"},{"1":"1033169610","2":"Khalilull Khatri"},{"1":"1033169610","2":"Khalil Khatri"},{"1":"1023055076","2":"Ian Fredric Sklaver"},{"1":"1023055076","2":"Ian Sklaver"},{"1":"1023014958","2":"Irma Cruz-Gonzalez"},{"1":"1023014958","2":"Irma Cruz Gonzalez"},{"1":"1013903822","2":"Babak Eliassi Rad"},{"1":"1013903822","2":"Babak Eliassi-Rad"},{"1":"1013469428","2":"Kendra Gagliardi"},{"1":"1013469428","2":"Kendra Lund"},{"1":"1013391408","2":"Nicole Cerio"},{"1":"1013391408","2":"Nicole Horn"},{"1":"1013368349","2":"Karla Calzada Morales"},{"1":"1013368349","2":"Karla Calzada"},{"1":"1003992629","2":"Erin Fitzpatrick"},{"1":"1003992629","2":"Erin Mackey"},{"1":"1003942749","2":"M. Richard Pavao"},{"1":"1003942749","2":"M Richard Pavao"},{"1":"1003848532","2":"John Looney"},{"1":"1003848532","2":"John Joseph Looney"},{"1":"1003379215","2":"Mohamed Ramadan"},{"1":"1003379215","2":"Mohamed Ehab Ramadan"},{"1":"1003047473","2":"Sherine Hassey"},{"1":"1003047473","2":"Sherine Hassey-Halligan"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Because of these issues, it is important that we use the <code>Covered_Recipient_NPI</code> to identify doctors vs.&nbsp;the full name.</p>
+<p>Now that we have a final cleaned up <code>open_payments</code> data frame, let’s remove the other data frames from our environment.</p>
+<div class="cell" data-document="show">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(open_payments_original, open_payments_dates_cleaned)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>…and on to analysis.</p>
+</section>
+</section>
+</section>
+<section id="data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="data-analysis">Data Analysis</h2>
+<p>Ultimately, our aim is to produce a number of tables and plots <em>for each of the ten MA-based doctors that received the most money from medical drug and device manufacturers in 2024.</em> This means that one of our first analysis steps is to identify those 10 medical practitioners.</p>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<div class="question">
+<p>Write code to determine the 10 medical practitioners that received the most money from drug and device manufacturers in 2024, and store your results in <code>top_10_doctors</code>. Your final data frame should have 10 rows and columns for <code>Covered_Recipient_NPI</code> and <code>sum_total_payments</code>.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment below and write data wrangling code</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#top_10_doctors &lt;- open_payments |&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="section-4" class="level7">
+<p class="heading"></p>
+<p>Right now the values that we will eventually want to iterate over in our analysis are stored as columns in a dataframe. …but remember that the family of <code>purrr</code> functions allows us to apply a function to each element of a vector or list. We want to create a series of vectors from these columns that we can iterate over. We will use the <code>pull()</code> function to do this.</p>
+</section>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<div class="question">
+<p>Create a vector of <code>top_10_doctors_ids</code> from <code>top_10_doctors</code>, using the <code>pull()</code> function.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment and write code below to pull the top 10 doctor IDs into a vector</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># top_10_doctors_ids &lt;- top_10_doctors |&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="section-5" class="level7">
+<p class="heading"></p>
+<p>We also want a vector of doctor names associated with each of these IDs, but remember that there can be multiple names for a single doctor in this dataset. With this in mind, we are going to create a vector of the <strong>first listed name</strong> for a given <code>Covered_Recipient_NPI</code> in the dataset. Taking the first listed name as the doctor’s name is an imperfect solution. The first listed name could be a misspelling. It could be a doctor’s maiden name that they have since changed. This is a temporary solution, and we would want to confirm that we have the correct name for each doctor before publishing any of these findings.</p>
+</section>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<div class="question">
+<p>Create a vector containing the names of the doctors associated with the IDs in <code>top_10_doctors_ids</code>. First, define the function <code>get_doctor_name</code>. This function will:</p>
+<ol type="1">
+<li>take a <code>doctor_id</code> as an argument,</li>
+<li>filter <code>open_payments</code> to that ID,</li>
+<li>summarize the <code>first()</code> <code>Covered_Recipient_Full_Name</code> listed for that ID,</li>
+<li><code>pull()</code> the name value</li>
+</ol>
+<p>Once this function has been defined, select the appropriate <code>map()</code> function to iterate <code>top_10_doctors_ids</code> through <code>get_doctor_name</code> and store the resulting <strong>character vector</strong> in <code>top_10_doctors_names</code>.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>get_doctor_name <span class="ot">&lt;-</span> <span class="cf">function</span>(doctor_id){</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Write function code here</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Iterate the top_10_doctors_ids vector through get_doctor_name and store the results in a character vector</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># top_10_doctors_names &lt;- </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="section-6" class="level6">
+<h6 class="anchored" data-anchor-id="section-6"></h6>
+<p>Now that we have the vectors we want to iterate over, we are ready to start defining our first functions.</p>
+</section>
+<section id="what-kind-of-payments-did-ma-based-doctors-receive-in-2024" class="level3">
+<h3 class="anchored" data-anchor-id="what-kind-of-payments-did-ma-based-doctors-receive-in-2024">What kind of payments did MA-based doctors receive in 2024?</h3>
+<p>To get started, let’s define a function that filters <code>open_payments</code> to a given doctor ID, and then calculates how much of each kind of payment has been paid to that doctor. Here is an example of what that data wrangling code would look like for a specific <code>Covered_Recipient_NPI</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>open_payments <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Covered_Recipient_NPI <span class="sc">==</span> <span class="dv">1003801903</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Nature_of_Payment_or_Transfer_of_Value) <span class="sc">|&gt;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">num_payments =</span> </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">sum</span>(Number_of_Payments_Included_in_Total_Amount),</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">total_payments =</span> <span class="fu">sum</span>(Total_Amount_of_Payment_USDollars))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Nature_of_Payment_or_Transfer_of_Value"],"name":[1],"type":["chr"],"align":["left"]},{"label":["num_payments"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["total_payments"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"Acquisitions","2":"1","3":"2114077"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<div class="question">
+<p>Wrap the above code in a function named <code>calculate_payment_type_amts</code>. Rather than filtering to 1003801903, filter based on the value passed to an argument named <code>doctor_id</code>.</p>
+<p>Then, use the <code>map()</code> function to apply <code>calculate_payment_type_amts</code> to each element in the <code>top_10_doctors_ids</code> vector. Running this code should return a list of 10 data frames.</p>
+<p>Finally, pipe in <code>set_names(top_10_doctors_names)</code> to set the names for each data frame in the list to the doctor’s name.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write calculate_payment_type_amts function here</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Iterate calculate_payment_type_amts over top_10_doctors_ids and set names to top_10_doctors_names</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="section-7" class="level7">
+<p class="heading"></p>
+</section>
+</section>
+</section>
+<section id="when-were-payments-made-to-each-of-these-doctors-in-2024" class="level3">
+<h3 class="anchored" data-anchor-id="when-were-payments-made-to-each-of-these-doctors-in-2024">When were payments made to each of these doctors in 2024?</h3>
+<p>Here’s an example of a plot we could create to answer this question for one doctor.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>  open_payments <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(Covered_Recipient_NPI <span class="sc">==</span> <span class="dv">1003801903</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">day</span>(Date_of_Payment), </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">y =</span> <span class="st">""</span>, </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">fill =</span> Total_Amount_of_Payment_USDollars)) <span class="sc">+</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_jitter</span>(<span class="at">pch =</span> <span class="dv">21</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Roger Hajjar"</span>, </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">""</span>, </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"Day"</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">fill =</span> <span class="st">"Payment Amount"</span>) <span class="sc">+</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_discrete</span>(<span class="at">limits =</span> rev) <span class="sc">+</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_distiller</span>(<span class="at">palette =</span> <span class="st">"BuPu"</span>, <span class="at">direction =</span> <span class="dv">1</span>, <span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">31</span>)) <span class="sc">+</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(<span class="fu">month</span>(Date_of_Payment, <span class="at">label =</span> <span class="cn">TRUE</span>)), <span class="at">nrow =</span> <span class="dv">4</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab8_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<div class="question">
+<p>Write a function named <code>payments_calendar</code>. The function should:</p>
+<ol type="1">
+<li>Take a <code>doctor_id</code> and <code>doctor_name</code> as arguments</li>
+<li>Filter <code>open_payments</code> to the doctor’s ID</li>
+<li>Create payment calendar plot modeled after the one above.</li>
+<li>Set the title of the plot to the doctor’s name</li>
+</ol>
+<p>After you’ve written this function, select the appropriate map function to apply <code>payments_calendar</code> to each element in the <code>top_10_doctors_ids</code> vector and <code>top_10_doctors_names</code> vector.</p>
+<blockquote class="blockquote">
+<p>Optional Challenge: Extend your code to include the first listed specialty for each top 10 doctor as a subtitle in each plot.</p>
+</blockquote>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write payments_calendar function here</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Iterate payments_calendar over top_10_doctors_ids and top_10_doctors_ids to create 10 plots</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="section-8" class="level7">
+<p class="heading"></p>
+</section>
+</section>
+</section>
+<section id="which-manufacturers-paid-ma-based-doctors-in-2024-and-through-what-forms-of-payment" class="level3">
+<h3 class="anchored" data-anchor-id="which-manufacturers-paid-ma-based-doctors-in-2024-and-through-what-forms-of-payment">Which manufacturers paid MA-based doctors in 2024, and through what forms of payment?</h3>
+<p>Finally, let’s define a function that filters <code>open_payments</code> to a given doctor ID and determines how much the doctor received in compensation from different manufacturers, along with the forms of payment from each manufacturer. To do so, we will need to aggregate the data by <code>Covered_Recipient_NPI</code>, <code>Applicable_Manufacturer_or_Applicable_GPO_Making_Payment_Name</code>, and <code>Form_of_Payment_or_Transfer_of_Value</code> and calculate the total payments associated with each grouping.</p>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<div class="question">
+<p>Write a function named <code>calculate_manufacturer_payments</code>. The function should:</p>
+<ol type="1">
+<li>Take a <code>doctor_id</code> as an argument</li>
+<li>Filter <code>open_payments</code> to that ID</li>
+<li>Aggregate the filtered data by <code>Covered_Recipient_NPI</code>, <code>Applicable_Manufacturer_or_Applicable_GPO_Making_Payment_Name</code>, and <code>Form_of_Payment_or_Transfer_of_Value</code></li>
+<li>Calculate the total amount of payments for each grouping</li>
+<li>Sort the resulting data frame in descending order by the total amount of payments.</li>
+</ol>
+<p>After you’ve written this function, use the <code>map_df()</code> function to apply <code>calculate_manufacturer_payments</code> to each element in the <code>top_10_doctors_ids</code> vector. Note how this returns one data frame rather than a list of 10 data frames.</p>
+<p>Plot your resulting data frame as a column plot, attempting (to the best of your ability) to match the formatting of the plot below.</p>
+<blockquote class="blockquote">
+<p>Optional Challenge: List the doctor’s full name in each facet band, rather than the the doctor’s ID.</p>
+</blockquote>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write calculate_manufacturer_payments function here</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Iterate calculate_manufacturer_payments over top_10_doctors_ids here</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot resulting data frame here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-document="solutions">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab8_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="section-9" class="level7">
+<p class="heading"></p>
+</section>
+</section>
+<section id="question-10" class="level6">
+<h6 class="anchored" data-anchor-id="question-10">Question</h6>
+<div class="question">
+<p><strong>Extra Credit (+5 points on lab)</strong></p>
+<p>Write a function named <code>drugs_and_devices</code>. The function should create a plot that shows how much money a given doctor was paid for each drug or biological device for which they received payment in 2024, grouped by the nature of payment.</p>
+<p>After you’ve written this function, use a map function to apply <code>drugs_and_devices</code> to each element in the <code>top_10_doctors_ids</code> vector. You should produce 10 plots - one for each doctor.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create function here</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply function here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="section-10" class="level7">
+<p class="heading"></p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Ethical Considerations
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>On September 29, 2022, California Governor Gavin Newsom signed a bill requiring that all physicians and surgeons notify patients about the Open Payments database on their initial visit. Specifically, patients will be given the following notice: “The Open Payments database is a federal tool used to search payments made by drug and device companies to physicians and teaching hospitals. It can be found at https://openpaymentsdata.cms.gov,” and will be prompted to sign and date that they have received the notice. This policy was developed in response to concerns that, while the Open Payments database includes a great deal of information that might impact how citizens make decisions about their healthcare, very few people knew of the database. Do you think this is a good solution to this problem? Should other states follow suit? Do you see any drawbacks to this policy? Share your ideas on our <code>sds-192-discussions</code> Slack channel.</p>
+</div>
+</div>
+
+
+</section>
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

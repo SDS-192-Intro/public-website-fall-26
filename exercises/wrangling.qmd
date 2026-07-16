@@ -1,0 +1,247 @@
+---
+title: "Data Wrangling"
+editor: visual
+---
+
+```{r}
+#| warning: false
+#| message: false
+#| echo: false
+#| document: show
+
+library(tidyverse)
+
+hmda_ms_2024 <- read.csv("https://ffiec.cfpb.gov/v2/data-browser-api/view/csv?states=MS&years=2024") |>
+  filter(loan_type == 1 & 
+           lien_status == 1 & 
+           conforming_loan_limit == 'C' & 
+           derived_dwelling_category %in% c("Single Family (1-4 Units):Site-Built", 
+                                            "Single Family (1-4 Units):Manufactured") & 
+           business_or_commercial_purpose == 2 &
+           loan_purpose %in% c(1, 2)) |>
+  select(lei,
+         derived_race,
+         action_taken,
+         loan_purpose,
+         loan_amount,
+         interest_rate,
+         loan_to_value_ratio,
+         denial_reason.1,
+         denial_reason.2,
+         denial_reason.3,
+         denial_reason.4,
+         loan_term,
+         debt_to_income_ratio) |>
+  mutate(loan_purpose = recode(loan_purpose, 
+                               "1" = "Home Purchase",
+                               "2" = "Home improvement",
+                               .default = NA_character_)) |>
+  mutate(action_taken = recode(action_taken, 
+                               "1" = "Loan originated", 
+                               "2" = "Application approved but not accepted",
+                               "3" = "Application denied",
+                               "4" = "Application withdrawn by applicant",
+                               "5" = "File closed for incompleteness",
+                               "6" = "Purchased loan",
+                               "7" = "Preapproval request denied",
+                               "8" = "Preapproval request approved but not accepted",
+                               .default = NA_character_)) |>
+  mutate(denial_reason.1 = recode(denial_reason.1, 
+                                  "1" = "Debt-to-income ratio",
+                                  "2" = "Employment history",
+                                  "3" = "Credit history",
+                                  "4" = "Collateral",
+                                  "5" = "Insufficient cash (downpayment, closing costs)",
+                                  "6" = "Unverifiable information",
+                                  "7" = "Credit application incomplete",
+                                  "8" = "Mortgage insurance denied",
+                                  "9" = "Other",
+                                  "10" = "Not applicable",
+                               .default = NA_character_)) |>
+  rowwise() |>
+  mutate(denial_reason = case_when(any(!is.na(c_across(c(denial_reason.2,
+                                                         denial_reason.3,
+                                                         denial_reason.4)))) ~ "Multiple",
+      TRUE ~ denial_reason.1)) |>
+  ungroup() |>
+  mutate(loan_to_value_ratio = as.numeric(loan_to_value_ratio),
+         interest_rate = as.numeric(interest_rate),
+         loan_term = as.numeric(loan_term)) |>
+  mutate(debt_to_income_ratio = case_when(debt_to_income_ratio %in% c("36", "37", "38","39","40","41") ~ "36%-41%",
+                                          debt_to_income_ratio %in% c("42","43","44","45","46","47","48","49") ~ "42%-49%",
+                                          TRUE ~ debt_to_income_ratio)) |>
+  mutate(debt_to_income_ratio = factor(debt_to_income_ratio, levels = c("Exempt",
+                                                                        "<20%",
+                                                                        "20%-<30%",
+                                                                        "30%-<36%",
+                                                                        "36%-41%",
+                                                                        "42%-49%",
+                                                                        "50%-60%",
+                                                                        ">60%"))) |>
+  select(-c(denial_reason.1, 
+            denial_reason.2, 
+            denial_reason.3, 
+            denial_reason.4))
+```
+
+###### Question
+
+::: question
+Send me a list of all of the lending IDs for the mortgage applications that were originated for borrowers with a debt-to-income ratio of greater than 60%.
+:::
+
+```{r}
+
+#Code here
+```
+
+```{r}
+#| document: solutions
+
+hmda_ms_2024 |>
+  filter(debt_to_income_ratio == ">60%") |>
+  select(lei)
+```
+
+###### Question
+
+::: question
+Send me the lending ID and action taken for the *home purchases* with the top 10 loan-to value ratios.
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+
+hmda_ms_2024 |>
+  filter(loan_purpose == "Home Purchase") |>
+  arrange(desc(loan_to_value_ratio)) |>
+  head(10) |>
+  select(lei, action_taken)
+```
+
+###### Question
+
+::: question
+Send me a list of the loan to value ratios, loan amounts, and property values for each originated loan.
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+
+hmda_ms_2024 |>
+  mutate(property_value = loan_amount / (loan_to_value_ratio/100)) |>
+  select(loan_to_value_ratio, loan_amount, property_value)
+```
+
+###### Question
+
+::: question
+How many `NA` values were listed in the loan to value ratio variable?
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+
+hmda_ms_2024 |>
+  filter(is.na(loan_to_value_ratio)) |>
+  nrow()
+
+hmda_ms_2024 |>
+  summarize(total_na = sum(is.na(loan_to_value_ratio)))
+```
+
+###### Question
+
+::: question
+Of applicants with a debt-to-income ratio of less than 36%, what was the mean and median interest rate of originated loans for each race?
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+
+hmda_ms_2024 |>
+  filter(debt_to_income_ratio %in% c("<20%", "20%-<30%", "30%-<36%")) |>
+  group_by(derived_race) |>
+  summarize(mean_interest = mean(interest_rate, na.rm = TRUE),
+            median_interest = median(interest_rate, na.rm = TRUE))
+```
+
+###### Question
+
+::: question
+Which 5 lending institutions lent the most? Send me a list of their IDs, the number of loans they originated, and the total originated.
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+
+hmda_ms_2024 |>
+  filter(action_taken == "Loan originated") |>
+  group_by(lei) |>
+  summarize(total_loans = n(),
+            total_amount = sum(loan_amount)) |>
+  arrange(desc(total_amount)) |>
+  head(5)
+```
+
+###### Question
+
+::: question
+How many loans were denied because of debt-to-income ratio for each race and debt-to-income ratio bracket? Send me a list of the race, debt-to-income ratio, and count of denied loans, sorted first by the derived race, and second by the count in descending order.
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+
+hmda_ms_2024 |>
+  filter(denial_reason == "Debt-to-income ratio") |>
+  group_by(derived_race, debt_to_income_ratio) |>
+  summarize(denied_for_debt_count = n()) |>
+  arrange(derived_race, desc(denied_for_debt_count))
+```
+
+###### Question
+
+::: question
+When applicants were denied, what was the most common denial reason for each race? Send me a list of the race, top denial reason, and count of loans that were denied for that reason.
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+
+hmda_ms_2024 |>
+  filter(action_taken == "Application denied") |>
+  group_by(derived_race, denial_reason) |>
+  summarize(count = n()) |>
+  ungroup() |>
+  group_by(derived_race) |>
+  filter(count == max(count))
+```

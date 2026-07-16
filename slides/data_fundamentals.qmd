@@ -1,0 +1,184 @@
+---
+title: "Data Fundamentals"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs:
+    scrollable: true
+editor: source
+---
+
+# What is a dataset? {.smaller}
+
+::: columns
+::: {.column width="60%"}
+-   a collection of data points organized into a structured format
+-   in this course, we will mainly work with datasets that are structured in a two-dimensional format
+-   we will refer to these as *rectangular* datasets
+-   rectangular datasets are organized into a series of rows and columns; ideally:
+    -   we refer to rows as *observations*
+    -   we refer to columns as *variables*
+:::
+
+::: {.column width="40%"}
+
+![](https://d33wubrfki0l68.cloudfront.net/6f1ddb544fc5c69a2478e444ab8112fb0eea23f8/91adc/images/tidy-1.png)
+
+Grolemund, Garrett, and Hadley Wickham. n.d. R for Data Science. Accessed March 31, 2019. https://r4ds.had.co.nz/.
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Observations vs. Variables vs. Values
+
+::: columns
+::: {.column width="70%"}
+::: panel-tabset
+### Observations
+
+::: nonincremental
+-   Observations refer to individual units or cases of the data being collected.
+    -   If I was collecting data about each student in this course, one student would be an observation.
+    -   If I was collecting census data and aggregating it at the county level, one county would be an observation.
+:::
+
+### Variables
+
+::: nonincremental
+-   Variables describe something about an observation.
+    -   If I was collecting data about each student in this course, 'major' might be one variable.
+    -   If I was collecting county-level census data, 'population' might be one variable.
+:::
+
+### Values
+
+::: nonincremental
+-   Values refer to the actual value associated with a variable for a given observation.
+    -   If I was collecting data about each student's major in this course, one value might be SDS.
+:::
+:::
+:::
+
+::: {.column width="30%"}
+![](https://d33wubrfki0l68.cloudfront.net/6f1ddb544fc5c69a2478e444ab8112fb0eea23f8/91adc/images/tidy-1.png)
+
+Grolemund, Garrett, and Hadley Wickham. n.d. R for Data Science. Accessed March 31, 2019. https://r4ds.had.co.nz/.
+:::
+:::
+
+------------------------------------------------------------------------
+
+## How can we refer to certain rows, columns, or values in a dataset?
+
+-   An *index* is a formal way of identifying the data at certain positions in a dataset.
+-   Indexes are usually formatted as two numbers in brackets (e.g. \[3,4\]).
+-   The first number refers to the row's position in the dataset. The second number refers to the column's position in the dataset.
+    -   \[3,4\] will refer to the value three rows down and four rows over.
+-   We can refer to an entire row of data by leaving the value in the second position of the index blank (e.g. \[3,\] will refer to the third row.)
+-   We can refer to an entire column of data by leaving the value in the first position of the index blank (e.g. \[,4\] will refer to the fourth column)
+    -   Alternatively, we can refer to a column by its column name.
+
+------------------------------------------------------------------------
+
+## Key Considerations for Rectangular Datasets
+
+::: columns
+::: column
+-   All rows in a rectangular dataset are of equal length.
+
+-   All columns in a rectangular dataset are of equal length.
+
+::: callout-note
+
+### Understanding Check
+
+Let's say I have a rectangular dataset documenting student names and majors, and I was missing major information for one student. What would this look like in a rectangular dataset?
+:::
+:::
+
+::: column
+![](https://d33wubrfki0l68.cloudfront.net/6f1ddb544fc5c69a2478e444ab8112fb0eea23f8/91adc/images/tidy-1.png)
+
+Grolemund, Garrett, and Hadley Wickham. n.d. R for Data Science. Accessed March 31, 2019. https://r4ds.had.co.nz/.
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Is this dataset rectangular?
+
+```{r echo=FALSE, out.width=700}
+knitr::include_graphics("img/rec_data1.png")
+```
+
+------------------------------------------------------------------------
+
+## Is this a rectangular dataset?
+
+```{r echo=FALSE, out.width=700}
+knitr::include_graphics("img/rec_data2.png")
+```
+
+------------------------------------------------------------------------
+
+## How do I find out more information about a dataset?
+
+::: nonincremental
+-   Metadata can be referred to as "data about data"
+-   Metadata provides important contextual information to help us interpret a dataset.
+-   There are two types of metadata associated with datasets:
+:::
+
+::: panel-tabset
+### Administrative
+
+::: nonincremental
+-   Administrative metadata tells us how a dataset is managed and its *provenance*, or the history of how it came to be in its current form:
+    -   Who created it?
+    -   When was it created?
+    -   When was it last updated?
+    -   Who is permitted to use it?
+:::
+
+### Descriptive
+
+::: nonincremental
+-   Descriptive metadata tells us information about the contents of a dataset:
+    -   What does each row refer to?
+    -   What does each column refer to?
+    -   What values might appear in each cell?
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Where do I find metadata for a dataset? {.smaller}
+
+-   Oftentimes metadata is recorded in a dataset codebook or data dictionary.
+-   These documents provide definitions for the observations and variables in a dataset and tell you the accepted values for each variable.
+-   Let's say that I have a dataset of student names, majors, and class years. A codebook or data dictionary might tell me that:
+    -   Each row in the dataset refers to one student.
+    -   The 'Class Year' variable refers to "the year the student is expected to graduate."
+    -   Possible values for the 'Major' variable are Political Science, SDS, and Sociology.
+
+------------------------------------------------------------------------
+
+## Types of Variables
+
+| Categorical Variables                                                             | Numeric Variables                                                               |
+|------------------------------------|------------------------------------|
+| Nominal Variables: Named or classified labels (e.g. names, zip codes, hair color) | Discrete Variables: Countable variables (e.g. number of students in this class) |
+| Ordinal Variables: Ordered labels (e.g. letter grades, pollution levels)          | Continuous Variables: Measured variables (e.g. temperature, height)             |
+
+------------------------------------------------------------------------
+
+## Exercise
+
+Coming Soon!
+
+------------------------------------------------------------------------
+
+## For Wednesday
+
+-   Complete Reading Quiz and Syllabus Quiz in Perusall

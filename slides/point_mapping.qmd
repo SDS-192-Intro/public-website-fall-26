@@ -1,0 +1,372 @@
+---
+title: "Point Mapping in `R`"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs:
+    scrollable: true
+    chalkboard:
+      theme: whiteboard
+      boardmarker-width: 5
+editor: source
+execute:
+  echo: true
+  messages: false
+  warnings: false
+---
+
+## For Today
+
+-   Projections
+-   Coordinate Reference Systems
+-   Point Mapping in Leaflet
+-   Palettes for Points
+-   Exercise
+
+------------------------------------------------------------------------
+
+## Why analyze spatial data?
+
+-   How are features distributed across geographies, and what does this tell us about potential disparities?
+-   Where are certain events or features concentrated, and what other conditions might implicate these patterns?
+-   What kinds of features are proximate, and what impact might this have?
+-   What is the best way to get from point A to point B?
+
+------------------------------------------------------------------------
+
+## Geographic Comparisons
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+library(tidyverse)
+library(leaflet)
+library(tidycensus)
+library(RColorBrewer)
+library(sf)
+census <- get_decennial(
+  geography = "tract",
+  state=25,
+  county=15,
+  variables = 'P4_002N', 
+  geometry = TRUE, 
+  year = 2020,
+  summary_var = 'P1_001N'
+) |>
+  mutate(percent_pop = value/summary_value * 100) |>
+  st_transform(4326)
+```
+
+```{r}
+#| echo: false
+pal_bin <- colorBin(palette = "YlOrRd", domain = census$percent_pop, bins = 4)
+leaflet(width = "100%") |>
+  setView(lat = 42.35, lng = -72.66, zoom = 8) |>
+  addProviderTiles("OpenStreetMap") |>
+  addPolygons(data = census, 
+              stroke = TRUE,
+              weight = 1,
+              color = "black",
+              fillColor = ~pal_bin(percent_pop), 
+              fillOpacity = 0.8) |>
+  addLegend(data = census,
+            pal = pal_bin, 
+            values = ~percent_pop,
+            title = "% Pop Hispanic or Latino"
+  )
+```
+
+------------------------------------------------------------------------
+
+## Concentrations of Features
+
+> Where are the most were Missed Collections on October 1, 2021?
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+nyc_311_missed <- read_csv("https://data.cityofnewyork.us/resource/erm2-nwe9.csv?$select=x_coordinate_state_plane,y_coordinate_state_plane&$where=complaint_type=%27Missed%20Collection%27%20AND%20date_trunc_ymd(created_date)=%272021-10-01%27&$limit=4000") |>
+  st_as_sf(coords = c("x_coordinate_state_plane", "y_coordinate_state_plane"), crs = 2263) |>
+  st_transform(crs = 4326)
+```
+
+```{r}
+#| echo: false
+
+leaflet(width = "100%") |>
+  setView(lat = 40.7, lng = -74, zoom = 10) |>
+  addProviderTiles("OpenStreetMap") |>
+  addCircleMarkers(data = nyc_311_missed, 
+              stroke = FALSE,
+              fillColor = "blue",
+              radius = 2,
+              fillOpacity = 0.5)
+
+```
+
+------------------------------------------------------------------------
+
+## Projections
+
+-   Means by which we convert curved surface of the globe to 2D rectangle
+-   Necessarily distorts the surface (e.g. area, distance)
+-   Many projections exist, serving different purposes
+
+------------------------------------------------------------------------
+
+::: columns
+::: {.column width="50%"}
+
+![](https://upload.wikimedia.org/wikipedia/commons/7/76/Cylindrical_equal-area_projection_SW.jpg)
+
+> Strebe, Cylindrical Equal Area Projection
+
+:::
+
+::: {.column width="50%"}
+
+![](https://upload.wikimedia.org/wikipedia/commons/b/b9/Sinusoidal_projection_SW.jpg)
+
+> Strebe, Sinusoidal projection
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+::: columns
+::: {.column width="50%"}
+
+![](https://upload.wikimedia.org/wikipedia/commons/f/f2/Goode_homolosine_projection_SW.jpg)
+
+> Strebe, Goode’s homolosine projection
+
+:::
+
+::: {.column width="50%"}
+
+![](https://upload.wikimedia.org/wikipedia/commons/7/73/Mercator_projection_Square.JPG)
+
+> Strebe, Mercator projection
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Orange Peel Example
+
+::: columns
+::: {.column width="60%"}
+
+-   Imagine that you peel an orange
+    -   Datum is the original shape of the fruit (e.g. orange, lemon, apple, grapefruit)
+    -   Projection is how we go about peeling and flattening the orange
+    
+:::
+
+::: {.column width="40%"}
+
+![](https://geohackweek.github.io/visualization/assets/img/orange.png)
+
+> https://geohackweek.github.io/visualization/02-projections/
+
+:::
+:::
+
+
+------------------------------------------------------------------------
+
+## Coordinate Reference System (CRS)
+
+-   Points are in different locations depending on how we flatten Earth's surface into 2D map 
+-   CRS is a system for locating features on a certain map projection via coordinates 
+-   Thousands of CRSs but some are more common than others (e.g. WGS 84 most common)
+-   For locations to appear correctly on maps, geographic features and underlying maps need to share same CRS
+
+
+------------------------------------------------------------------------
+
+## `sf` Package
+
+-   Encodes spatial data into geometry objects
+-   Locates latitudes and longitudes according to a particular CRS
+-   Enables setting and transforming CRSs
+
+::: panel-tabset
+
+### Lat/Long
+
+```{r include=FALSE}
+nyc_311_lat_long <- read_csv("https://data.cityofnewyork.us/resource/erm2-nwe9.csv?$select=longitude,latitude&$where=complaint_type=%27Missed%20Collection%27%20AND%20date_trunc_ymd(created_date)=%272021-10-01%27&$limit=400")
+```
+
+```{r}
+nyc_311_lat_long |>
+  st_as_sf(coords = c("longitude", 
+                      "latitude"), 
+           crs = 4326) |>
+  head(4)
+```
+
+### X/Y Coordinates
+
+```{r include=FALSE}
+nyc_311_xy <- read_csv("https://data.cityofnewyork.us/resource/erm2-nwe9.csv?$select=x_coordinate_state_plane,y_coordinate_state_plane&$where=complaint_type=%27Missed%20Collection%27%20AND%20date_trunc_ymd(created_date)=%272021-10-01%27&$limit=400")
+```
+
+
+```{r}
+nyc_311_xy |>
+  st_as_sf(coords = c("x_coordinate_state_plane", 
+                      "y_coordinate_state_plane"), 
+           crs = 2263) |>
+  head(4)
+```
+
+
+:::
+
+------------------------------------------------------------------------
+
+## How do I know which CRS to use?
+
+-   We hope that it's listed somewhere in data documentation. 
+-   Not always the case. 
+
+------------------------------------------------------------------------
+
+## Leaflet
+
+-   Start by calling `leaflet(width = "100%")` function, setting the original view, and adding basemap tiles
+-   Note that you need to look up the coordinates of the geography you wish to center in on.
+
+
+```{r}
+#| eval: false
+
+leaflet(width = "100%") |>
+  setView(lat = 40.7, lng = -100.0, zoom = 3) |> 
+  addProviderTiles("OpenStreetMap")
+```
+
+
+```{r}
+#| echo: false
+
+leaflet(width = "100%") |>
+  setView(lat = 40.7, lng = -100.0, zoom = 3) |> 
+  addProviderTiles("OpenStreetMap")
+```
+
+
+------------------------------------------------------------------------
+
+## Adding Markers
+
+```{r include=FALSE}
+nyc_311_xy <- nyc_311_xy |>
+  st_as_sf(coords = c("x_coordinate_state_plane", 
+                      "y_coordinate_state_plane"), 
+           crs = 2263) |>
+  st_transform(4326)
+```
+
+-   `addCircleMarkers()`
+-   `addMarkers()`
+-   `addPolygons`
+
+
+```{r}
+leaflet(width = "100%") |>
+  setView(lat = 40.7, lng = -74.0, zoom = 10) |> 
+  addProviderTiles("CartoDB.Positron") |>
+  addCircleMarkers(data = nyc_311_xy)
+```
+
+------------------------------------------------------------------------
+
+## Transforming CRS
+
+-   Why didn't points appear?
+-   Leaflet assumes that coordinates will be in `CRS:4326` (WGS84)
+-   We can use `st_transform()` to convert points to a different CRS.
+
+::: panel-tabset
+
+### Before
+
+```{r}
+nyc_311_xy |>
+  st_as_sf(coords = c("x_coordinate_state_plane", 
+                      "y_coordinate_state_plane"), 
+           crs = 2263) |>
+  head(4)
+```
+
+### After
+
+```{r}
+nyc_311_xy |>
+  st_as_sf(coords = c("x_coordinate_state_plane", 
+                      "y_coordinate_state_plane"), 
+           crs = 2263) |>
+  st_transform(crs = 4326) |>
+  head(4)
+```
+ 
+:::
+
+------------------------------------------------------------------------
+
+## Leaflet, cont.
+
+```{r}
+nyc_311_xy <- nyc_311_xy |>
+  st_transform(4326)
+
+leaflet(width = "100%") |>
+  setView(lat = 40.7, lng = -74.0, zoom = 10) |> 
+  addProviderTiles("CartoDB.Positron") |>
+  addCircleMarkers(data = nyc_311_xy)
+```
+
+------------------------------------------------------------------------
+
+## Layers
+
+> NYC Rodent and Litter Complaints on October 31, 2025
+
+```{r}
+#| include: false
+
+nyc_311_rodent <- read_csv("https://data.cityofnewyork.us/resource/erm2-nwe9.csv?$where=complaint_type=%27Rodent%27%20AND%20date_trunc_ymd(created_date)=%272025-10-31%27") |>
+  filter(!is.na(longitude)) |>
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+nyc_311_litter <- read_csv("https://data.cityofnewyork.us/resource/erm2-nwe9.csv?$where=complaint_type=%27Litter%20Basket%20Complaint%27%20AND%20date_trunc_ymd(created_date)=%272025-10-31%27") |>
+  filter(!is.na(longitude)) |>
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) 
+```
+
+```{r}
+leaflet(width = "100%") |>
+  setView(lat = 40.7, lng = -74.0, zoom = 10) |> 
+  addProviderTiles("CartoDB.Positron") |>
+  addCircleMarkers(data = nyc_311_rodent,
+                   fillColor = "red",
+                   stroke = FALSE) |>
+  addCircleMarkers(data = nyc_311_litter,
+                   fillColor = "blue",
+                   stroke = FALSE)
+```
+
+------------------------------------------------------------------------
+
+## Creating Palettes for Points
+
+-   `colorNumeric()`: Maps numbers to colors in a specified palette
+-   `colorBin()`: Maps numbers into *equally-spaced* intervals (e.g. 0-10, >10-20, etc.)
+-   `colorQuantile()`: Maps numbers into *equally-sized* intervals (same number of observations in each grouping)
+-   `colorFactor()`: Maps categories into a specified number of categorical buckets
+
+------------------------------------------------------------------------
+
+# Let's see how this works!

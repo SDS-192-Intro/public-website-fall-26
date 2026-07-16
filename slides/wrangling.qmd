@@ -1,0 +1,515 @@
+---
+title: "Data Wrangling"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs:
+    scrollable: true
+    chalkboard:
+      theme: whiteboard
+      boardmarker-width: 5
+editor: source
+execute:
+  echo: true
+  messages: false
+  warnings: false
+---
+
+## For Today
+
+> Today we are aiming to understand the data wrangling verbs *conceptually*. We will practice in three ways:
+
+-   Paper-based data wrangling
+-   Visualizing data wrangling from code
+-   Writing pseudo-code for data wrangling prompts
+
+```{r}
+#| warning: false
+#| message: false
+#| echo: false
+
+library(tidyverse)
+
+hmda_ms_2024 <- read.csv("https://ffiec.cfpb.gov/v2/data-browser-api/view/csv?states=MS&years=2024") |>
+  filter(loan_type == 1 & 
+           lien_status == 1 & 
+           conforming_loan_limit == 'C' & 
+           derived_dwelling_category %in% c("Single Family (1-4 Units):Site-Built", 
+                                            "Single Family (1-4 Units):Manufactured") & 
+           business_or_commercial_purpose == 2 &
+           loan_purpose %in% c(1, 2)) |>
+  select(lei,
+         derived_race,
+         action_taken,
+         loan_purpose,
+         loan_amount,
+         interest_rate,
+         loan_to_value_ratio,
+         denial_reason.1,
+         denial_reason.2,
+         denial_reason.3,
+         denial_reason.4,
+         loan_term,
+         debt_to_income_ratio) |>
+  mutate(loan_purpose = recode(loan_purpose, 
+                               "1" = "Home Purchase",
+                               "2" = "Home improvement",
+                               .default = NA_character_)) |>
+  mutate(action_taken = recode(action_taken, 
+                               "1" = "Loan originated", 
+                               "2" = "Application approved but not accepted",
+                               "3" = "Application denied",
+                               "4" = "Application withdrawn by applicant",
+                               "5" = "File closed for incompleteness",
+                               "6" = "Purchased loan",
+                               "7" = "Preapproval request denied",
+                               "8" = "Preapproval request approved but not accepted",
+                               .default = NA_character_)) |>
+  mutate(denial_reason.1 = recode(denial_reason.1, 
+                                  "1" = "Debt-to-income ratio",
+                                  "2" = "Employment history",
+                                  "3" = "Credit history",
+                                  "4" = "Collateral",
+                                  "5" = "Insufficient cash (downpayment, closing costs)",
+                                  "6" = "Unverifiable information",
+                                  "7" = "Credit application incomplete",
+                                  "8" = "Mortgage insurance denied",
+                                  "9" = "Other",
+                                  "10" = "Not applicable",
+                               .default = NA_character_)) |>
+  rowwise() |>
+  mutate(denial_reason = case_when(any(!is.na(c_across(c(denial_reason.2,
+                                                         denial_reason.3,
+                                                         denial_reason.4)))) ~ "Multiple",
+      TRUE ~ denial_reason.1)) |>
+  ungroup() |>
+  mutate(loan_to_value_ratio = as.numeric(loan_to_value_ratio),
+         interest_rate = as.numeric(interest_rate),
+         loan_term = as.numeric(loan_term)) |>
+  mutate(debt_to_income_ratio = case_when(debt_to_income_ratio %in% c("36", "37", "38","39","40","41") ~ "36%-41%",
+                                          debt_to_income_ratio %in% c("42","43","44","45","46","47","48","49") ~ "42%-49%",
+                                          TRUE ~ debt_to_income_ratio)) |>
+  mutate(debt_to_income_ratio = factor(debt_to_income_ratio, levels = c("Exempt",
+                                                                        "<20%",
+                                                                        "20%-<30%",
+                                                                        "30%-<36%",
+                                                                        "36%-41%",
+                                                                        "42%-49%",
+                                                                        "50%-60%",
+                                                                        ">60%"))) |>
+  select(-c(denial_reason.1, 
+            denial_reason.2, 
+            denial_reason.3, 
+            denial_reason.4))
+```
+
+------------------------------------------------------------------------
+
+# Data wrangling is a process for transforming a dataset from its original form into a more relevant form.
+
+------------------------------------------------------------------------
+
+## Six "verbs" for data wrangling
+
+* `select()`
+* `arrange()`
+* `filter()`
+* `mutate()`
+* `summarize()`
+* `group_by()`
+
+------------------------------------------------------------------------
+
+# Review: What is a data frame?
+
+------------------------------------------------------------------------
+
+## Key things to remember
+
+1. These six verbs are part of the `dplyr` package in the `tidyverse`.
+2. When we wrangle data, we start with a data frame and end with a transformed data frame.
+3. We can string together multiple data wrangling verbs with a pipe (`|>`).
+
+------------------------------------------------------------------------
+
+# Paper-based Data Wrangling
+
+------------------------------------------------------------------------
+
+## `select()`
+
+* `select()` enables us to select variables (columns) of interest.
+
+![](http://ohi-science.org/data-science-training/img/rstudio-cheatsheet-select.png)
+
+> What were Talyor Swift's album names and the years they were released?
+
+------------------------------------------------------------------------
+
+## `arrange()`
+
+* `arrange()` sorts rows according to values in a column 
+* Defaults to sorting from smallest to largest (numeric) or first character to last character (character).
+
+> What were Taylor Swift's three most recent albums?
+
+------------------------------------------------------------------------
+
+
+## `filter()`
+
+* `filter()` subsets observations (rows) according to a certain criteria that we provide.
+
+![](http://ohi-science.org/data-science-training/img/rstudio-cheatsheet-filter.png) 
+
+> For which albums with the Republic label did Taylor Swift have more than 2,500,000 in US sales?
+
+------------------------------------------------------------------------
+
+## `mutate()`
+
+* `mutate()` creates a new variable (column) in a data frame and fills values according to criteria we provide
+
+![](https://d33wubrfki0l68.cloudfront.net/baeec2f985b2ec36388ba4d18960eebe59911ff3/bce5f/images/cheatsheets/mutate.png) 
+
+> How many years has it been since the release of each of Taylor Swift's albums?
+
+------------------------------------------------------------------------
+
+## Summary functions
+
+![](https://d33wubrfki0l68.cloudfront.net/2b0d818e37178ef348ca8250a6112a2b13072e88/a810c/images/cheatsheets/summary.png)
+
+> What is the most in US sales that a Taylor Swift album has made?
+
+------------------------------------------------------------------------
+
+## `summarize()`
+
+* `summarize()` computes a value across a vector of values and stores it in a new data frame
+
+![](http://ohi-science.org/data-science-training/img/rstudio-cheatsheet-summarise.png)
+
+> What is the most in US sales that a Taylor Swift album has made?
+
+------------------------------------------------------------------------
+
+## `group_by()`
+
+* `group_by()` groups observations with a shared value in a variable
+* Grouping only changes the metadata of a data frame; we combine `group_by()` with other functions to transform the data frame
+* Values remain in groups unless we `ungroup()` it. This is important if we intend to run further operations on the resulting data.
+
+------------------------------------------------------------------------
+
+## `group_by() |> summarize()`
+
+* `group_by()` groups observations with a shared value in a variable
+* When we combine `group_by()` and `summarize()` we can perform operations *within* groups
+
+> What is the total and max in album sales for each label Taylor Swift has recorded with?
+
+------------------------------------------------------------------------
+
+## `group_by() |> filter()`
+
+* `group_by()` groups observations with a shared value in a variable
+* When we combine `group_by()` and `filter()` we can filter *within* groups
+
+> Which album had the highest sales for each label Taylor Swift has recorded with? 
+
+------------------------------------------------------------------------
+
+## `group_by() |> mutate()`
+
+* `group_by()` groups observations with a shared value in a variable
+* When we combine `group_by()` and `mutate()` we can perform operations *within* groups and add the resulting variable to the data frame
+
+> What percentage of each label's Taylor Swift sales does each Taylor Swift album represent?
+
+------------------------------------------------------------------------
+
+# Visualizing Data Wrangling from Code
+
+------------------------------------------------------------------------
+
+## What were the lending IDs, actions taken, and loan finance details for each loan application?
+
+```{r}
+#| eval: false
+hmda_ms_2024 |>
+  select(lei, action_taken, loan_amount:loan_to_value_ratio) |>
+  head() #Remember that head() shows the first six rows of data!
+```
+
+------------------------------------------------------------------------
+
+## What were the lending IDs, actions taken, and loan finance details for each loan application?
+
+```{r}
+hmda_ms_2024 |>
+  select(lei, action_taken, loan_amount:loan_to_value_ratio) |>
+  head() #Remember that head() shows the first six rows of data!
+```
+
+------------------------------------------------------------------------
+
+## What were the top six loan amounts requested?
+
+```{r}
+#| eval: false
+hmda_ms_2024 |>
+  arrange(desc(loan_amount)) |>
+  select(lei, loan_amount) |>
+  head()
+```
+
+------------------------------------------------------------------------
+
+## What were the top six loan amounts requested?
+
+```{r}
+hmda_ms_2024 |>
+  arrange(desc(loan_amount)) |>
+  select(lei, loan_amount) |>
+  head()
+```
+
+------------------------------------------------------------------------
+
+## What were the lending IDs, actions taken, loan amounts, and applicant races for each denied loan?
+
+```{r}
+#| eval: false
+hmda_ms_2024 |>
+  filter(action_taken == "Application denied") |>
+  select(lei, action_taken, loan_amount, derived_race) |>
+  head()
+```
+
+------------------------------------------------------------------------
+
+## What were the lending IDs, actions taken, loan amounts, and applicant races for each denied loan?
+
+```{r}
+hmda_ms_2024 |>
+  filter(action_taken == "Application denied") |>
+  select(lei, action_taken, loan_amount, derived_race) |>
+  head()
+```
+
+------------------------------------------------------------------------
+
+## Which loan applications were denied when the loan to value ratio was less than 50% and the debt-to-income ratio was less than 30%? What were the applicant races and denial reasons?
+
+```{r}
+#| eval: false
+hmda_ms_2024 |>
+  filter(action_taken == "Application denied" & 
+           loan_to_value_ratio < 50 &
+           debt_to_income_ratio %in% c("<20%", "20%-<30%")) |>
+  select(lei, action_taken, loan_to_value_ratio, debt_to_income_ratio, derived_race, denial_reason) |>
+  head()
+```
+
+------------------------------------------------------------------------
+
+## Which loan applications were denied when the loan to value ratio was less than 50% and the debt-to-income ratio was less than 30%? What were the applicant races and denial reasons?
+
+```{r}
+hmda_ms_2024 |>
+  filter(action_taken == "Application denied" & 
+           loan_to_value_ratio < 50 &
+           debt_to_income_ratio %in% c("<20%", "20%-<30%")) |>
+  select(lei, action_taken, loan_to_value_ratio, debt_to_income_ratio, derived_race, denial_reason) |>
+  head()
+```
+
+
+
+------------------------------------------------------------------------
+
+## What would be the monthly interest for each loan?
+
+```{r}
+#| eval: false
+hmda_ms_2024 |>
+  mutate(monthly_interest = loan_amount * 
+           ((interest_rate / 100 / 12) * (1 + (interest_rate / 100 / 12))^loan_term) / 
+           ((1 + (interest_rate / 100 / 12))^loan_term - 1)) |>
+  select(lei, loan_amount, interest_rate, loan_term, monthly_interest) |>
+  head()
+```
+
+------------------------------------------------------------------------
+
+## What would be the monthly interest for each loan?
+
+```{r}
+hmda_ms_2024 |>
+  mutate(monthly_interest = loan_amount * 
+           ((interest_rate / 100 / 12) * (1 + (interest_rate / 100 / 12))^loan_term) / 
+           ((1 + (interest_rate / 100 / 12))^loan_term - 1)) |>
+  select(lei, loan_amount, interest_rate, loan_term, monthly_interest) |>
+  head()
+```
+
+------------------------------------------------------------------------
+
+## What were the average and maximum interest rates?
+
+```{r}
+#| eval: false
+mean(hmda_ms_2024$interest_rate, na.rm = TRUE)
+median(hmda_ms_2024$interest_rate, na.rm = TRUE)
+max(hmda_ms_2024$interest_rate, na.rm = TRUE)
+
+```
+
+------------------------------------------------------------------------
+
+## What were the average and maximum interest rates?
+
+
+```{r}
+mean(hmda_ms_2024$interest_rate, na.rm = TRUE)
+median(hmda_ms_2024$interest_rate, na.rm = TRUE)
+max(hmda_ms_2024$interest_rate, na.rm = TRUE)
+
+```
+
+
+------------------------------------------------------------------------
+
+## What were the average and maximum interest rates?
+
+
+```{r}
+#| eval: false
+hmda_ms_2024 |>
+  summarize(num_applications = n(),
+            mean_interest = mean(interest_rate, na.rm = TRUE),
+            median_interest = median(interest_rate, na.rm = TRUE),
+            max_interest = max(interest_rate, na.rm = TRUE))
+
+```
+
+------------------------------------------------------------------------
+
+## What were the average and maximum interest rates?
+
+
+```{r}
+hmda_ms_2024 |>
+  summarize(num_applications = n(),
+            mean_interest = mean(interest_rate, na.rm = TRUE),
+            median_interest = median(interest_rate, na.rm = TRUE),
+            max_interest = max(interest_rate, na.rm = TRUE))
+
+```
+
+------------------------------------------------------------------------
+
+
+```{r}
+hmda_ms_2024 |>
+  group_by(loan_purpose) |>
+  select(loan_purpose, loan_amount, loan_to_value_ratio) |>
+  head()
+```
+
+------------------------------------------------------------------------
+
+## What were the median loan amounts, LRVs, and interest rates for each loan purpose?
+
+```{r}
+#| eval: false
+hmda_ms_2024 |>
+  group_by(loan_purpose) |>
+  summarize(num_apps = n(),
+            median_amnt = median(loan_amount, na.rm = TRUE),
+            median_lrv = median(loan_to_value_ratio, na.rm = TRUE),
+            median_int = median(interest_rate, na.rm = TRUE))
+```
+
+------------------------------------------------------------------------
+
+## What were the median loan amounts, LRVs, and interest rates for each loan purpose?
+
+```{r}
+hmda_ms_2024 |>
+  group_by(loan_purpose) |>
+  summarize(num_apps = n(),
+            median_amnt = median(loan_amount, na.rm = TRUE),
+            median_lrv = median(loan_to_value_ratio, na.rm = TRUE),
+            median_int = median(interest_rate, na.rm = TRUE))
+```
+
+------------------------------------------------------------------------
+
+## What was the maximum loan amount for each loan purpose?
+
+```{r}
+#| eval: false
+hmda_ms_2024 |>
+  group_by(loan_purpose) |>
+  filter(loan_amount == max(loan_amount, na.rm = TRUE)) |>
+  select(lei, loan_amount, loan_to_value_ratio)
+```
+
+------------------------------------------------------------------------
+
+## What was the maximum loan amount for each loan purpose?
+
+```{r}
+hmda_ms_2024 |>
+  group_by(loan_purpose) |>
+  filter(loan_amount == max(loan_amount, na.rm = TRUE)) |>
+  select(lei, loan_amount, loan_to_value_ratio)
+```
+
+------------------------------------------------------------------------
+
+## For originated loans, what percentage of the total lent in MS in 2024 does the loan represent for each loan purpose?
+
+```{r}
+#| eval: false
+hmda_ms_2024 |>
+  filter(action_taken == "Loan originated") |>
+  group_by(loan_purpose) |>
+  mutate(total_lent = sum(loan_amount, na.rm = TRUE),
+         percent_total_lent = loan_amount/total_lent * 100) |>
+  select(lei, loan_purpose, total_lent, percent_total_lent) |>
+  head()
+```
+
+
+------------------------------------------------------------------------
+
+## For originated loans, what percentage of the total lent in MS in 2024 does the loan represent for each loan purpose?
+
+```{r}
+hmda_ms_2024 |>
+  filter(action_taken == "Loan originated") |>
+  group_by(loan_purpose) |>
+  mutate(total_lent = sum(loan_amount, na.rm = TRUE),
+         percent_total_lent = loan_amount/total_lent * 100) |>
+  select(lei, loan_purpose, total_lent, percent_total_lent) |>
+  head()
+```
+
+------------------------------------------------------------------------
+
+# Pseudo-code for Data Wrangling Prompts
+
+------------------------------------------------------------------------
+
+## Send me a list of all of the lending IDs for the mortgage applications that were originated for borrowers with a debt-to-income ratio of greater than 60%. 
+
+------------------------------------------------------------------------
+
+## Send me the lending ID and action taken for the *home purchases* with the top 10 loan-to value ratios.
+
+------------------------------------------------------------------------
+
+## Of applicants with a debt-to-income ratio of less than 36%, what was the mean and median interest rate of originated loans for each race? 

@@ -1,0 +1,31 @@
+project:
+  type: website
+  output-dir: "docs"
+
+website:
+  navbar:
+    background: primary
+    title: "SDS 192: Introduction to Data Science"
+    right:
+      - text: "Syllabus"
+        href: index.html
+      - text: "Assignments"
+        href: assignments.html
+      - text: "Labs"
+        href: labs.html
+      - text: "Schedule"
+        href: schedule.html
+
+format:
+  html:
+    theme: flatly
+    css: "css/custom.css"
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+    highlight: tango
+    lib_dir: libs
+
+
+

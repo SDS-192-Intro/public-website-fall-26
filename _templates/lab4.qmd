@@ -1,0 +1,120 @@
+---
+title: 'Lab 4: Git and GitHub'
+format:
+  html:
+    embed-resources: true
+editor: visual
+---
+
+###### Question 1
+Navigate to [GitHub Classroom](https://classroom.github.com/a/28PT6Nnm) to accept the assignment. For this assignment, you will work with your Project 1 team members. You can find your group number at [CATME.org](catme.org).
+
+###### Question 2
+All group members should clone the repo to their RStudio environment. To do so, copy the repo's URL at GitHub.com. You will want to make sure you are in the main project folder when you copy this URL; it won't work if you've clicked through to any of the files. Then in RStudio click on File \> New Project \> Version Control \> Git, and paste the copied URL into the window that appears. Note what you see in the RStudio files pane after cloning the repo.
+
+###### Question 3
+Navigate back to GitHub.com, and click on the repo's Issues tab. Each member of your team should create an issue by clicking the 'New Issue' button. Title the issue: "Adding \<your name\> to the assignment." Submit the issue, and to the left of the screen, assign the issue to yourself.
+
+![](img/issues.png){width="700"}
+
+###### Question 4
+Click on the Code tab on your repo's page at GitHub.com. Directly below this tab, you will see a dropdown that is currently labeled "main." This means that you are in the main branch. Each member of your team should click the down arrow, and create a branch by entering their first name into the textbox that appears, and then clicking "Create branch."
+
+![](img/creating-branch.png){fig-alt="This demonstrates the UI to create a branch." width="300"}
+
+###### Question 5
+Head back to RStudio. In the Environment pane, you will notice a tab labeled "Git." It's important to note that this tab will only appear in projects that are built from super fancy `git` folders. This is your RStudio command center for Git and GitHub. When you click on this tab, you will see a few buttons in the navigation bar. To pull changes, you should click the blue downward arrow. Click this button to pull the branches created remotely to your local machine.
+
+![](img/pull-button.png){fig-alt="This highlights the pull button." width="400"}
+
+###### Question 6
+In the top right hand corner of the Git tab, you will see a dropdown currently set to "main". Click the downward arrow, and switch to your branch by selecting the appropriate branch.
+
+![](img/switch-branch.png){fig-alt="This highlights were to look to switch branches." width="400"}
+
+###### Question 7
+Once in your branch, open `github-practice.Rmd` from the files pane. Decide within your group who will be Group member 1, 2, 3, and so on. Each group member should edit this file on their own local machines by adding their name **and only their name** to the appropriate location in the document (line 5, 7, or 9) based on their assigned number. **It's very important that this be the only section of the document you edit.** Save the file by clicking File\>Save.
+
+###### Question 8
+Once you save the file you'll notice in the RStudio Git pane that the file name appears after a blue square labeled "M" (which stands for Modified). This means that the file is ready for staging. Stage the file - indicating that it's ready for committing - by clicking the checkbox in front of the file name.
+
+![](img/stage.png){fig-alt="This highlights where to look to stage changes." width="400"}
+
+###### Question 9
+Commit your changes by clicking the 'Commit' button in the Git pane. When you click this button, a new window will open showcasing the changes that have been made to the staged file. You should enter a commit message in the window that appears. Remember that commit messages should be descriptive. In this case, something like "added \<your-name\>'s name" would work. Click commit. Now a snapshot of this version of the code repo has been taken.
+
+###### Question 10
+Click the Green upward arrow in the Git pane to push your changes to GitHub.
+
+![](img/push-button.png){fig-alt="This highlights the push button in RStudio." width="400"}
+
+Once all group members have pushed their changes, head back over to GitHub. On the main code page, switch between branches and check out the contents of `github-practice.Rmd` in each branch. What differences do you notice?
+
+###### Question 11
+On your repo's page in GitHub.com, click the "Pull Requests" tab, and then click the green "New Pull Request" button. You're requesting to pull the changes from your personal branch into the main branch. This means that the *base* branch should be main, and the *compare* branch should be your personal branch.
+
+![](img/pull-request.png){fig-alt="This shows how you should select branches when creating a pull request." width="500"}
+
+You'll see a screen where you can compare your branch to the main branch. Click the button to "Create Pull Request," enter a descriptive title of the changes made, and then click "Create Pull Request" again.
+
+###### Question 12
+Open your own pull request in GitHub.com, and in the right sidebar, assign the team member responsible for reviewing your changes as a "Reviewer."
+
+![](img/reviewers.png){fig-alt="This shows where to add reviewers on the GitHub UI." width="500"}
+
+Then navigate to the pull request you are responsible for reviewing. Click on the "Files Changed" tab. Note that the left side of the screen shows the previous version of the file, and the right side of the screen shows the new version of the file. Lines in red have been deleted, and lines in green have been added.
+
+![](img/files-changed.png){fig-alt="This shows where to find the files changed tab in GitHub." width="500"}
+
+After looking through the changes, click the green button "Review changes." Leave a note for your collaborator, indicating your evaluation of their changes. If everything looks good, check the radio button for "Approve." If there are issues, check the radio button for "Request Changes." Then click the button to "Submit Review."
+
+###### Question 13
+Click the button to "Merge Pull Request". In the comment box that appears, enter the text "closes \#". When you enter this text, you will see a dropdown of issues and pull requests currently in the repo. Issues will have an icon that appears as a circle with a dot in the center.
+
+![](img/closes.png){fig-alt="This shows the window that appears when you enter \"closes #\" into the comment box." width="300"}
+
+Select the issue associated with this pull request, and then click "Confirm Merge." This will both merge the changes into the main branch and simultaneously close the issue you opened earlier. Finally, click the button to the delete the branch. Once this has been completed for all pull requests, head back over to the "Code" tab at GitHub.com, and check out github-practice.Rmd. What has happened to the file since merging the code? Navigate to the "Issues" tab. What has happened to the issues since confirming the merge?
+
+###### Question 14
+One of your partners should navigate to the GitHub.com repository. Click on the file README.md. Click the pencil icon to edit the file. Replace the text: ADD NAME 1 HERE ADD NAME 2 HERE, and so on with your names. Scroll to the bottom of the page and commit changes noting in the message that your names were added.
+
+Other partner: Return to RStudio. **Do not pull changes yet.** Open github-practice.Rmd. On line 40 change the `ncol()` function to `dim()`. Save the file. Stage and commit your changes. Click the green upward arrow to push your changes. You should get an error that looks like this.
+
+![](img/push-error.png){fig-alt="This shows the text that we see when we get a push error. It says hint: Updates were rejected because the remote contains work that you do hint: not have locally. This is usually caused by another repository pushing hint: to the same ref. You may want to first integrate the remote changes hint: (e.g., 'git pull ...') before pushing again."}
+
+Follow the steps above to resolve the error.
+
+###### Question 15
+One of your partners should navigate to the GitHub.com repository. Click on the file github-practice.Rmd. Click the pencil icon to edit the file. Replace the code on line 47 with the following: `colnames(pioneer_valley_2013).`
+
+Scroll to the bottom of the page and commit changes noting in the message how you updated the function.
+
+Other partner: Return to RStudio. **Do not pull changes yet.** Open github-practice.Rmd. Replace the code on line 47 with the following: `ncol(pioneer_valley_2013)`
+
+Save the file. Click the blue downward button to Pull changes. You should get an error that looks like this.
+
+![](img/pull-error.png){fig-alt="This shows the error message we get for a pull error. It says \"error: Your local changes to the following files would be overwritten by merge:    README.md Please commit your changes or stash them before you merge.\""}
+
+Follow the steps above to resolve the error.
+
+###### Question 16
+One of your partners should try to pull changes by clicking the blue downward arrow in RStudio. You will get an error that looks like this:
+
+![](img/merge-conflict.png){fig-alt="This is the window that we see when we get a merge conflict. It says: CONFLICT (content): Merge conflict in README.md}
+
+To fix this one your partners should open the file with the conflict. In this case it will be github-practice.Rmd. Scroll to the section of the file with the conflict. It will now look something like this:
+
+```         
+    <<<<<<< HEAD
+
+    ncol(pioneer_valley_2013)
+
+    =======
+
+    colnames(pioneer_valley_2013)
+
+    >>>>>>> ee175895783b64e0e1f696d9456be4c4c7c3f3bf
+```
+
+The code following HEAD represents the recent changes you made on your local machine, and the code right before the long string of characters represents the changes that were made in an earlier commit (the long string of characters is the commit hash). Decide what that line should look like and delete all other content. This means you *must* delete "\<\<\<\<\<\<\< HEAD", "=======", and "\>\>\>\>\>\>\> \<long-hash\>", and you likely should delete at least one other line. Save the file, stage the file by clicking the checkbox next to the file in the Git page, and then commit your changes, and push them to GitHub.com.
+

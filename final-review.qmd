@@ -1,0 +1,78 @@
+---
+title: "Final Review"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+
+### Understanding Datasets and `R` Fundamentals
+
+- Reading data documentation/data dictionary
+- Identifying a unit of observation
+- Identifying types of variables in a dataset
+- Characterizing different data objects in `R`
+- Interpreting functions and arguments in `R`
+- Identifying missing data in `R`
+
+### Visualization Aesthetics
+
+- Mapping appropriate variables onto plot aesthetics
+- Adjusting plot attributes
+- Recognizing and adjusting plot scales
+- Contextualizing a plot with titles and labels
+- Recognizing and dealing with overplotting
+- Effectively selecting color palettes for plots
+- Faceting plots into small multiples
+- Defining and recognizing a plot's graphical integrity (e.g. lie factor and data-to-ink ratio)
+
+### Plotting Freqencies
+
+- Understanding how to visualize the frequency of both categorical and numeric values
+- Recognizing how to visualize frequency for aggregate data
+- Interpreting frequencies and distributions via a plot
+- Interpreting a boxplot
+
+### GitHub
+
+- Understanding `git` vocabulary
+- Identifying the steps of a collaborative GitHub workflow, including when to branch and merge changes
+- Addressing common push/pull errors
+- Resolving merge conflicts
+
+### Data Wrangling
+
+- Understanding the 6 data wrangling verbs and when to appy them
+- Understanding how a data structure transforms when wrangling data
+- Writing pseduo-code to transform a dataset from one form to another
+
+### Joining
+
+- Identifying a join key
+- Understanding the outputs of different kinds of joins (inner vs. left vs. full)
+
+### Tidying Data
+
+- Formatting date and time in a data frame
+- Mutating a column based on a condition (i.e. `case_when()`)
+- Mutating a column to convert its type or format strings
+- Understanding how and when to pivot data longer and wider
+
+### Programming
+
+- Writing custom functions
+- Writing if-else statements 
+- Recognizing when to `pull()` values from a vector
+- Applying functions `across` a series of columns
+- Iterating functions using the family `map` functions
+
+### Mapping
+
+- Understanding the significance of map projections and coordinate reference systems
+- Understanding the features of different types of spatial datasets
+- Recognizing how and why to classify numeric data into different color bins when mapping
+- Defining and addressing "lies" on maps (e.g. symbolization, aggregation, normalization, modifiable aerial unit problem)
+
+

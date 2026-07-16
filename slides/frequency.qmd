@@ -1,0 +1,338 @@
+---
+title: "Plotting Frequencies"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs:
+    scrollable: true
+editor: source
+---
+
+## For Today
+
+-   Fill out CATME Survey
+-   Histograms
+-   Bar plots
+-   Multivariate Frequencies
+
+------------------------------------------------------------------------
+
+# Frequency plots (histograms and barplots) involve *counting* the values in a variable.
+
+------------------------------------------------------------------------
+
+## Let's create the following data frame to motivate today's lecture.
+
+```{r}
+library(tidyverse)
+counties <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/a8b64e3070ca2543b904d4d92780b09e6062ced6/website/data/nbi_counties.csv")
+route_prefixes <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/a8b64e3070ca2543b904d4d92780b09e6062ced6/website/data/nbi_route_pre.csv")
+maintenance <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/a8b64e3070ca2543b904d4d92780b09e6062ced6/website/data/nbi_maintenance.csv")
+kinds <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/a8b64e3070ca2543b904d4d92780b09e6062ced6/website/data/nbi_kind.csv")
+
+nbi_ma <- read.delim("https://www.fhwa.dot.gov/bridge/nbi/2024/delimited/MA24.txt", sep = ",") |>
+  left_join(counties) |>
+  left_join(route_prefixes) |>
+  left_join(maintenance) |>
+  left_join(kinds) |>
+  filter(SERVICE_ON_042A == 1) |>
+  select(STRUCTURE_NUMBER_008, COUNTY_CODE_003_L, ROUTE_PREFIX_005B_L, MAINTENANCE_021_L, YEAR_BUILT_027, ADT_029, STRUCTURE_KIND_043A_L, STRUCTURAL_EVAL_067, BRIDGE_IMP_COST_094) |>
+  mutate(STRUCTURE_KIND_043A_L = 
+           case_when(
+             STRUCTURE_KIND_043A_L == "Concrete continuous" ~ "Concrete",
+             STRUCTURE_KIND_043A_L == "Steel continuous" ~ "Steel",
+             STRUCTURE_KIND_043A_L == "Prestressed concrete continuous" ~ "Prestressed concrete",
+             TRUE ~ STRUCTURE_KIND_043A_L)) |>
+  mutate(BRIDGE_IMP_COST_094 = BRIDGE_IMP_COST_094 * 1000)
+
+nbi_hampshire <- nbi_ma |> filter(COUNTY_CODE_003_L == "Hampshire")
+
+rm(counties, kinds, maintenance, route_prefixes)
+```
+
+------------------------------------------------------------------------
+
+## Histogram
+
+::: columns
+::: {.column width="50%"}
+
+-   Visualizes *distribution* of a **numeric** variable
+    -   What are maximum and minimum values?
+    -   How spread out are the values?
+    -   What is the center of the values.
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+df <- data.frame(x = rnorm(100, mean = 50, sd = 20))
+ggplot(df, aes(x = x, y="")) + geom_point(size = 3, alpha = 0.5) +
+  theme(text = element_text(size = 20))
+ggplot(df, aes(x = x)) +
+  geom_histogram(color = "white", binwidth = 10)  +
+  theme(text = element_text(size = 20))
+```
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Histogram
+
+::: columns
+::: {.column width="50%"}
+
+1. Create bins for numbers, each with the same range of values [i.e. 0-10, >10-20, >20-30, and so on]
+    - Converts the linear scale to a categorical scale
+2. Count the numbers in each bin
+3. Set the height of a bar for that bin to the count 
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+df <- data.frame(x = rnorm(100, mean = 50, sd = 20))
+ggplot(df, aes(x = x, y="")) + geom_point(size = 3, alpha = 0.5) +
+  theme(text = element_text(size = 20))
+ggplot(df, aes(x = x)) +
+  geom_histogram(color = "white", binwidth = 10) +
+  theme(text = element_text(size = 20))
+```
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+# Learning Check: What's the scale of the x-axis on the previous plot? What's the scale of the y-axis?
+
+------------------------------------------------------------------------
+
+## Bar Plot
+
+::: columns
+::: {.column width="50%"}
+
+-   Visualizes *counts* of a **categorical** variable
+    -   Which value appears the most?
+    -   Which appears the least?
+    -   How evenly distributed are the counts?
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+df <- data.frame(x =c("a", "b", "c", "a", "c", "a", "a", "b", "c", "a", "b", "c"))
+df$x
+ggplot(df, aes(x = x)) +
+  geom_bar(color = "white") +
+  theme(text = element_text(size = 20))
+```
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+
+## Bar Plot
+
+::: columns
+::: {.column width="50%"}
+
+1. Determine the unique values and places them on the x-axis
+2. Count the number of times each value appears
+3. Set the height of a bar for that category to the count 
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+df <- data.frame(x =c("a", "b", "c", "a", "c", "a", "a", "b", "c", "a", "b", "c"))
+df$x
+ggplot(df, aes(x = x)) +
+  geom_bar(color = "white") +
+  theme(text = element_text(size = 20))
+```
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+# Learning Check: What's the scale of the x-axis on the previous plot? What's the scale of the y-axis?
+
+------------------------------------------------------------------------
+
+
+## Distribution in MA Bridge's Years Built
+
+
+```{r}
+ggplot(nbi_ma, aes(x = YEAR_BUILT_027)) +
+  geom_histogram()  +
+  theme(text = element_text(size = 20))
+```
+
+
+------------------------------------------------------------------------
+
+
+## Bidwidth vs. Bins
+
+::: columns
+::: {.column width="50%"}
+
+-   Binwidth indicates the width of the buckets we'd like to categorize our data into.
+-   Bins indicates the number of bins to create. 
+-   We choose one or the other when creating histograms. 
+
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+ggplot(nbi_ma, 
+       aes(x = YEAR_BUILT_027)) +
+  geom_histogram(binwidth = 10, 
+                 color = "white")
+```
+
+:::
+:::
+
+
+------------------------------------------------------------------------
+
+
+## How would we describe this plot?
+
+```{r}
+ggplot(nbi_ma, aes(x = YEAR_BUILT_027)) +
+  geom_histogram(binwidth = 10, color = "white") +
+  labs(title = "Distribution in the Years MA Bridges were Built, 2021", 
+       x = "Year Built",
+       y = "Number of Bridges")
+```
+
+
+
+------------------------------------------------------------------------
+
+## Faceting a Histogram
+
+
+```{r}
+ggplot(nbi_ma, aes(x = YEAR_BUILT_027)) +
+  geom_histogram(binwidth = 10, color = "white") +
+  labs(title = "Distribution in the Years MA Bridges were Built, 2021", 
+       x = "Year Built",
+       y = "Number of Bridges") +
+  facet_wrap(vars(ROUTE_PREFIX_005B_L))
+```
+
+
+------------------------------------------------------------------------
+
+## Frequency of Structure Kinds
+
+```{r}
+ggplot(nbi_ma, aes(x = STRUCTURE_KIND_043A_L)) +
+  geom_bar()
+```
+
+
+------------------------------------------------------------------------
+
+## Labels for this Plot
+
+
+```{r}
+ggplot(nbi_ma, aes(x = STRUCTURE_KIND_043A_L)) +
+  geom_bar() +
+  coord_flip() +
+  labs(title = "Frequency of Different Kinds of MA Bridge Structures, 2021", 
+       x = "Structure Kind",
+       y = "Number of Bridges")
+```
+
+
+------------------------------------------------------------------------
+
+## Stacked Bar Plot
+
+```{r}
+ggplot(nbi_ma, aes(x = STRUCTURE_KIND_043A_L, fill = ROUTE_PREFIX_005B_L)) +
+  geom_bar() +
+  coord_flip() +
+  labs(title = "Frequency of Different Kinds of MA Bridge Structures, 2021", 
+       x = "Structure Kind",
+       y = "Number of Bridges",
+       fill = "Route Prefix") +
+  scale_fill_brewer(palette = 'Set3')
+```
+
+
+
+
+
+------------------------------------------------------------------------
+
+## Learning Check: Why not this?
+
+```{r}
+#| echo: false
+ggplot(nbi_ma, aes(x = STRUCTURE_KIND_043A_L, fill = ROUTE_PREFIX_005B_L)) +
+  geom_bar() +
+  coord_flip() +
+  labs(title = "Frequency of Different Kinds of MA Bridge Structures, 2021", 
+       x = "Structure Kind",
+       y = "Number of Bridges",
+       fill = "Route Prefix") +
+  scale_fill_brewer(palette = 'Blues')
+```
+
+
+------------------------------------------------------------------------
+
+## Dodging 
+
+
+```{r}
+ggplot(nbi_ma, aes(x = STRUCTURE_KIND_043A_L, fill = ROUTE_PREFIX_005B_L)) +
+  geom_bar(position = "dodge") +
+  coord_flip() +
+  labs(title = "Frequency of Different Kinds of MA Bridge Structures, 2021", 
+       x = "Structure Kind",
+       y = "Number of Bridges",
+       fill = "Route Prefix") +
+  scale_fill_brewer(palette = 'Set3')
+```
+
+
+
+------------------------------------------------------------------------
+
+## Converting to Percentages
+
+```{r}
+
+ggplot(nbi_ma, aes(x = STRUCTURE_KIND_043A_L, fill = ROUTE_PREFIX_005B_L)) +
+  geom_bar(position = "fill") +
+  coord_flip() +
+  labs(title = "Frequency of Different Kinds of MA Bridge Structures, 2021", 
+       x = "Structure Kind",
+       y = "Number of Bridges",
+       fill = "Route Prefix") +
+  scale_fill_brewer(palette = 'Set3')
+```

@@ -1,0 +1,217 @@
+---
+title: "Advanced Data Wrangling"
+editor: source
+---
+
+```{r}
+#| warning: false
+#| message: false
+#| echo: false
+#| document: show
+
+library(tidyverse)
+
+sqf_url <- "https://www1.nyc.gov/assets/nypd/downloads/zip/analysis_and_planning/stop-question-frisk/sqf-2011-csv.zip"
+temp <- tempfile()
+download.file(sqf_url, temp)
+sqf_zip <- unzip(temp, "2011.csv")
+sqf_2011 <- read.csv(sqf_zip, stringsAsFactors = FALSE) 
+sqf_2011_race_cat <- read.csv("https://raw.githubusercontent.com/lindsaypoirier/STS-101/master/Data/SQF/sqf_race_categories.csv", stringsAsFactors = FALSE) 
+rm(sqf_url)
+rm(temp)
+rm(sqf_zip)
+```
+
+###### Question
+
+::: question
+Select all columns relating the crime suspected.
+:::
+
+```{r}
+#Code here
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+sqf_2011 |>
+  select(starts_with("cs")) |> 
+  head(5)
+```
+
+###### Question
+
+::: question
+Select all of the first 5 columns, except the 4th column. 
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+
+sqf_2011 |>
+  select(1:5, -4) |> 
+  head(5)
+```
+
+###### Question
+
+::: question
+Send me the distinct values in the crime suspected column.
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+
+sqf_2011 |>
+  select(crimsusp) |>
+  distinct() |> 
+  head(5)
+```
+
+###### Question
+
+::: question
+In which rows where a suspect was frisked and searched was either contraband or a pistol found on the suspect? Add a line of code below to determine this. 
+:::
+
+```{r}
+sqf_2011 |>
+  select(frisked, searched, contrabn, pistol) |> 
+  head(5)
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+
+sqf_2011 |>
+  filter(frisked == "Y" & searched == "Y" & (contrabn == "Y" | pistol == "Y")) |>
+  select(frisked, searched, contrabn, pistol) |> 
+  head(5)
+```
+
+###### Question
+
+::: question
+Send me all of the rows where the crime suspected contains "FEL."
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+
+sqf_2011 |>
+  filter(str_detect(crimsusp, "FEL")) |>
+  select(pct, ser_num, crimsusp) |> 
+  head(5)
+```
+
+###### Question
+
+::: question
+The NYPD uses the number 999 to indicate a missing age. In the code below, add a line to convert 999 to NA, using `mutate()`. 
+:::
+
+```{r}
+# Code Here
+
+sqf_2011 |>
+  filter(age > 100) |>
+  ggplot(aes(x = age)) +
+  geom_histogram(binwidth = 100)
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+
+sqf_2011 |>
+  mutate(age = na_if(age, 999)) |>
+  filter(age > 100) |>
+  ggplot(aes(x = age)) +
+  geom_histogram(binwidth = 100)
+```
+
+###### Question
+
+::: question
+Add a line to the code below to create a new column called `innocent` that is set to "Y" if both `arstmade` and `sumissue` are "N", and otherwise set to "N".
+:::
+
+```{r}
+#sqf_2011 |>
+  #select(pct, ser_num, arstmade, sumissue) #|>
+  #summarize(num_innocent = sum(innocent == "Y"))
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+
+sqf_2011 |>
+  mutate(innocent = case_when(arstmade == "Y" & sumissue == "Y" ~ "N", 
+                              TRUE ~ "Y")) |>
+  select(pct, ser_num, arstmade, sumissue, innocent) |>
+  summarize(num_innocent = sum(innocent == "Y"))
+  
+```
+
+###### Question
+
+::: question
+In the following code, the percent total stops is calculated out the total stops for each city. How can I adjust the code if I wanted to calculate percent total stops out of the total stops in the entire dataset.
+:::
+
+```{r}
+sqf_2011 |>
+  group_by(city, race) |>
+  summarize(count = n()) |>
+  mutate(total_stops = sum(count)) |>
+  mutate(percent_total_stops = count/total_stops)
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+
+sqf_2011 |>
+  group_by(city, race) |>
+  summarize(count = n()) |>
+  ungroup() |>
+  mutate(total_stops = sum(count)) |>
+  mutate(percent_total_stops = count/total_stops)
+```
+
+###### Question
+
+::: question
+In which precinct were individuals of each race stopped the most?
+:::
+
+```{r}
+# Code Here
+```
+

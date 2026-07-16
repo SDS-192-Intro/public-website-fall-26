@@ -1,0 +1,75 @@
+---
+title: "R Fundamentals"
+editor: source
+---
+
+Today, we are going to practice some of the basic `R` skills we learned in lecture. To get started, run the code below to load the `nyc_urban_ranger` data frame into your environment. This is the same dataset we learned about in Monday's activity. Don't worry about how this code works for now, but note that I've included code to convert all of the missing values to `NA` values. 
+
+```{r}
+#| message: false
+#| warning: false
+#| document: show
+
+library(tidyverse)
+nyc_urban_ranger <- 
+  read_csv("https://data.cityofnewyork.us/api/views/fuhs-xmg2/rows.csv",
+           name_repair = make.names) |>
+  mutate_if(is.character, na_if, c("")) |>
+  mutate_if(is.character, na_if, c("N/A"))
+```
+
+###### Question
+
+::: question
+
+1. Apply a function below to determine the number of rows in the data frame.
+
+:::
+
+```{r}
+# Write code here
+```
+
+###### Question
+
+::: question
+2. Apply a function below to determine the data frame's column names.
+:::
+
+```{r}
+# Write code here
+```
+
+###### Question
+
+::: question
+
+3. Apply a function below to determine the unique values in the `Species.Status` column.
+:::
+
+```{r}
+# Write code here
+```
+
+###### Question
+
+::: question
+4. Apply a function below to determine the sum of the `X..of.Animals` column. Be sure to account for `NA` values. What does this represent?
+:::
+
+```{r}
+# Write code here
+```
+
+###### Question
+
+::: question
+5. Apply a function below to determine the number of missing values in the `Animal Condition` column.
+
+:::
+
+```{r}
+# Write code here
+```
+
+

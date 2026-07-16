@@ -1,0 +1,219 @@
+---
+title: "`ggplot()`"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs:
+    scrollable: true
+    chalkboard:
+      theme: whiteboard
+      boardmarker-width: 5
+editor: source
+execute:
+  echo: true
+  messages: false
+  warnings: false
+---
+
+
+## For Today
+
+-   Visualizations Exercise
+-   Introduction to `ggplot()`
+-   Class Activity
+
+------------------------------------------------------------------------
+
+
+## Let's create the following data frame to motivate today's lecture. 
+
+> This dataset comes from [Pioneer Valley Data](https://pioneervalleydata.org/data-download-page/) and documents estimates of population characteristics for each municipality in the Pioneer Valley. 
+
+```{r}
+library(tidyverse)
+pioneer_valley_census_data <- read_csv("https://raw.githubusercontent.com/SDS-192-Intro/public-website-fall-25/refs/heads/main/data/pioneer_valley_census_2022.csv")
+
+pioneer_valley_census_data_dictionary <- pioneer_valley_census_data |> 
+  select(VAR_CAT, VAR, VAR_NAME) |>
+  distinct()
+
+pioneer_valley_census_data <- pioneer_valley_census_data |>
+  select(-VAR_CAT, -VAR) |>
+  pivot_wider(names_from = VAR_NAME,
+              values_from = VALUE) |>
+  filter(LEVEL_CD_NAME != "Region")
+  
+hampshire_census_data <- pioneer_valley_census_data %>% 
+  filter(COUNTY == "Hampshire")
+```
+
+------------------------------------------------------------------------
+
+## `ggplot`
+
+-   Most plots we create in this course will rely on package called `ggplot2`
+-   `ggplot2` is included in the Tidyverse, which you installed in SDS 100
+-   Load `ggplot2` in your environment. 
+
+```{r}
+library(ggplot2)
+```
+
+------------------------------------------------------------------------
+
+## Anatomy of the `ggplot()` function
+
+-   `ggplot()` takes two arguments:
+    -   data: the dataset used to produce the plot (in a data frame)
+    -   mapping: the variables from the dataset we want mapped onto visual cues
+        -   mappings are defined in a function called `aes()` (short for aesthetics)
+        -   in Cartesian plots, we must supply the variables/columns that will appear on the axes (via `x = ` and `y = `)
+
+------------------------------------------------------------------------
+
+## Anatomy of the `ggplot()` function
+
+```{r, fig.height=5, fig.retina=2, fig.width=10}
+ggplot(data = hampshire_census_data, 
+       aes(x = COMMUNITY, 
+           y = 	CEN_CHILD_POV))
+```
+
+------------------------------------------------------------------------
+
+# Learning check: What's the scale of the x-axis in the plot you just created? What's the scale of the y-axis?
+
+------------------------------------------------------------------------
+
+## Where's the data?
+
+-   In previous plot, we told `R` *what* variables to plot, but we didn't indicate *how* to plot them.
+-   To do this, we need to add a *geom function* to our `ggplot` call. Examples:
+    -   Bar plots: `geom_bar()`
+    -   Scatterplots: `geom_point()`
+-   Appended to function call with a `+` sign
+
+------------------------------------------------------------------------
+
+## Adding a geom function
+
+```{r, fig.height=5, fig.retina=2, fig.width=10}
+ggplot(data = hampshire_census_data, 
+       aes(x = COMMUNITY, 
+           y = 	CEN_CHILD_POV)) +
+  geom_col()
+```
+
+------------------------------------------------------------------------
+
+# Learning check: What variables are mapped on to what visual cues in this plot?
+
+------------------------------------------------------------------------
+
+## Styling Plots: Flipping Coordinates
+
+```{r, fig.height=5, fig.retina=2, fig.width=10}
+ggplot(data = hampshire_census_data, 
+       aes(x = COMMUNITY, 
+           y = CEN_CHILD_POV)) +
+  geom_col() +
+  coord_flip() # Flipping the x and y coordinates here makes the labels more legible.
+```
+
+------------------------------------------------------------------------
+
+# Learning check: How's the data-to-ink ratio on this plot?
+
+------------------------------------------------------------------------
+
+## Styling Plots: Changing the Theme
+
+```{r, fig.height=5, fig.retina=2, fig.width=10}
+ggplot(data = hampshire_census_data, 
+       aes(x = COMMUNITY, 
+           y = 	CEN_CHILD_POV)) +
+  geom_col() +
+  coord_flip() + # Flipping the x and y coordinates here makes the labels more legible. 
+  theme_minimal()
+```
+
+------------------------------------------------------------------------
+
+# Learning check: What context needs to be added to this plot?
+
+------------------------------------------------------------------------
+
+## Styling Plots: Adding Labels
+
+```{r, fig.height=5, fig.retina=2, fig.width=10}
+ggplot(data = hampshire_census_data, 
+       aes(x = COMMUNITY, 
+           y = CEN_CHILD_POV)) +
+  geom_col() +
+  coord_flip() + # Flipping the x and y coordinates here makes the labels more legible. 
+  theme_minimal() +
+  labs(title = "Hampshire County Child Poverty, 2022", 
+       x = "Municipality in Hampshire County, MA", 
+       y = "Child Poverty Rate")
+```
+
+------------------------------------------------------------------------
+
+## Styling Plots: Adjusting the Scale
+
+```{r, fig.height=5, fig.retina=2, fig.width=10}
+# Adjust the Scale
+ggplot(data = pioneer_valley_census_data, 
+       aes(x = COUNTY,y = CEN_SINGPARHOU)) +
+  geom_point() +
+  coord_flip() +
+  scale_y_log10() +
+  labs(title = "Single Parent Households in Pioneer Valley, MA Municipalities, 2018", x = "County", y = "Number of Households")
+```
+
+------------------------------------------------------------------------
+
+## Aeshetics vs. Attributes
+
+-   We can adjust the way the data appears on plots in two ways:
+    -   According to a variable: 
+        -   This must be done inside of the `aes()` function
+    -   In a fixed way:
+        -   This must be done outside of the `aes()` function
+
+------------------------------------------------------------------------
+
+## Adjusting Data on Plots via Aeshetics
+
+> We add visual cues to the plot in the `aes()` call
+
+```{r, fig.height=5, fig.retina=2, fig.width=10}
+# Add visual cue for size
+
+ggplot(data = pioneer_valley_census_data, 
+       aes(x = COUNTY,y = CEN_SINGPARHOU, size = CEN_HOUSEHOLDS)) +
+  geom_point() +
+  coord_flip() +
+  scale_y_log10() +
+  labs(title = "Single Parent Households in Pioneer Valley, MA Municipalities, 2018", x = "County", y = "Number of Single Parent Households", size = "Total Households")
+```
+
+------------------------------------------------------------------------
+
+## Adjusting Data on Plots via Attributes
+
+```{r, fig.height=5, fig.retina=2, fig.width=10}
+# Add visual cue for size and attribute for transparency
+ggplot(data = pioneer_valley_census_data, 
+       aes(x = COUNTY,y = CEN_SINGPARHOU, size = CEN_HOUSEHOLDS)) +
+  geom_point(alpha = 0.5) +
+  coord_flip() +
+  scale_y_log10() +
+  labs(title = "Single Parent Households in Pioneer Valley, MA Municipalities, 2018", x = "County", y = "Number of Single Parent Households", size = "Total Households")
+```
+
+------------------------------------------------------------------------
+
+## Do I really have to memorize all of these stylistic functions?!
+
+No. There are cheatsheets. The `ggplot2()` cheatsheet is linked [here](https://www.maths.usyd.edu.au/u/UG/SM/STAT3022/r/current/Misc/data-visualization-2.1.pdf).

@@ -1,0 +1,47 @@
+---
+title: "Assignments"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Syllabus Quiz (3%)
+
+Our course syllabus is a contract that identifies expectations that I have of you, expectations you can have of me, and how we can effectively use resources to create an impactful learning environment. It serves you to know the syllabus inside and out; knowing the syllabus means that you are aware of resources available to you if you are struggling and that you won't be surprised by course policies that may negatively impact your grade. It also serves the whole class to have everyone know the course syllabus; knowing the syllabus sets standards for how we will learn as a community, and it also reduces the class time spent answering questions that have already been documented. 
+
+After reading the syllabus, you should complete the 20 question syllabus quiz in Perusall. This syllabus quiz is graded on **correctness**. Please note that **this is an open note quiz, and you may work with other students on this quiz.** 
+
+## Reading Quizzes (5%)
+
+I've selected 10 readings that correspond to 10 different units we will engage in class. Reading ahead of class will help introduce you to the language you will see in class. Lectures and class activities will reinforce the concepts that you learn in the reading. All readings will be posted in Perusall with a very short reading quiz. Reading quizzes are graded based on **completion**, not on **correctness**. They are designed to let me know ahead of time which concepts students understand from the reading and which concepts they are struggling with. They also help you understand which concepts you may want to study/practice further. 
+
+## Course Infrastructure Set-up (2%)
+
+In this course, you will submit most assignments via GitHub. The course infrastructure set-up will help you configure RStudio to easily push assignments to GitHub. This assignment is graded on **completion**. 
+
+## Labs (30%)
+
+There are ten units in this course, and ten labs associated with each unit. Labs in this course introduce a data science skill by walking you through exploratory analysis of a dataset documenting a socially-relevant issue (such as racial profiling in policing, affordable housing, and pollution). Labs will be started in class on Fridays and completed for homework by the following Wednesday. If you finish a lab early, you are encouraged to help your classmates. Labs will be graded on both **completion** and **correctness**. You will earn some credit for every exercise that you attempt, but points may be deducted for incorrect responses/code. Note that, at the end of each lab, there will be a prompt asking you to consider some of the ethical considerations of the data analysis you just completed. **You must respond to this prompt in Slack to earn full credit on the lab.**
+
+## Projects (30%)
+
+There will be three group projects assigned over the course of the semester. 
+
+- [Project 1](https://github.com/SDS-192-Intro/MP1)
+- [Project 2](https://github.com/SDS-192-Intro/MP2)
+- [Project 3](https://github.com/SDS-192-Intro/MP3)
+
+## Mid-Term Exam (15%)
+
+There will be one closed book mid-term exam. You will be permitted to bring any of the course-approved `R` cheatsheets with you to the exam, but use of laptops and cell phones are not permitted. The mid-term exam will be graded on **correctness**. 
+
+Note that after you receive your grade, you may choose up to two questions on the mid-term exam to have re-assessed in an in-person technical interview with me. In an in-person technical interview, I will ask you questions related to the exam questions you would like re-assessed, and you will have an opportunity to demonstrate your understanding of the concepts. Please note that an in-person technical interview must be scheduled *before Thanksgiving Break*.
+
+[Mid-term Review](midterm-review.html)
+
+## Final Exam (15%)
+
+The final exam will be a cumulative exam that assesses your understanding of concepts covered throughout the course. It will be closed book and self-scheduled. You will be permitted to bring any of the course-approved `R` cheatsheets with you to the exam, but use of laptops and cell phones are not permitted. The final exam will be graded on **correctness**.
+
+[Final Review](final-review.html)

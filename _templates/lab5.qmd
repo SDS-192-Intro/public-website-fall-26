@@ -1,0 +1,165 @@
+---
+title: 'Lab 5: Exploratory Data Analysis'
+format:
+  html:
+    embed-resources: true
+editor: source
+knitr:
+  opts_chunk:
+    message: false
+---
+
+```{r unnamed-chunk-1}
+#| warning: false
+#| messages: false
+#| document: show
+library(tidyverse)
+
+sqf_url <- "https://www1.nyc.gov/assets/nypd/downloads/zip/analysis_and_planning/stop-question-frisk/sqf-2011-csv.zip"
+temp <- tempfile()
+download.file(sqf_url, temp)
+sqf_zip <- unzip(temp, "2011.csv")
+sqf_2011 <- read.csv(sqf_zip, stringsAsFactors = FALSE) 
+sqf_2011_race_cat <- read.csv("https://raw.githubusercontent.com/lindsaypoirier/STS-101/master/Data/SQF/sqf_race_categories.csv", stringsAsFactors = FALSE) 
+rm(sqf_url)
+rm(temp)
+rm(sqf_zip)
+```
+```{r unnamed-chunk-2}
+#| warning: false
+#| messages: false
+#| document: show
+sqf_2011 <- 
+  sqf_2011 |> 
+  select(pct, race, age, frisked, pistol, riflshot, asltweap, knifcuti, machgun, othrweap, sumissue, arstmade) |>
+  left_join(sqf_2011_race_cat, by = "race") |>
+  mutate(across(frisked:arstmade, 
+         ~ case_when(. == "Y" ~ 1, . == "N" ~ 0)))
+rm(sqf_2011_race_cat)
+```
+###### Question 1
+
+Add two new columns. The first should indicate whether a weapon was found, and the second should indicate whether an arrest/summons was made.
+
+
+```{r unnamed-chunk-3}
+#| eval: false
+sqf_2011 <- 
+  sqf_2011 |>
+  #Add a variable for weapon found
+  _____(wpnfound = case_when(pistol == 1 |
+                               riflshot == 1 | 
+                               asltweap == 1 |
+                               knifcuti == 1 | 
+                               machgun == 1 | 
+                               othrweap == 1 ~ 1,
+                             TRUE ~ 0))
+sqf_2011 <- 
+  sqf_2011 |>
+  #Add a variable for arrest made or summons issued
+  _____(arrestsumm = case_when(sumissue == 1 | 
+                                arstmade == 1 ~ 1,
+                               TRUE ~ 0))
+```
+###### Question 2
+
+Subset the dataset to the six variables listed in the data dictionary above.
+
+
+```{r unnamed-chunk-6}
+#| eval: false
+sqf_2011 <-
+  #Subset the data here
+```
+###### Question 3
+Calculate the number of stops in 2011. If you are not sure which function to use below, you may want to refer to the list of Summary functions in the the Data Wrangling cheatsheet. Remember that each row in the data frame is a stop. Note that we will use `pull()` at the end of this code to pull the value out of the data frame. 
+
+```{r unnamed-chunk-8}
+#| eval: false
+total_stops <-
+  # Calculate total stops
+  pull()
+
+total_stops
+```
+###### Question 4
+How many stops did not result in an arrest or summons in 2011? What percentage of stops did not result in an arrest or summons?
+
+```{r unnamed-chunk-10}
+#| eval: false
+sqf_2011 |>
+  #Subset to rows where suspect innocent
+  #Calculate number of observations
+```
+###### Question 5
+
+In how many stops were the individuals aged 14-24? In what percentage of stops were the individuals aged 14-24?
+
+```{r unnamed-chunk-12}
+#| eval: false
+sqf_2011 |>
+  #Subset to rows where suspect age 14-24
+  #Calculate number of observations and percentage of observations
+```
+###### Question 6
+
+Fix the code below to calculate the correct number of stops for individuals 14-24. 
+
+
+```{r unnamed-chunk-14}
+#| eval: false
+total_stops_age_recorded <-
+  sqf_2011 |>
+  #Subset to rows where age is not 999
+  #Calculate total number of stops
+  pull()
+
+sqf_2011 |>
+  filter(age >= 14 & age <= 24) |>
+  summarize(total_14_24 = n(), 
+            percent_14_24 = n() / total_stops_age_recorded * 100)
+```
+###### Question 7
+
+How many stops were there per race in 2011? What percentage of stops per race in 2011? Arrange by number of stops in descending order.
+
+```{r unnamed-chunk-16}
+#| eval: false
+total_stops_race_recorded <-
+  sqf_2011 |>
+  #Subset to rows where race_cat is not NA or "OTHER"
+  #Calculate the total number of stops
+  pull()
+
+sqf_2011 |>
+  #Subset to rows where race_cat is not NA or "OTHER"
+  #Calculate number of stops per race and percent of stops per race
+  #Sort by stops in descending order
+```
+###### Question 8
+
+In how many stops were the individuals identified as Latinx (i.e. "WHITE-HISPANIC" or "BLACK-HISPANIC")? In what percentage of stops were the individuals identified as Latinx?
+
+```{r unnamed-chunk-18}
+#| eval: false
+sqf_2011 |>
+  #Subset to rows where race_cat is "WHITE-HISPANIC" or "BLACK-HISPANIC"
+  #Calculate number of stops and percentage of stops
+```
+###### Question 9
+
+What percentage of stops in 2011 resulted in a frisk per race? What percentage of stops in 2011 resulted in a weapon found per race? What percentage of stops in 2011 resulted in an arrest or summons per race? In your resulting data table, each row should be a race, and there should be columns for `stops`, `percent_stops`, `percent_frisked`, `percent_wpnfound` , and `percent_arrestsumm`.
+
+```{r unnamed-chunk-20}
+#| eval: false
+# Write code here. 
+```
+###### Question 10
+
+Below, in 2-3 sentences, summarize what you learn from reviewing the summary statistics from the code above. What does this tell us about the constitutionality of 2011 stop and frisk activity in NYC?
+
+
+```{r unnamed-chunk-22}
+#| document: show
+#If you finish early, I encourage you to attempt to plot some of this data below using `ggplot()`!
+```

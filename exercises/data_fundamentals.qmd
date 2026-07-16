@@ -1,0 +1,51 @@
+---
+title: "Data Fundamentals"
+editor: visual
+---
+
+Today, we are going to work with a dataset that documents cases where NYC Urban Park Rangers respond to requests for animal assistance, relocation, and/or rescue. If you are unfamiliar with what an Urban Park Ranger does, you may want to check out this video!
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/PRn0v8rNyPI?start=48" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+
+</iframe>
+
+1.  Navigate to the [NYC Urban Park Ranger Animal Condition Response](https://data.cityofnewyork.us/Environment/Urban-Park-Ranger-Animal-Condition-Response/fuhs-xmg2) dataset.
+
+2.  Note the information listed in the "About this Dataset" section. This is administrative metadata.
+
+3.  Note the attachment in this section with the file name: `UrbanParkRangerAnimalConditionResponse_DataDictionary_20181107.xlsx`. This contains descriptive metadata for this dataset.
+
+4.  Click the Data tab at the top of the page. This previews this data as a rectangular dataset.
+
+5.  Answer the following questions by discussing in your groups:
+
+-   What is the unit of observation in this dataset? In other words, what does each row signify? How do you know?
+-   How frequently is this dataset updated? How do you know?
+-   What are the possible values for the Species Status variable in this dataset? How do you know?
+-   What is the value at index \[4,4\] in this dataset? How do you know?
+-   Identify the index of one missing value in this dataset.
+-   Identify one nominal variable, one ordinal variable, one discrete variable, and one continuous variable.
+
+6.  As a preview of what you will be able to do in a few weeks, here is a visualization of the most commons species for which services are requested in NYC!
+
+```{r}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+nyc_urban_ranger <- 
+  read_csv("https://data.cityofnewyork.us/api/views/fuhs-xmg2/rows.csv",
+           name_repair = make.names)
+
+nyc_urban_ranger %>%
+  group_by(Species.Description) %>%
+  summarize(Count = sum(X..of.Animals)) %>%
+  top_n(10, Count) %>%
+  ggplot(aes(x = reorder(Species.Description, Count), y = Count)) +
+  geom_col() +
+  coord_flip() +
+  labs(title="Top 10 Most Common Species for which NYC Urban Park Rangers Assistance is Requested, 2018-2024", x = "Species", y = "Count") +
+  theme_minimal() +
+  theme(plot.title = element_text(size=8))
+
+```

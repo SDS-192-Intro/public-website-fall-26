@@ -1,0 +1,163 @@
+---
+title: "Introductions"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs:
+    scrollable: true
+editor: source
+---
+
+## What is data science?: Common view
+
+::: columns
+::: {.column width="60%"}
+-   interdisciplinary field combining computer science, mathematics/statistics, and domain expertise to extract meaningful information from unstructured data points
+:::
+
+::: {.column width="40%"}
+![](https://upload.wikimedia.org/wikipedia/commons/b/b4/Data_science.png){width="400"} Hckum, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons
+:::
+:::
+
+------------------------------------------------------------------------
+
+## What is data science?: My view
+
+::: columns
+::: {.column width="60%"}
+-   interdisciplinary field combining computer science, mathematics/statistics, and domain expertise to extract meaningful information from unstructured data points
+-   also involves art, design, hermeneutics, communication, and ability to grapple with ethical dilemmas
+:::
+
+::: {.column width="40%"}
+![](https://upload.wikimedia.org/wikipedia/commons/b/b4/Data_science.png) Hckum, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons
+:::
+:::
+
+------------------------------------------------------------------------
+
+### Case Study 1: ACLU Fights Discriminatory Housing
+
+::: columns
+::: column
+-   American Civil Liberties Union employs [data scientists](https://medium.com/aclu-tech-analytics/meet-the-aclu-analytics-team-4644d4f20dae) to produce insights regarding discriminatory laws and practices
+-   Findings are presented in courts, legislatures, and public reports
+-   In [this study](https://www.aclu.org/news/racial-justice/clearing-the-record-how-eviction-sealing-laws-can-advance-housing-access-for-women-of-color), they use public data to show that eviction screening policies can deny fair housing to Black renters, and particularly Black women.
+:::
+
+::: column
+![](https://www.aclu.org/sites/default/files/maps-desktop2.png)
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Case Study 2: Cal EPA Tracks Environmental Injustice
+
+::: columns
+::: column
+-   The California Environmental Protection Agency hires [data scientists](https://oehha.ca.gov/public-information/career-opportunities) to produce insights regarding environmental health risks
+-   Findings implicate environmental policies, funding allocations, and legal actions against states and industries
+-   [This tool](https://storymaps.arcgis.com/stories/413d2b6be94c42ce85ada08499623a2a/), visualizes environmental and demographic indicators to highlight communities experiencing environmental injustices in California.
+:::
+
+::: column
+![](https://oehha.ca.gov/sites/default/files/media/styles/width_-_340px/public/files/images/misc/ces4dashboardhome2.png?itok=v01WmfVS)
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Case Study 3: Geena Davis Institute Studies Gender Biases in Films
+
+::: columns
+::: {.column width="70%"}
+-   Geena Davis Institute collaborated with University of Southern California's Signal Analysis and Interpretation Laboratory (SAIL)
+-   Developed a machine learning tool to measure representation of diverse groups in films by studying screen time and speaking
+:::
+
+::: {.column width="30%"}
+![](https://geenadavisinstitute.org/wp-content/uploads/2025/05/API-Report-Cover.jpg)
+> [Link to *Rewriting the Script: A New Era for API Voices in Hollywood*](https://geenadavisinstitute.org/research/rewriting-the-script-a-new-era-for-api-voices-in-hollywood/)
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Topics covered in this course
+
+
+-   data visualization
+-   data wrangling
+-   programming with data
+-   mapping
+-   data retrieval
+-   data science infrastructures and workflows
+-   data science ethics
+
+
+------------------------------------------------------------------------
+
+## Who is the professor? Why is an anthropologist teaching data science?
+
+-   Please call me Lindsay (preferred), Professor Poirier, or Dr. Poirier
+-   Assistant Professor of SDS and cultural anthropologist
+-   Previously Assistant Professor of Science and Technology Studies at UC Davis
+-   Lab Manager at [BetaNYC](https://beta.nyc/)
+-   M.S./Ph.D. in Science and Technology Studies from Rensselaer Polytechnic Institute
+-   B.S. in Information Technology and Web Science from Rensselaer Polytechnic Institute
+-   Dancing, crafting, cooking, reading, learning French
+-   I have a *very* spunky dog Madison.
+
+------------------------------------------------------------------------
+
+## Exercise
+
+Demonstration: Find the class year for which students on average drink the most cups of coffee per day. Repeat for the remaining class years. Arrange class years by order of most average cups of coffee per day. Plot the results. How could we perform the same task for every class on campus?
+
+------------------------------------------------------------------------
+
+## Ethics Framework
+
+-   What assumptions and commitments informed the design of this dataset?
+-   Who has had a say in data collection and analysis regarding this dataset? Who has been excluded?
+-   What are the benefits and harms of this dataset, and how are they distributed amongst diverse social groups?
+
+------------------------------------------------------------------------
+
+## Coding can be intimidating!
+
+-   Coding is like learning a new language. When you are first learning it, it all feels completely unfamiliar. I will work to support you in building the vocabulary and syntax to code in `R`.
+-   Coding can be frustrating. I regularly lose hours of my day in trying to find bugs in my code. I will work to give you resources and skills to navigate coding frustrations.
+-   Coding social environments have historically been exclusionary. I will work to reduce barriers to coding in whatever ways I can.
+
+------------------------------------------------------------------------
+
+## Syllabus Highlights
+
+-   Attendance/Extensions
+-   Academic Integrity and Generative AI
+-   Accommodations
+-   Mental Health and Wellness
+
+------------------------------------------------------------------------
+
+## Prepping for this Class
+
+-   Navigating Course Website
+-   Grading
+-   Perusall
+-   Slack
+
+------------------------------------------------------------------------
+
+## For Monday
+
+-   Install Slack Desktop and set notifications
+-   Fill out first day of class questionnaire
+-   Create a GitHub account if you don’t have one
+-   Accept SDS 192 Labs Assignment in Moodle
+-   Let me know if you will be using a Chromebook, asap
+

@@ -1,0 +1,141 @@
+---
+title: "Functions"
+editor: source
+---
+
+
+
+```{r}
+#| message: false
+#| warning: false
+#| document: show
+
+library(tidyverse)
+pit <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/main/website/data/pit_2015_2020.csv") |>
+  pivot_longer(-State, names_to = "Measure", values_to = "Count") |>
+  separate(Measure, into = c("Shel_Unshel", "Demographic"), sep = " - ") |>
+  separate(Demographic, into = c("Demographic", "Year"), sep = ", ") |>
+  filter(Demographic %in% c("Black or African American", 
+  "Asian", 
+  "American Indian or Alaska Native", 
+  "Native Hawaiian or Other Pacific Islander", 
+  "White", 
+  "Multiple Races")) |>
+  filter(State != "Total")
+```
+
+
+###### Question
+
+::: question
+
+Write a function that produces a bar plot of the total unsheltered unhoused count by race for a given state and year. Call the function for Massachusetts 2020. Bonus if you can figure out how to get the variables in the plot title.
+
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+
+create_unhoused_plot <- function(state_name, year) {
+  x <- pit |> 
+    filter(Shel_Unshel == "Unsheltered Homeless" & State == state_name & Year == year) |>
+    ggplot(aes(x = Demographic, y = Count)) +
+    geom_col() +
+    coord_flip() +
+    theme_minimal() +
+    labs(title = paste("Total Unsheltered Unhoused", state_name, year, sep = ", "), 
+         x = "Race", 
+         y = "Count Unhoused")
+  
+  return(x)
+}
+
+create_unhoused_plot("MA", 2020)
+```
+
+
+###### Question
+
+::: question
+
+Write a function that accepts a race and a year and returns the name of the state with the highest unsheltered unhoused population for that race in that year. Call the function to determine the state with the greated unhoused count of individuals listed as "American Indian or Alaska Native" in 2020. Hint: You will need the `pull()` function to pull the state name out of the data frame. 
+
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+
+identify_most_unhoused_state <- function(race, year) {
+  x <- pit |> 
+    filter(Shel_Unshel == "Unsheltered Homeless" & Demographic == race & Year == year) |>
+    arrange(desc(Count)) |>
+    head(1) |>
+    select(State) |>
+    pull()
+  
+  return(x)
+}
+
+identify_most_unhoused_state("American Indian or Alaska Native", 2020)
+```
+
+###### Question
+
+::: question
+
+Write a function that takes a state name and two years. The function should return a statement indicating which year had a greater total unhoused population for that state. Call the function for RI in 2019 and 2020. Hint: You will need to calculate the total unhoused in year 1 and year 2. You will also need if-else statements and the `paste()` function.
+
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+
+determine_greater_unhoused_year <- function(state_name, year1, year2) {
+  x <- pit |> 
+    filter(State == state_name) |>
+    group_by(Year) |>
+    summarize(Total = sum(Count))
+  
+  year1_total <- x |>
+    filter(Year == year1) |>
+    select(Total) |>
+    pull()
+  
+  year2_total <- x |>
+    filter(Year == year2) |>
+    select(Total) |>
+    pull()
+  
+  if(year1 > year2) {
+    return(paste("The unhoused population in", state_name, "was greater in", year1, "than", year2))
+  }
+  else if(year2 > year1) {
+    return(paste("The unhoused population in", state_name, "was greater in", year2, "than", year1))
+  }
+  else{
+    return(paste("The unhoused population in", state_name, "was the same in", year1, "and", year2))
+  }
+  
+  return(x)
+}
+
+determine_greater_unhoused_year("RI", 2020, 2019)
+```

@@ -1,0 +1,92 @@
+---
+title: "Labs"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+### Problem Solving
+
+*Note: We will not complete this lab this semester since this material is now covered in SDS 100. However, you may wish to refer back to this lab if you are looking fore resources to get help in `R`.* This lab will introduce you to resources and techniques for problem solving in `R`. You should reference this lab often throughout the semester for reminders on best practices for addressing errors and getting help.
+
+-   [Problem Solving Lab Instructions](labs/problem-solving.html)
+-   [Template](https://github.com/SDS-192-Intro/public-website-fall-25/blob/main/_templates/problem-solving.qmd)
+
+### Lab 1: Understanding Datasets
+
+This lab is all about learning to understand the context and parts of a dataset by referencing and interpreting data dictionaries and technical data documentation. We will get to know the U.S. Department of Education's College Scorecard data, which includes over 3000 variables characterizing colleges in the U.S.
+
+-   [Lab 1 Instructions](labs/lab1.html)
+-   [Template](https://github.com/SDS-192-Intro/public-website-fall-25/blob/main/_templates/lab1.qmd)
+
+### Lab 2: Visualization Aesthetics
+
+This week we will practice mapping variables in the U.S. National Bridge Inventory onto different plot aesthetics in order to tell different stories with the data. We're going to look at what kinds of variables might contribute to poor bridge conditions, where there are poor bridge conditions, and which entities are responsible for maintaining them. We will only be creating one type of plot today - a scatterplot. However, we are going to show how we can use different visual cues to plot a number of different variables onto a scatterplot.
+
+-   [Lab 2 Instructions](labs/lab2.html)
+-   [Template](https://github.com/SDS-192-Intro/public-website-fall-25/blob/main/_templates/lab2.qmd)
+
+### Lab 3: Plotting Freqencies
+
+In this lab, you will practice plotting both frequencies and distributions by analyzing data about racial disparities in home mortgage denial rates in Mississippi in 2024. 
+
+-   [Lab 3 Instructions](labs/lab3.html)
+-   [Template](https://github.com/SDS-192-Intro/public-website-fall-25/blob/main/_templates/lab3.qmd)
+
+### Lab 4: GitHub
+
+This lab is designed to help you get acquainted with the concepts behind Git and GitHub, suggested workflows for collaborating on projects in this course, and error resolution strategies.
+
+-   [Lab 4 Instructions](labs/lab4.html)
+
+### Lab 5: Data Wrangling
+
+In this lab, you will apply 6 data wrangling verbs in order to analyze data regarding NYPD stop, question, and frisk. Specifically, we will replicate [data analysis performed by the NYCLU](https://www.nyclu.org/en/stop-and-frisk-data) in 2011 to demonstrate how the practice was being carried out unconstitutionally in New York.
+
+-   [Lab 5 Instructions](labs/lab5.html)
+-   [Template](https://github.com/SDS-192-Intro/public-website-fall-25/blob/main/_templates/lab5.qmd)
+
+### Lab 6: Joining Datasets
+
+In terms of data analysis, this lab has one goal: to determine the number of industrial facilities that are currently in violation of **both** the Clean Air Act and the Clean Water Act in California. To achieve this goal, we're going to have to do some data wrangling and join together some datasets published by the EPA. We're going to practice applying different types of joins to this data and consider what we learn with each. 
+
+-   [Lab 6 Instructions](labs/lab6.html)
+-   [Template](https://github.com/SDS-192-Intro/public-website-fall-25/blob/main/_templates/lab6.qmd)
+
+### Lab 7: Tidying Datasets
+
+In this lab, we will create a few data visualizations documenting point-in-time counts of homelessness in the United States. Specifically, we are going visualize data collected in 2020 through various Continuums of Care (CoCs) programs. In order to produce these data visualizations, you will need to join homelessness data with census population data and develop and execute a plan for how to wrangle the dataset into a "tidy" format. 
+
+-   [Lab 7 Instructions](labs/lab7.html)
+-   [Template](https://github.com/SDS-192-Intro/public-website-fall-25/blob/main/_templates/lab7.qmd)
+
+### Lab 8: Programming with Data
+
+In this lab, we will program some custom `R` functions that allow us to analyze data related to medical conflicts of interest. Specifically, we will determine which ten Massachusetts-based doctors received the most money from pharmaceutical or medical device manufacturers in 2024. Then we will leverage our custom functions to produce a number of tables and plots documenting information about the payments made to each of these doctors. In doing so, we will update a similar analysis produced by ProPublica in 2018 called [*Dollars for Docs*](https://projects.propublica.org/docdollars/).
+
+-   [Lab 8 Instructions](labs/lab8.html)
+-   [Template](https://github.com/SDS-192-Intro/public-website-fall-25/blob/main/_templates/lab8.qmd)
+
+### Lab 9: Point Mapping with Leaflet
+
+In this lab, we will build a map that visualizes the extent of toxic emissions in Louisiana's Cancer Alley, using Toxic Release Inventory data. In doing so, we will gain practice in producing point maps in Leaflet. 
+
+-   [Lab 9 Instructions](labs/lab9.html)
+-   [Template](https://github.com/SDS-192-Intro/public-website-fall-25/blob/main/_templates/lab9.qmd)
+
+### Lab 10: Polygon Mapping with Leaflet
+
+In this lab, we will extend the analysis we did in lab 9 to consider the environmental injustices along Louisiana's Cancer Alley. We will map census data of race demographics along cancer alley to understand the disparate impact of pollution in this region. 
+
+-   [Lab 10 Instructions](labs/lab10.html)
+-   [Template](https://github.com/SDS-192-Intro/public-website-fall-25/blob/main/_templates/lab10.qmd)
+
+
+### Review + Working with APIs
+
+In this lab, we will write queries to access subsets of a very large dataset on the NYC Open Data Portal. We will practice all of the standards we have learned in the course so far in visualizing and wrangling the resulting data.
+
+-   [Review Lab Instructions](labs/review.html)
+-   [Template](https://github.com/SDS-192-Intro/public-website-fall-25/blob/main/_templates/review.qmd)

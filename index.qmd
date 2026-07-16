@@ -1,0 +1,231 @@
+---
+title: "SDS 192: Introduction to Data Science"
+author: "Lindsay Poirier"
+date: "Last updated on `r Sys.Date()`"
+---
+
+# Syllabus
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(echo = FALSE)
+library(bsplus)
+library(htmltools)
+```
+
+
+Data science involves applying a set of strategies to transform a recorded set of values into something from which we can glean knowledge and insight. This course will introduce you to concepts and methods from the field of data science, along with how to apply them in `R`. You will learn how to acquire, clean, wrangle, and visualize data. You will also learn best practices in data science workflows, such as code documentation and version control. Issues in data ethics will be addressed throughout the course.
+
+Classes will be held on Mondays from 1:40 PM to 2:55 PM and on Wednesday and Fridays from 1:20 PM to 2:35 PM.
+
+SDS 100: Reproducible Scientific Computing with Data is a co-requisite for this course and designed to help support you in coding in `R`. Please note that I walk into this course with the assumption that most students have never coded before. Coding for the first time can be intimidating, but I intend do everything in my power to support you through the learning curve and to make things both fun and relevant in the process. I personally picked up most of my data science skills through a lot of trial-and-error, practice, and curiosity. My hope is that, in this course, you will learn through experimentation, along with independent and collaborative problem-solving. Honing these competencies will serve you as you move on to other courses in the SDS program and/or at Smith.
+
+
+## Course Instructor
+
+::: float_image_right
+```{r}
+#| label: Lindsay Poirier
+#| fig-cap: Lindsay Poirier, she/her/hers.
+#| out.width: "200px"
+knitr::include_graphics("https://lindsaypoirier.github.io/images/profile.png")
+```
+:::
+
+I am a cultural anthropologist that studies how civic data gets produced, how communities think about and interface with data, and how data infrastructure can be designed more equitably. My Ph.D. is in an interdisciplinary discipline called Science and Technology Studies - a field that studies the intricate ways science, technology, culture, and politics all co-constitute each other. I work on a number of collaborative research projects that leverage public data to deepen understanding of social and environmental inequities in the US, while also qualitatively studying the politics behind data gaps and inconsistencies. As an instructor, I prioritize active learning and often structure courses as flipped classrooms. You can expect in-class time to involve lectures, activities, and labs.
+
+### Getting in Touch
+
+::: panel-tabset
+
+#### Slack
+
+I can best support students in this course when I can readily keep tabs on our course-related communication. Because of this, I ask that you please don't email me regarding course-related questions or issues. The best way to get in touch with me is via our course Slack. If you have course-related questions, I encourage you to ask them in the `#sds-192-questions` channel. When discretion is needed, feel free to DM. Please reserve more formal concerns like grades or accommodation requests for an in-person (or in-person virtual) conversation.
+
+*During the week, I will try my best to answer all Slack messages within 24 hours of receiving them. Please note that to maintain my own work-life balance, I don't answer Slack messages late in the evenings or on the weekends. It's important that you plan when you start your assignments accordingly.*
+
+#### Meeting with Me
+
+Meeting with me outside of class is a great opportunity for us to chat about what you're learning in the course, clarify expectations on assignments, and review work in progress. I also love when students drop in to office hours to request book recommendations, discuss career or research paths, or just to say hi! 
+
+There are two ways to meet with me. If you would like to have a one-on-one private conversation, I ask that you schedule an appointment with me via the [booking form on Moodle](https://moodle.smith.edu/mod/url/view.php?id=1334056). For support on class topics, you may drop-in during my regularly scheduled office hours.
+
+-   Wednesday, 2:45 PM - 3:45 PM, McConnell 214
+-   Friday, 11:15 AM - 12:15 PM, McConnell 214
+
+:::
+
+## Course Texts
+
+I will make all course readings available on Perusall, which can be accessed through our course Moodle page. 
+
+## Assessment
+
+- Course Syllabus Quiz: 3%
+- Course Infrastructure Set-up: 2%
+- Reading Quizzes: 5%
+- Labs (10): 30%
+- Projects (3): 30%
+- Mid-term Exam: 15%
+- Final Exam: 15%
+
+Also note that your grade may be impacted if you have more than 3 unexcused absences. See the course Attendance Policy below.
+
+
+::: callout-tip
+## Spinelli Center
+
+Smith's [Spinelli Center](https://www.smith.edu/qlc/tutoring.html) offers a number of resources to support SDS students. Spinelli Center Data Assistants will visit our classroom regularly to support you through lab work. The Center also offers [drop-in tutoring hours](https://www.smith.edu/academics/integrative-learning/spinelli-center-quantitative-learning/tutoring#statistical-and-data-sciences-8) Sunday through Thursday 7-9 PM. Finally, you can drop-in to Seelye 207D or schedule an appointment with the Data Research and Statistics Counselor (Kenneth Jeong). To schedule an appointment, email [qlctutor\@smith.edu](mailto:qlctutor@smith.edu).
+:::
+
+## Policies
+
+::: panel-tabset
+### Preparation
+
+This is a 4-credit course with 4.5 hours per week of in-classroom instructions. Smith expects students to devote 7.5 out-of-class hours per week to 4-credit classes. I have designed the course assignments and selected the course readings with this target in mind.
+
+
+### Attendance
+
+Attending class is not only important for your learning but also an act of community. Attendance will be taken each class period. That said, we all have reasons we can't be available from time-to-time. You may miss **three classes with no penalty**. You do not need to inform me that you will be absent in these cases. After the third unexcused absence, your grade may drop by a modifier for each class missed. I understand that you may need to be absent beyond these three sessions. Additional absences may be excused due to family/personal difficulties, sickness, or school or career-related activities; however, I will require some form of documentation for these absences. Please note that it will not be enough to email me about the absence in advance. You should speak with your class dean or the Accessibility Resource Center so that we can get documentation of your need.
+
+I also ask that you make every effort to arrive to class on time. This is a large course, and when students arrive late, it can be distracting for me as the instructor, and it can be distracting to other students in the course. It also makes it difficult for me to plan group activities. Students arriving more than 10 minutes late for class without having informed me ahead of time will be marked as absent.
+
+If you must miss a class entirely, you should contact a peer to discuss what was missed. Please note that the [SDS Program](https://www.smith.edu/academics/statistics) has adopted a shared policy regarding in-person attendance:
+
+> In keeping with Smith’s core identity and mission as an in-person, residential college, SDS affirms College policy (as per the Provost and Dean of the College) that students will attend class in person. SDS courses will not provide options for remote attendance. Students who have been determined to require a remote attendance accommodation by the Accessibility Resource Center will be the only exceptions to this policy. As with any other kind of ADA accommodations, please notify your instructor during the first week of classes to discuss how we can meet your accommodations. 
+
+### Extensions
+
+There is an automatic 24-hour **grace period** on all *lab and project assignments*. There will be no penalties for submitting the project within this 24-hour period, and you do not need to inform me that you intend to take the extra time. You can also request up to a 72-hour **extension** on any project or lab assignment, as long *as you make that request at least 48 hours before the original assignment due date*. You can request an extension by filling out the [Extension Request form](https://moodle.smith.edu/mod/questionnaire/view.php?id=1334055) on Moodle, and I will confirm your extension on Slack. Beyond this, late assignments will not be accepted without an accommodation from a class dean or from the ARC.
+  
+Note that this policy does not apply to reading assignments/Perusall annotations. *Reading assignments/Perusall annotations need to be completed by the due date for credit.*
+
+### Academic Integrity
+
+> Smith College provides its students with a world-class liberal arts education. The purpose of this education is not only to provide students opportunities for intellectual growth and advancement, but also to prepare its graduates to make powerful contributions to the world. Upholding the integrity of a Smith education, then, is at once a responsibility to oneself and to the community.
+
+> The Academic Integrity Board defines academic integrity as the alignment of students’ behaviors in academic courses with Smith’s commitment to the honest pursuit of genuine learning. Smith students are responsible for upholding their own integrity by adhering to all course policies and properly acknowledging all sources used in preparing academic work. When assignments require students to submit work that is the product of their own intellectual labor, faculty expect that students have neither used unauthorized resources nor engaged in unauthorized collaboration with others. When courses require students to submit work that is the product of intellectual engagement with fellow students, students should follow all of the guidelines set out for collaboration. All submitted coursework of any kind must be the original work of the student(s). Faculty are expected to clearly communicate to students how honest engagement is defined in each course.
+
+> According to Smith’s Statement of Purpose, “the world needs a place where knowledge is not the end, but merely the beginning of creating incalculable good. And we will always be that place.” Delivering on this promise demands that students and faculty hold each other to the highest standard of academic integrity.
+
+Examples of dishonesty or plagiarism include:
+
+-   Submitting work completed by another student as your own.
+-   Copying and pasting words from sources without quoting and citing the author.
+-   Paraphrasing material from another source without citing the author.
+-   Failing to cite your sources correctly.
+-   Falsifying or misrepresenting information in submitted work.
+-   Paying another student or service to complete assignments for you.
+-   Submitting work generated by artificially intelligent tools such as chatGPT and passing it off as your own
+
+### Generative AI
+
+The Academic Integrity Board has produced [a statement](https://www.smith.edu/your-campus/offices-services/dean-college/academic-integrity-board/academic-integrity-board-students) on the use of Generative AI in the classroom that we will read together in class on the first day. 
+
+#### AI and your Learning in this Course
+
+In this course, you are learning, not only how to produce code, but also how to think like a data scientist - i.e. how to develop logical solutions to problems, how to discern a good plot from a bad one, and how to spot errors in reasoning that can lead to misleading results. It is my goal that you come away from this course not only being able to generate code that answers questions, but also able to articulate the theoretical reasons why that code came to the answer that it did. If you are using generative AI to do "thinking work" in this course, then you are not developing these foundational skills. There are a number of consequences that can arise when we train data scientists with an over-reliance on automated tools to generate code and text:
+
+-   Students do not understand underlying data science concepts (e.g. why we have to be careful producing univariate plots from multidimensional data or why we would opt to perform an inner join vs a full join).
+-   Students are unprepared for higher divisions data science courses that require foundational theoretical knowledge. 
+-   Students do not develop the critical thinking skills needed to parse through and manage data that is messy or inconsistent (i.e. not well tolerated by AI). 
+-   Students do not have the skills to audit AI-generated code for errors and biases. 
+-   Students become less competitive in a data science job market increasingly saturated with technical, but not conceptual, competency. 
+-   Societally, we see a diminished prioritization of and ability to situate data in their social context, inviting more biased interpretations of data. 
+
+#### AI Usage in this Course 
+
+With this in mind, any use of generative AI to complete assignments/exams or produce content for this course is prohibited. Examples of prohibited forms of usage include but are not limited to: 
+
+-   summarizing course readings in lieu of completing the reading,
+-   generating ideas for how to approach group projects,
+-   brainstorming, outlining, or drafting responses to written prompts, 
+-   drafting comments for Slack, 
+-   composing, formatting, or debugging code,
+-   answering lab, quiz, or exam questions
+
+In each of the cases above, the use of generative AI would take away from the "thinking work" you are expected to perform as part of this course. 
+
+If you have any uncertainty about where I have drawn the line regarding the acceptable use of generative AI for this course, you should reach out to me for clarification on the policy. Any suspected use of generative artificial intelligence to complete assignments/exams or produce content this course will be reported to the Academic Integrity Board.
+
+:::
+
+## Community
+
+::: panel-tabset
+### Code of Conduct
+
+As the instructor for this course, I am committed to making participation in this course a harassment-free experience for everyone, regardless of level of experience, gender, gender identity and expression, sexual orientation, disability, personal appearance, body size, race, ethnicity, age, or religion. Examples of unacceptable behavior by participants in this course include the use of sexual language or imagery, derogatory comments or personal attacks, trolling, public or private harassment, insults, or other unprofessional conduct.
+
+As the instructor I have the right and responsibility to point out and stop behavior that is not aligned to this Code of Conduct. Participants who do not follow the Code of Conduct may be reprimanded for such behavior. Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the instructor.
+
+All students and the instructor are expected to adhere to this Code of Conduct in all settings for this course: seminars, office hours, and over Slack.
+
+This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org/), version 1.0.0, available [here](https://www.contributor-covenant.org/version/1/0/0/code-of-conduct/).
+
+### Principles of Community
+
+I hope that we can foster a collaborative and caring environment in this classroom: one that celebrates successes, respects individual strengths and weaknesses, demonstrates compassion for each other's struggles, and affirms diverse identities. Here are some ideas that I have for creating this environment in our course:
+
+-   Check-in with colleagues before starting collaborative work. "What three words describe how you're feeling?" "Name one challenge and one success from this week." "What are you doing for self-care right now?" Thank each other for sharing where they're at.
+-   Consider when to step up and when to step back in class discussions, creating space for others to contribute. Listening is just as important to community-building as speaking.
+-   Acknowledge that there is much we don't know about how our colleagues experience the world. ...but don't ask colleagues to speak on behalf of a social group you perceive them to be a part of.
+-   Cheer on colleagues as they give presentations or try something out for the first time.
+-   Ask questions often in our `#sds-192-questions` channel. Help each other out by answering questions when you can.
+-   Mistakes happen. I will certainly make mistakes in class. Admit mistakes, and then move on.
+
+### Pronouns
+
+Using the proper pronouns for our students is foundational to a safe, respectful classroom environment that creates a culture of trust. For information on pronouns and usage, please see the Office of Equity and Inclusion link here: [Pronouns](https://www.smith.edu/about-smith/equity-inclusion/gender-identity/pronouns)
+:::
+
+## Support
+
+::: panel-tabset
+### Accommodations
+
+It is my goal for everyone to succeed in this course. If you have personal circumstances that may impact your experience of our classroom, I encourage you to contact Accessibility Resource Center in College Hall 104 or at [arc\@smith.edu](mailto:arc@smith.edu). The Center will generate a letter that indicates to me what kind of support you need and how I can make your classroom experience more accommodating. This letter will be made available to me in Workday. *Once you have this letter, you should to visit my office hours or email me to discuss ideas about how we can tailor the course accordingly.* While you can request accommodations at any time, the sooner we start this conversation, the better. If you have concerns about the course that are not addressed through ARC, please contact me. At no point will I ask you to divulge details about your personal circumstances to me.
+
+### Student Well-being
+
+College life is stressful, and life outside of college can be overwhelming. It is my position that attending to your physical and mental health and well-being should be a top priority. I will remind you of this often throughout the semester. I encourage you to schedule a time to talk with me if you are struggling with this course. If you, or anyone you know, is experiencing distress, there are numerous campus resources that can provide support via the [Schacht Center](https://www.smith.edu/student-life/health-wellness). I can point you to these resources at any time throughout the semester.
+
+### Trigger Warnings
+
+A trigger is a topic or image that can precipitate an intense emotional response. When common triggering topics are to be covered in this course, I will do my best to provide a trigger warning in advance of the discussion. However, I can't always anticipate triggers. With this in mind I've set up [an anonymous form](https://moodle.smith.edu/mod/questionnaire/view.php?id=1334054), available on Moodle, where you can indicate topics for which you would like me to provide a warning.
+:::
+
+## Infrastructure
+
+::: panel-tabset
+
+### Moodle
+
+Grades, forms, and handouts will be available on the course Moodle.
+
+### Perusall
+
+All course readings and recorded lectures will be available on Perusall. You can access Perusall via our course Moodle page.
+
+### GitHub
+
+I will be using GitHub Classroom to distribute several course assignments, including labs and projects. You will submit assignments by pushing changes to template documents to a private GitHub repository. I will provide guidance on how to do this early in the semester.
+
+## RStudio/RStudio Server
+
+This class will use the `R` statistical software package. If you haven't already, you will install and configure `R` and RStudio in SDS 100. You should let me know in the first week of the course if you are using a Chromebook or tablet.
+
+
+### Slack
+
+Outside of class almost all of our communication will happen via Slack. You can use the following channels 
+
+-   `#general`: Course announcements (only I can post)
+-   `#sds-192-discussions`: Share news articles and relevant events/opportunities
+-   `#sds-192-questions`: Ask and answer questions about our course
+-   You can also create private Slack channels with your project group members.
+
+:::
+

@@ -1,0 +1,590 @@
+---
+title: "Boxplots"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs:
+    scrollable: true
+    chalkboard:
+      theme: whiteboard
+      boardmarker-width: 5
+editor: source
+execute:
+  echo: true
+  messages: false
+  warnings: false
+---
+
+## For Today
+
+-   Measures of Central Tendency and Dispersion
+-   Boxplots
+-   Project 1 Assigned
+
+------------------------------------------------------------------------
+
+# A measure of central tendency is a single numeric quantity describing data by identifying a central position.
+
+------------------------------------------------------------------------
+
+## Let's create the following data frame to motivate today's lecture.
+
+```{r}
+library(tidyverse)
+counties <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/a8b64e3070ca2543b904d4d92780b09e6062ced6/website/data/nbi_counties.csv")
+route_prefixes <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/a8b64e3070ca2543b904d4d92780b09e6062ced6/website/data/nbi_route_pre.csv")
+maintenance <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/a8b64e3070ca2543b904d4d92780b09e6062ced6/website/data/nbi_maintenance.csv")
+kinds <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/a8b64e3070ca2543b904d4d92780b09e6062ced6/website/data/nbi_kind.csv")
+
+nbi_ma <- read.delim("https://www.fhwa.dot.gov/bridge/nbi/2022/delimited/MA22.txt", sep = ",") |>
+  left_join(counties) |>
+  left_join(route_prefixes) |>
+  left_join(maintenance) |>
+  left_join(kinds) |>
+  filter(SERVICE_ON_042A == 1) |>
+  select(STRUCTURE_NUMBER_008, COUNTY_CODE_003_L, ROUTE_PREFIX_005B_L, MAINTENANCE_021_L, YEAR_BUILT_027, ADT_029, STRUCTURE_KIND_043A_L, STRUCTURAL_EVAL_067, BRIDGE_IMP_COST_094) |>
+  mutate(STRUCTURE_KIND_043A_L = 
+           case_when(
+             STRUCTURE_KIND_043A_L == "Concrete continuous" ~ "Concrete",
+             STRUCTURE_KIND_043A_L == "Steel continuous" ~ "Steel",
+             STRUCTURE_KIND_043A_L == "Prestressed concrete continuous" ~ "Prestressed concrete",
+             TRUE ~ STRUCTURE_KIND_043A_L)) |>
+  mutate(BRIDGE_IMP_COST_094 = BRIDGE_IMP_COST_094 * 1000)
+
+nbi_hampshire <- nbi_ma |> filter(COUNTY_CODE_003_L == "Hampshire")
+
+rm(counties, kinds, maintenance, route_prefixes)
+```
+
+------------------------------------------------------------------------
+
+## Mean
+
+::: columns
+::: {.column width="50%"}
+
+-   Sum of values divided by number of values summed
+-   Takes every value into consideration
+-   Model of entire dataset
+-   Heavily influenced by outliers
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+ggplot(nbi_ma, aes(x = STRUCTURAL_EVAL_067)) +
+  geom_histogram(color = "white", binwidth = 1, fill = "#d4d4d4") +
+  geom_vline(aes(xintercept = mean(STRUCTURAL_EVAL_067)), 
+             color = "blue", 
+             linetype="dashed") +
+  theme_bw() +
+  labs(title = "Distribution of Structural Evaluations for Hampshire County, MA Bridges, 2021", 
+       x = "Structural Evaluation", 
+       y = "Count of Bridges") + 
+  geom_label(aes(x = mean(STRUCTURAL_EVAL_067), y = 100, label="Mean"),
+           color = "blue", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  theme(plot.title = element_text(size=20))
+```
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Median
+
+::: columns
+::: {.column width="50%"}
+
+-   Middle value(s) of the dataset when all values are lined from smallest to largest
+-   Does not model entire dataset
+-   Limited influence from outliers 
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+ggplot(nbi_hampshire, aes(x = STRUCTURAL_EVAL_067)) +
+  geom_histogram(color = "white", binwidth = 1, fill = "#d4d4d4") +
+  geom_vline(aes(xintercept = mean(STRUCTURAL_EVAL_067)), 
+             color = "blue", 
+             linetype="dashed") +
+  geom_vline(aes(xintercept = median(STRUCTURAL_EVAL_067)), 
+             color = "orange", 
+             linetype="dashed") +
+  theme_bw() +
+  labs(title = "Distribution of Structural Evaluations for Hampshire County, MA Bridges, 2021", 
+       x = "Structural Evaluation", 
+       y = "Count of Bridges") + 
+  geom_label(aes(x = mean(STRUCTURAL_EVAL_067), y = 25, label="Mean"),
+           color = "blue", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = median(STRUCTURAL_EVAL_067), y = 40, label="Median"),
+           color = "orange", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) +
+  theme(plot.title = element_text(size=20))
+```
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+# Learning Check: How many variables from the dataset are represented on the previous plot?
+
+------------------------------------------------------------------------
+
+## Normal Distributions
+
+::: columns
+::: {.column width="50%"}
+
+-   More values huddle around some center line and taper off as we move away from center
+-   Histogram is symmetrical with a perfectly normal distribution
+-   Median and mean should be about the same; mean is a good measure of central tendency
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+ggplot(nbi_hampshire, aes(x = STRUCTURAL_EVAL_067)) +
+  geom_histogram(color = "white", binwidth = 1, fill = "#d4d4d4") +
+  geom_vline(aes(xintercept = mean(STRUCTURAL_EVAL_067)), 
+             color = "blue", 
+             linetype="dashed") +
+  geom_vline(aes(xintercept = median(STRUCTURAL_EVAL_067)), 
+             color = "orange", 
+             linetype="dashed") +
+  theme_bw() +
+  labs(title = "Distribution of Structural Evaluations for Hampshire County, MA Bridges, 2021", 
+       x = "Structural Evaluation", 
+       y = "Count of Bridges") + 
+  geom_label(aes(x = mean(STRUCTURAL_EVAL_067), y = 25, label="Mean"),
+           color = "blue", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = median(STRUCTURAL_EVAL_067), y = 40, label="Median"),
+           color = "orange", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) +
+  theme(plot.title = element_text(size=20))
+```
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+
+## Skew
+
+::: columns
+::: {.column width="50%"}
+
+-   Histogram is non-symmetrical when there is skew
+-   Long trail to the right of center indicates a *right skew* 
+-   Median becomes more representative measure of central tendency than mean
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+
+ggplot(nbi_hampshire, aes(x = BRIDGE_IMP_COST_094)) +
+  geom_histogram(color = "white", binwidth = 1000000, fill = "#d4d4d4") +
+  geom_vline(aes(xintercept = mean(BRIDGE_IMP_COST_094)), 
+             color = "blue", 
+             linetype="dashed") +
+  geom_vline(aes(xintercept = median(BRIDGE_IMP_COST_094)), 
+             color = "orange", 
+             linetype="dashed") +
+  theme_bw() +
+  labs(title = "Distribution of Bridge Improvement Costs for Hampshire County, MA Bridges, 2021", 
+       x = "Bridge Improvement Cost", 
+       y = "Count of Bridges") + 
+  geom_label(aes(x = mean(BRIDGE_IMP_COST_094), y = 25, label="Mean"),
+           color = "blue", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = median(BRIDGE_IMP_COST_094), y = 40, label="Median"),
+           color = "orange", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) +
+  scale_x_continuous(labels = scales::comma) +
+  theme(plot.title = element_text(size=20))
+```
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Summarizing Data
+
+-   Measures of central tendency summarize swaths of information into single value
+-   Can be reductionist
+    -   Example: Measures of central tendency related to wealth in the US only tell us about those in the middle
+    -   Hide the experiences of the most impoverished communities. 
+-   Degree of spread or *dispersion* is just as important as center
+
+------------------------------------------------------------------------
+
+
+## Range
+
+
+::: columns
+::: {.column width="50%"}
+
+-   Maximum value minus the minimum value
+-   Evaluates the spread of the entire dataset
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+ggplot(nbi_hampshire, aes(x = STRUCTURAL_EVAL_067, y="")) + 
+  geom_jitter(alpha = 0.3, height = 0.2, fill = "#d4d4d4") +
+  geom_vline(aes(xintercept = min(STRUCTURAL_EVAL_067)), 
+              color = "red", 
+             linetype="dashed") +
+  geom_vline(aes(xintercept = max(STRUCTURAL_EVAL_067)), 
+              color = "red", 
+             linetype="dashed") +
+  theme_bw() +
+  geom_label(aes(x = min(STRUCTURAL_EVAL_067), y = "", label="Min"),
+           color = "red", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = max(STRUCTURAL_EVAL_067), y = "", label="Max"),
+           color = "red", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  theme(plot.title = element_text(size=20))
+
+ggplot(nbi_hampshire, aes(x = STRUCTURAL_EVAL_067)) +
+  geom_histogram(color = "white", binwidth = 1, fill = "#d4d4d4") +
+  geom_vline(aes(xintercept = min(STRUCTURAL_EVAL_067)), 
+              color = "red", 
+             linetype="dashed") +
+  geom_vline(aes(xintercept = max(STRUCTURAL_EVAL_067)), 
+              color = "red", 
+             linetype="dashed") + 
+  theme_bw() +
+  labs(title = "Distribution of Structural Evaluations for Hampshire County, MA Bridges, 2021", 
+       x = "Structural Evaluation", 
+       y = "Count of Bridges") + 
+  geom_label(aes(x = min(STRUCTURAL_EVAL_067), y = 15, label="Min"),
+           color = "red", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = max(STRUCTURAL_EVAL_067), y = 15, label="Max"),
+           color = "red", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  theme(plot.title = element_text(size=20))
+```
+:::
+:::
+
+
+------------------------------------------------------------------------
+
+
+## Interquartile Range
+
+::: columns
+::: {.column width="50%"}
+
+-   1st quartile is middle value between minimum and median
+-   3rd quartile is middle value between median and maximum
+-   IQR is the difference between the 1st and 3rd quartile
+-   Represents the middle 50% of values
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+ggplot(nbi_hampshire, aes(x = STRUCTURAL_EVAL_067, y="")) + 
+  geom_jitter(alpha = 0.3, height = 0.2, fill = "#d4d4d4") +
+  geom_vline(aes(xintercept = min(STRUCTURAL_EVAL_067)), 
+              color = "red", 
+             linetype="dashed") +
+  geom_vline(aes(xintercept = max(STRUCTURAL_EVAL_067)), 
+              color = "red", 
+             linetype="dashed") +
+  geom_vline(aes(xintercept = median(STRUCTURAL_EVAL_067)), 
+              color = "orange", 
+             linetype="dashed") +
+  geom_vline(aes(xintercept = quantile(STRUCTURAL_EVAL_067)[2]), 
+              color = "purple", 
+             linetype="dashed") +
+  geom_vline(aes(xintercept = quantile(STRUCTURAL_EVAL_067)[4]), 
+              color = "purple", 
+             linetype="dashed") +
+  theme_bw() + 
+  geom_label(aes(x = min(STRUCTURAL_EVAL_067), y = "", label="Min"),
+           color = "red", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = max(STRUCTURAL_EVAL_067), y = "", label="Max"),
+           color = "red", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = quantile(STRUCTURAL_EVAL_067)[2], y = "", label="1st Quartile"),
+           color = "purple", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = quantile(STRUCTURAL_EVAL_067)[4], y = "", label="3rd Quartile"),
+           color = "purple", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = median(STRUCTURAL_EVAL_067), y = "", label="Median"),
+           color = "orange", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  theme(plot.title = element_text(size=20))
+
+ggplot(nbi_hampshire, aes(x = STRUCTURAL_EVAL_067)) +
+  geom_histogram(color = "white", binwidth = 1, fill = "#d4d4d4") +
+  geom_vline(aes(xintercept = min(STRUCTURAL_EVAL_067)), 
+              color = "red", 
+             linetype="dashed") +
+  geom_vline(aes(xintercept = max(STRUCTURAL_EVAL_067)), 
+              color = "red", 
+             linetype="dashed") + 
+  geom_vline(aes(xintercept = median(STRUCTURAL_EVAL_067)), 
+              color = "orange", 
+             linetype="dashed") + 
+  geom_vline(aes(xintercept = quantile(STRUCTURAL_EVAL_067)[2]), 
+              color = "purple", 
+             linetype="dashed") +
+  geom_vline(aes(xintercept = quantile(STRUCTURAL_EVAL_067)[4]), 
+              color = "purple", 
+             linetype="dashed") +
+  theme_bw() +
+  labs(title = "Distribution of Structural Evaluations for Hampshire County, MA Bridges, 2021", 
+       x = "Structural Evaluation", 
+       y = "Count of Bridges") + 
+  geom_label(aes(x = min(STRUCTURAL_EVAL_067), y = 15, label="Min"),
+           color = "red", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = max(STRUCTURAL_EVAL_067), y = 15, label="Max"),
+           color = "red", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = quantile(STRUCTURAL_EVAL_067)[2], y = 15, label="1st Quartile"),
+           color = "purple", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = quantile(STRUCTURAL_EVAL_067)[4], y = 15, label="3rd Quartile"),
+           color = "purple", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = median(STRUCTURAL_EVAL_067), y = 10, label="Median"),
+           color = "orange", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  theme(plot.title = element_text(size=20))
+```
+
+:::
+:::
+
+
+------------------------------------------------------------------------
+
+
+## Boxplot
+
+```{r}
+#| echo: false
+ggplot(nbi_hampshire, aes(x = STRUCTURAL_EVAL_067)) +
+  geom_boxplot() +
+  geom_vline(aes(xintercept = min(STRUCTURAL_EVAL_067)), 
+              color = "red", 
+             linetype="dashed") +
+  geom_vline(aes(xintercept = max(STRUCTURAL_EVAL_067)), 
+              color = "red", 
+             linetype="dashed") + 
+  geom_vline(aes(xintercept = median(STRUCTURAL_EVAL_067)), 
+              color = "orange", 
+             linetype="dashed") + 
+  geom_vline(aes(xintercept = quantile(STRUCTURAL_EVAL_067)[2]), 
+              color = "purple", 
+             linetype="dashed") +
+  geom_vline(aes(xintercept = quantile(STRUCTURAL_EVAL_067)[4]), 
+              color = "purple", 
+             linetype="dashed") +
+  theme_bw() +
+  labs(title = "Distribution of Structural Evaluations for Hampshire County, MA Bridges, 2021", 
+       x = "Structural Evaluation", 
+       y = "") + 
+  geom_label(aes(x = min(STRUCTURAL_EVAL_067), y = 0.2, label="Min"),
+           color = "red", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = max(STRUCTURAL_EVAL_067), y = 0.2, label="Max"),
+           color = "red", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = quantile(STRUCTURAL_EVAL_067)[2], y = 0.1, label="1st Quartile"),
+           color = "purple", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = quantile(STRUCTURAL_EVAL_067)[4], y = -0.1, label="3rd Quartile"),
+           color = "purple", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  geom_label(aes(x = median(STRUCTURAL_EVAL_067), y = 0, label="Median"),
+           color = "orange", 
+           size = 3, 
+           angle = 45, 
+           fontface = "bold" ) + 
+  theme(plot.title = element_text(size=20))
+```
+
+
+
+------------------------------------------------------------------------
+
+## Grouped Boxplots
+
+
+```{r}
+ggplot(nbi_hampshire, aes(x = ADT_029, y = ROUTE_PREFIX_005B_L)) +
+  geom_boxplot() +
+  labs(title = "Distribution in the Average Daily Traffic of Hampshire County, MA Bridges, 2021", 
+       x = "Average Daily Traffic",
+       y = "Route Prefix") +
+  theme_minimal()
+```
+
+------------------------------------------------------------------------
+
+## Interpreting Boxplots Step 1: Check for Outliers
+
+> How many are there? What do they indicate? Do you assume they are errors in teh data? Or do they represent extremes that are important for us to take into consideration? 
+
+
+```{r}
+#| echo: false
+ggplot(nbi_hampshire, aes(x = ADT_029, y = ROUTE_PREFIX_005B_L)) +
+  geom_boxplot() +
+  labs(title = "Distribution in the Average Daily Traffic of Hampshire County, MA Bridges, 2021", 
+       x = "Average Daily Traffic",
+       y = "Route Prefix") +
+  theme_minimal()
+```
+
+------------------------------------------------------------------------
+
+## Interpreting Boxplots Step 2: Compare Medians
+
+> Do the medians line up? If not, in which groups are the medians higher and in which are they lower? 
+
+```{r}
+#| echo: false
+ggplot(nbi_hampshire, aes(x = ADT_029, y = ROUTE_PREFIX_005B_L)) +
+  geom_boxplot() +
+  labs(title = "Distribution in the Average Daily Traffic of Hampshire County, MA Bridges, 2021", 
+       x = "Average Daily Traffic",
+       y = "Route Prefix") +
+  theme_minimal()
+```
+
+
+------------------------------------------------------------------------
+
+## Interpreting Boxplots Step 3: Compare Range
+
+> Do certain groups have a wider range of values represented than others? In other words, are the values more distributed for certain groups than for others? This might indicate a greater degree of disparity in some groups than others. 
+
+```{r}
+#| echo: false
+ggplot(nbi_hampshire, aes(x = ADT_029, y = ROUTE_PREFIX_005B_L)) +
+  geom_boxplot() +
+  labs(title = "Distribution in the Average Daily Traffic of Hampshire County, MA Bridges, 2021", 
+       x = "Average Daily Traffic",
+       y = "Route Prefix") +
+  theme_minimal()
+```
+
+------------------------------------------------------------------------
+
+## Interpreting Boxplots Step 4: Compare IQR
+
+> In which groups do the middle 50% of values tend to huddle around a central value? In which are they more spread out from the center?
+
+```{r}
+#| echo: false
+ggplot(nbi_hampshire, aes(x = ADT_029, y = ROUTE_PREFIX_005B_L)) +
+  geom_boxplot() +
+  labs(title = "Distribution in the Average Daily Traffic of Hampshire County, MA Bridges, 2021", 
+       x = "Average Daily Traffic",
+       y = "Route Prefix") +
+  theme_minimal()
+```
+
+------------------------------------------------------------------------
+
+## Interpreting Boxplots Step 5: Compare Symmetry
+
+> Does the median appear to be in the center of the range and IQR? Is the median closer to the minimum – or the bottom whisker? Or the top whisker?
+
+```{r}
+#| echo: false
+ggplot(nbi_hampshire, aes(x = ADT_029, y = ROUTE_PREFIX_005B_L)) +
+  geom_boxplot() +
+  labs(title = "Distribution in the Average Daily Traffic of Hampshire County, MA Bridges, 2021", 
+       x = "Average Daily Traffic",
+       y = "Route Prefix") +
+  theme_minimal()
+```
+
+------------------------------------------------------------------------
+
+
+

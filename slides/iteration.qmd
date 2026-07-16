@@ -1,0 +1,258 @@
+---
+title: "Iteration"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs:
+    scrollable: true
+    chalkboard:
+      theme: whiteboard
+      boardmarker-width: 5
+editor: source
+execute:
+  echo: true
+  messages: false
+  warnings: false
+---
+
+## For Loops
+
+```{r}
+#| echo: false
+library(tidyverse)
+df <- data.frame(
+  name = c("obs1", "obs2", "obs3", "obs1"),
+  var_a = c(2, 3, 4, 5),
+  var_b = c(4, 7, 2, 1),
+  var_c = c(4, 9, 3, 2)
+)
+
+df
+```
+
+
+```{r}
+for (i in df$var_a) {
+  print(i + 1)
+}
+```
+
+------------------------------------------------------------------------
+
+## For Loops
+
+```{r}
+#| echo: false
+df
+```
+
+
+```{r}
+for (i in df |> select(var_a:var_c)) {
+  print(sum(i))
+}
+```
+
+------------------------------------------------------------------------
+
+## `across()` 
+
+-   Applies a function across multiple columns in a data frame
+-   Takes as arguments: the columns to perform the function across and the function name
+
+::: panel-tabset
+
+### Example 1
+
+```{r}
+df |>
+  summarize(across(var_a:var_c, sum))
+```
+
+### Example 2
+
+```{r}
+df |>
+  summarize(across(contains("var"), mean))
+```
+
+### Example 3
+
+```{r}
+df |>
+  mutate(across(where(is.numeric), as.character))
+```
+
+:::
+  
+------------------------------------------------------------------------
+
+## `purrr` package
+
+-   Included in `tidyverse`
+-   Package for working with functions and vectors
+-   Provides a family of `map()` functions
+-   `map()` functions allow us to apply a function to each element of a list or vector
+
+------------------------------------------------------------------------
+
+## Single Column Data Frames vs. Vectors
+
+- To extract a column from a data frame, we use `pull()`
+
+::: panel-tabset
+
+### Data Frame
+
+```{r}
+df |> select(var_a)
+```
+
+### Vector (`$`)
+
+```{r}
+df$var_a
+```
+
+### Vector (`pull()`)
+
+```{r}
+df |> select(var_a) |> pull()
+```
+
+:::
+
+------------------------------------------------------------------------
+
+`map()`
+
+- Applies a function to each element in a vector
+
+::: panel-tabset
+
+### Approach 1
+
+```{r}
+add_five <- function(x){
+  x + 5
+}
+
+map(df$var_a, add_five)
+```
+
+### Approach 2
+
+```{r}
+add_five <- function(x){
+  x + 5
+}
+
+a_vec <- df |> select(var_a) |> pull()
+map(a_vec, add_five)
+```
+
+:::
+
+------------------------------------------------------------------------
+
+## Setting Names
+
+-   `set_names()` sets the names of elements in a vector
+
+```{r}
+add_five <- function(x){
+  x + 5
+}
+
+map(df$var_a, add_five) |>
+  set_names(df$name)
+```
+
+
+------------------------------------------------------------------------
+
+## Family of Map Functions
+
+::: panel-tabset
+
+### `map_int()`
+
+-   Returns a numeric vector
+
+```{r}
+df |>
+  select(var_a:var_c) |>
+  map_int(is.numeric)
+```
+
+### `map_chr()`
+
+-   Returns a character vector
+
+```{r}
+df |>
+  select(var_a:var_c) |>
+  map_chr(is.numeric)
+```
+
+### `map_lgl()`
+
+-   Returns a logical vector
+
+```{r}
+df |>
+  select(var_a:var_c) |>
+  map_lgl(is.numeric)
+```
+
+:::
+
+------------------------------------------------------------------------
+
+## Returning a Data Frame
+
+::: panel-tabset
+
+### `map()`
+
+-   Returns a list
+
+```{r}
+create_total_col <- function(x){
+  df |>
+    filter(name == x) |>
+    mutate(total = var_a + var_b + var_c)
+    
+}
+
+map(unique(df$name), create_total_col)
+```
+
+### `map_df()`
+
+-   Returns a data frame (binding rows of list)
+
+```{r}
+create_total_col <- function(x){
+  df |>
+    filter(name == x) |>
+    mutate(total = var_a + var_b + var_c)
+    
+}
+
+map_df(unique(df$name), create_total_col)
+```
+
+:::
+
+------------------------------------------------------------------------
+
+## Iterating Over Multiple Vectors
+
+```{r}
+add_two_vectors <- function(x, y){
+  x + y
+}
+
+map2(df$var_a, df$var_b, add_two_vectors)
+```

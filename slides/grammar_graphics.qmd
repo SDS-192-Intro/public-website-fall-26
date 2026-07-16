@@ -1,0 +1,377 @@
+---
+title: "Visualizing Data"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs:
+    scrollable: true
+    chalkboard:
+      theme: whiteboard
+      boardmarker-width: 5
+editor: source
+execute:
+  echo: true
+  messages: false
+  warnings: false
+---
+
+
+## For Today
+
+-   Perusall quiz debriefing
+-   What is a data visualization?
+-   Taxonomy of Data Visualizations
+-   Visualization Conventions and Critiques
+-   Work on Problem Solving Lab in Class
+
+------------------------------------------------------------------------
+
+## What is data visualization?
+
+-   the translation of information into a graphical format
+-   helps analysts summarize and identify patterns across large datasets
+-   always involves critical judgment calls on the part of the designer
+
+------------------------------------------------------------------------
+
+## Elements of data graphics
+
+-   visual cues/aesthetics
+    -   color
+-   scale
+-   context
+
+> Framework drawn from: Yau, Nathan. 2013. *Data Points: Visualization That Means Something*. 1st edition. Indianapolis, IN: Wiley.
+
+------------------------------------------------------------------------
+
+## Visual Cues
+
+-   Where is the data *positioned* on the plot?
+-   What is the *length* of shapes on the plot?
+-   How large is the *angle* between vectors?
+-   What *shapes/symbols* appear on the plot?
+-   How much *area* do shapes take up on a plot?
+-   How intense is the *color* presented on the plot?
+
+------------------------------------------------------------------------
+
+## What variables mapped onto what visual cues?
+
+```{r}
+#| echo: false
+library(tidyverse)
+library(RColorBrewer)
+nyc_urban <- read_csv("https://data.cityofnewyork.us/api/views/fuhs-xmg2/rows.csv", name_repair = make.names) |>
+  mutate(Animal.Class = str_replace_all(Animal.Class, "\\[\"", "")) |>
+  mutate(Animal.Class = str_replace_all(Animal.Class, "\"\\]", "")) |>
+  mutate(Animal.Class = str_replace_all(Animal.Class, "\"", "")) |>
+  mutate(Animal.Class = str_replace_all(Animal.Class, "#", "")) |>
+  mutate(Animal.Class = str_replace_all(Animal.Class, ";", ",")) |>
+  mutate(Animal.Class = str_replace_all(Animal.Class, " ", "")) |>
+  mutate(Age = str_replace_all(Age, "\\[\"", "")) |>
+  mutate(Age = str_replace_all(Age, "\"\\]", ""))
+font_size <- 20
+larger_font_size <- 40
+```
+
+```{r}
+#| echo: false
+nyc_urban %>%
+  filter(Borough == "Brooklyn" & Property == "Marine Park") %>%
+  ggplot(aes(x = Duration.of.Response, y = X..of.Animals)) +
+  geom_point(alpha = 0.2, size = 6) +
+  theme_minimal() +
+  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2018-2021",
+       x = "Duration of Response",
+       y = "Number of Animals") +
+  theme(text = element_text(size = font_size))
+```
+
+------------------------------------------------------------------------
+
+## What variables mapped onto what visual cues?
+
+```{r}
+#| echo: false
+nyc_urban %>%
+  filter(Borough == "Brooklyn" & Property == "Marine Park") %>%
+  group_by(Species.Status) %>%
+  summarize(Count = n()) %>%
+  ggplot(aes(x = "", y = Count, fill = Species.Status)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start=0) +
+  theme_void() +
+  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2018-2021") +
+  theme(text = element_text(size = font_size))
+```
+
+\*\* This is the last time you will see me use a pie chart in this class!
+
+------------------------------------------------------------------------
+
+## What variables mapped onto what visual cues?
+
+```{r}
+#| echo: false
+nyc_urban %>%
+  filter(Borough == "Brooklyn" & Property == "Marine Park") %>%
+  ggplot(aes(x = Species.Status)) + 
+  geom_bar() +
+  theme_minimal() +
+  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2018-2021",
+       x = "Species Status",
+       y = "Count of Reponses") +
+  theme(text = element_text(size = font_size))
+```
+
+------------------------------------------------------------------------
+
+## What variables mapped onto what visual cues?
+
+```{r}
+#| echo: false
+
+library(lubridate)
+nyc_urban %>%
+  mutate(Date.and.time.of.Ranger.response = mdy_hms(Date.and.time.of.Ranger.response)) %>%
+  filter(Borough == "Brooklyn" & Property == "Marine Park") %>%
+  ggplot(aes(x = Date.and.time.of.Ranger.response, y = Animal.Class, shape = Age )) + 
+  geom_point(alpha = 0.5, size = 3) +
+  theme_minimal() +
+  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2018-2021",
+       x = "Date and Time of Response",
+       y = "Animal Class",
+       shape = "Age") +
+  theme(text = element_text(size = font_size))
+```
+
+------------------------------------------------------------------------
+
+## What variables mapped onto what visual cues?
+
+```{r}
+#| echo: false
+
+library(lubridate)
+nyc_urban %>%
+  mutate(Date.and.time.of.Ranger.response = mdy_hms(Date.and.time.of.Ranger.response)) %>%
+  filter(Borough == "Brooklyn" & Property == "Marine Park") %>%
+  ggplot(aes(x = Date.and.time.of.Ranger.response, y = Animal.Class, size = X..of.Animals)) + 
+  geom_point(alpha = 0.5) +
+  theme_minimal() +
+  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2018-2021",
+       x = "Date and Time of Response",
+       y = "Animal Class",
+       size = "# of Animals") +
+  theme(text = element_text(size = font_size))
+```
+
+------------------------------------------------------------------------
+
+## What variables mapped onto what visual cues?
+
+```{r}
+#| echo: false
+
+library(lubridate)
+nyc_urban %>%
+  mutate(Date.and.time.of.Ranger.response = mdy_hms(Date.and.time.of.Ranger.response)) %>%
+  filter(Borough == "Brooklyn" & Property == "Marine Park") %>%
+  group_by(Year = year(Date.and.time.of.Ranger.response), Call.Source) %>%
+  summarize(Count = n()) %>%
+  ggplot(aes(x = Year, y = Count, col = Call.Source, group = Call.Source)) + 
+  geom_line() +
+  theme_minimal() +
+  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2018-2021",
+       x = "Year",
+       y = "Count of Responses",
+       col = "Call Source") +
+  theme(text = element_text(size = font_size))
+```
+
+------------------------------------------------------------------------
+
+## Color 
+
+-   Qualitative: Distinct colors used to bucket categorical data
+-   Sequential: Gradient of color used to represent a uni-directional range of quantitative values
+-   Divergent: Gradations of color from a neutral center used to represent a bi-directional range of quantitative values
+
+------------------------------------------------------------------------
+
+## Accessible Color Palettes
+
+```{r}
+display.brewer.all(colorblindFriendly = TRUE)
+```
+
+
+------------------------------------------------------------------------
+
+## Scale
+
+-   *Linear*: Numeric values are evenly spaced on axis.
+-   *Logarithmic*: Numeric interval are spaced by a factor of the base of the logarithm.
+-   *Categorical*: Categorical values are discretely placed on axis.
+-   *Ordinal*: Categorical values are ordered on axis.
+-   *Percent*: Percentages of a whole are evenly spaced on axis.
+-   *Time*: Date/time values are placed on axis in years, months, days, hours, etc.
+
+------------------------------------------------------------------------
+
+## Examples
+
+```{r}
+#| include: false
+df <- data.frame(
+  a = c(1, 5, 23, 82, 100),
+  b = c("a", "b", "c","d", "e"),
+  c = seq(as.Date("2022-01-01"), as.Date("2022-01-05"), by="days")
+)
+```
+
+::: columns
+::: {.column width="50%"}
+```{r}
+#| echo: false
+ggplot(df, aes(x = a, y = 0)) + 
+  geom_point(size = 8) +
+  theme_minimal() +
+  labs(title = "Linear") +
+  coord_cartesian(ylim = c(0, 1)) +
+  theme(text = element_text(size = larger_font_size))
+```
+
+```{r}
+#| echo: false
+ggplot(df, aes(x = a, y = 0)) + 
+  geom_point(size = 8) +
+  theme_minimal() +
+  scale_x_log10() +
+  labs(title = "Logarithmic") +
+  coord_cartesian(ylim = c(0, 1)) +
+  theme(text = element_text(size = larger_font_size))
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+#| echo: false
+
+ggplot(df, aes(x = b, y = 0)) + 
+  geom_point(size = 8) +
+  theme_minimal() +
+  labs(title = "Categorical") +
+  coord_cartesian(ylim = c(0, 1)) +
+  theme(text = element_text(size = larger_font_size))
+```
+
+```{r}
+#| echo: false
+
+ggplot(df, aes(x = c, y = 0)) + 
+  geom_point(size = 8) +
+  theme_minimal() +
+  labs(title = "Date") +
+  coord_cartesian(ylim = c(0, 1)) +
+  theme(text = element_text(size = larger_font_size))
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Context
+
+**In every plot you submit for this class, I will be looking for five pieces of context.**
+
+-   The data's unit of observation
+-   Variables represented on the plot
+-   Filters applied to the data
+-   Geographic context of the data
+-   Temporal (date/time range) context of the date
+
+------------------------------------------------------------------------
+
+## Context
+
+![](img/labels.png)
+
+------------------------------------------------------------------------
+
+## Data Visualization Conventions
+
+-   Edward Tufte, American statistician sometimes considered "father of data visualization"
+-   Introduced the concept of "graphical integrity"
+-   How do we present data as honestly as possible?
+
+------------------------------------------------------------------------
+
+## Lie Factor
+
+-   Lie Factor = (size of effect in graphic)/(size of effect in data)
+-   Lie factor is greater when variations on a graph fail to match variations in data
+
+![Tufte, *Visual Display of Quantitative Information*](https://infovis-wiki.net/w/images/0/05/Lie_factor_example1_image.jpg?20051025183704){width="400"}
+
+::: notes
+5.3-0.6 / 0.6 \* 100= 783 (graph)
+
+27.5-18 /18 \*100 = 53 (data)
+
+783/53 = 14.8
+:::
+
+------------------------------------------------------------------------
+
+## Inconsistent Scales
+
+![Example from callingbullshit.org](https://www.callingbullshit.org/tools/img/linear_to_log.png)
+
+------------------------------------------------------------------------
+
+## Presenting Data out of Context
+
+![Example from mediamatters.org](http://cloudfront.mediamatters.org/static/uploader/image/2013/10/28/welfare-jobs-ff-1.jpg)
+
+------------------------------------------------------------------------
+
+## Disproportionate Data-to-Ink Ratio
+
+-   Ensure that the ink used on the data match the amount of data presented
+-   Data-to-ink ratio = (ink used to represent data)/(ink used to print graphic)
+-   Should be as close as possible to 1
+-   Another way to think about it: How much of this graph could I erase without losing data?
+
+------------------------------------------------------------------------
+
+## Disproportionate Data-to-Ink Ratio
+
+```{r}
+#| echo: false
+nyc_urban %>%
+  filter(Borough == "Brooklyn" & Property == "Marine Park") %>%
+  ggplot(aes(x = Species.Status, fill = Species.Status)) + 
+  geom_bar() +
+  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2018-2021") +
+  theme(text = element_text(size = 20),
+        panel.background = element_rect(fill = "yellow",
+                                colour = "yellow",
+                                size = 0.5, linetype = "solid"),
+        legend.position = "none")
+```
+
+------------------------------------------------------------------------
+
+## Deviating from Norms
+
+![Example from callingbullshit.org](https://www.callingbullshit.org/tools/img/stand_your_ground.png)
+
+------------------------------------------------------------------------
+
+## When can I break convention??
+
+<iframe width="700" height="500" src="https://www.youtube.com/embed/b5C5dV9XVKo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+
+</iframe>

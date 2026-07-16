@@ -1,0 +1,18 @@
+---
+title: "Grammar Graphics"
+editor: source
+---
+
+Today, we're going to take a look at some visualizations online, identify their components, and evaluate their integrity. You should work in groups of 4-5 and be prepared to share your findings with the class.
+
+1. Navigate to the [New York Times Grapics](https://www.nytimes.com/spotlight/graphics). Select a data visualization. ...but no maps for today! Take no more than 2 minutes to for this! Drop a link to the data visualization in a thread in `sds-192-discussions`.
+
+2. Identify the visual cues on the visualization, the color palette, and the scale of the visualization. Remember visual cues are used to represent variations in the data, while scale is the scale at which those visual cues are differentiated.
+  -   Visual cues include: position, length, angle, shape, size, color
+  -   Color palette: Qualitative, sequential, divergent
+  -   Scales include: numeric, logarithmic, categorical, ordinal, percentage date-time
+
+3. Identify the context provided on the visualization. Are all five components of context represented? 
+  -   Context components include: units of observation, variables, filter, geographic context, temporal context
+
+4. Assess the graphical integrity of the visualization. Does the visualization violate any of Tufte's principles? If so, does this violation serve a purpose?

@@ -1,0 +1,15 @@
+{
+  "hash": "308ad9b758ddb3af16d235fdf4b29413",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Peopling the Data\"\n---\n\n\n\n\n\n## Purpose and Instructions\n\nThis checkpoint aims to document the rituals of collection that shape your final project dataset. \n\n## Part 1: Data Commensurability\n\nWhat changes to data environments might make the data collected in one time period or setting incommensurable with data collected in another time period or setting? \n\n**Fill response here.**\n\n## Part 2: Detail a Data Collection Practice\n\nDetermine a stakeholder that is predominantly responsible for data collection in your dataset. Find a YouTube video of this stakeholder at work or an instruction manual detailing the steps they should take to collect the data. *Thickly* describe the rituals of the data collection. In your writing, see if you can make the \"familiar strange\" by paying close attention to details that we might otherwise take for granted. Questions you might consider include: \n\n* What standards (if any) must the data collectors follow when they encounter the environment on which they are collecting data? \n* What tools do they use? \n* What do they wear? \n* During what time periods do they collect the data? \n* Where do they go to collect the data? Are they alone or accompanied by others? \n* How do they engage their senses when collecting the data?\n\n### Stakeholder: ____\n\n**Fill response here.**\n\n\n\n## Part 3: Identify How Standards Stylize Data\n\nIn what ways do the habits you identified in Part 2 address some of the commensurability concerns raised in Part 1? How might the numbers look different if different rituals were engaged?\n\n**Fill response here.**",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -1,0 +1,367 @@
+---
+title: "R Fundamentals"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs:
+    scrollable: true
+editor: source
+execute:
+  echo: true
+---
+
+## For Today
+
+-   Nouns: Data objects in `R`
+-   Verbs: `R` Functions
+-   Conjunctions: `R` Operators
+-   Missing Values and `R` Functions
+-   Exercise
+
+------------------------------------------------------------------------
+
+## Things to Know Right Up Front
+
+-   `R` is case-sensitive. `df` is different than `DF`
+
+------------------------------------------------------------------------
+
+# Data Objects in `R`
+
+------------------------------------------------------------------------
+
+## Values vs. Vectors vs. Data Frames
+
+::: panel-tabset
+### Values
+
+::: nonincremental
+-   a single data point
+-   `R` understands values to be of a certain **type**:
+    -   numeric: 3.29
+    -   integer: 3
+    -   character: "SDS 192"
+    -   logical: TRUE/FALSE
+    -   date-time: 3/12/92 01:23:01
+:::
+
+### Vectors
+
+::: nonincremental
+-   a 1-dimensional data object, listing a series of values
+-   all objects in a vector share the same type
+-   vector defined by listing entries (separated by commas) in the function `c()` (shorthand for *combine*)
+-   can access single values at position in a vector via an index "[2]"
+
+```{r}
+vector_example <- c(1, 5, 6, 7)
+vector_example
+vector_example[2]
+```
+:::
+
+### Data Frame
+
+::: nonincremental
+-   a two-dimensional (rectangular) data object
+-   Every column in a data frame is a vector
+-   Column names act as a variable name for that vector (access via the `$` accessor)
+-   I (Lindsay) use `df` to denote a data frame.
+
+```{r}
+#| echo: false
+col1 <- c(1, 5, 6, 7)
+col2 <- c(TRUE, FALSE, TRUE, TRUE)
+col3 <- c("a", "b", "c", "d")
+df <- data.frame(col1, col2, col3)
+```
+
+```{r}
+df
+df$col1
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Assigning Objects to Variable Names
+
+-   `<-` symbol assigns a value to a variable
+
+-   Variable names should be descriptive! Poor or confusing variables names include:
+
+    -   `a` and`data1`: Be descriptive!
+
+    -   `student.test.scores`: Avoid periods!
+
+    -   `student test scores`: Use separator characters!
+
+    -   `3rd_test`: Variables can't start with numbers!
+
+-   This course: snake case (lower case with words separated by underscores)
+
+------------------------------------------------------------------------
+
+## Learning check
+
+What kind of object is this in `R`? What is its type?
+
+```{r}
+temps <- c(47.3, 55.6, 48.3)
+```
+
+------------------------------------------------------------------------
+
+## Learning check
+
+What would happen if I were to do the following in `R`?
+
+```{r}
+val <- 34
+val <- val + 1
+```
+
+-   This is called *overwriting* a variable.
+
+------------------------------------------------------------------------
+
+## Where can I find these data objects in `R`?
+
+::: columns
+::: {.column width="50%"}
+-   Objects in `R` will be listed in the Environment tab in the upper right hand corner of RStudio.
+
+-   Removing unnecessary objects from the environment can free up space!
+
+```{r}
+rm(vector_example)
+```
+:::
+
+::: {.column width="50%"}
+![](img/environment.png){width="500"}
+:::
+:::
+
+------------------------------------------------------------------------
+
+# Functions in `R`
+
+------------------------------------------------------------------------
+
+## What is a function?
+
+-   Think of functions like imperative sentences (e.g. "go", "stay", or "sleep")
+-   Indicate that you want it to take an action
+-   Typically immediately followed by open and closed parentheses
+-   What were some functions referenced this week's reading?
+
+------------------------------------------------------------------------
+
+## Arguments
+
+-   Imagine I requested someone to "close" or "bring"
+    -   They're next questions might be "close what" or "bring what", and I might say back "close *the door*" or "bring *dessert*"
+-   Specify the subject of the function, along with additional information needed to run the function
+-   Listed inside of the parentheses
+-   Some arguments are required. Others are optional.
+
+------------------------------------------------------------------------
+
+## Finding Help
+
+-   Typing `?FUNCTION_NAME` in to the Console loads info about that function
+
+`?round()`
+
+-   What functions are required?
+-   What functions are optional?
+
+------------------------------------------------------------------------
+
+## Learning check
+
+Convert the following variable name into something descriptive in snake case
+
+`a <- round(pi, digits = 2)`
+
+Run the code in your Console. How can we find this variable in RStudio once we run this code?
+
+------------------------------------------------------------------------
+
+# Helpful Functions in `R`
+
+------------------------------------------------------------------------
+
+## Helpful Value Operations
+
+::: panel-tabset
+### Numeric Values
+
+::: nonincremental
+`R` can work just like a calculator!
+
+```{r}
+a <- 2
+b <- 3
+
+sum(a,b)
+```
+
+Why does this produce an error?
+
+```{r}
+#| error: true
+c <- "3"
+sum(c, c)
+```
+:::
+
+### Character Values
+
+::: nonincremental
+`R` can concatenate strings!
+
+```{r}
+word1 <- "Harry"
+word2 <- "Sally"
+paste("When", word1, "Met", word2, sep = " ")
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Helpful Vector Functions
+
+::: panel-tabset
+### All Vectors
+
+::: nonincremental
+-   `class()` returns the class of the values in a vector
+-   `length()` returns the number of values in a vector
+-   `is.na()` for each value, returns whether the value is an `NA` value
+:::
+
+### Numeric Vectors
+
+::: nonincremental
+-   `sum()` returns the sum of the values in a vector
+-   `max()` returns the maximum value in a vector
+-   `rank()` returns the ranking of a value in a vector
+:::
+
+### Categorical Vectors
+
+::: nonincremental
+-   `unique()` returns the unique values of a vector
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Learning Check
+
+How would I find the sum of the third column in this data frame, which I have named `df`?
+
+```{r}
+#| echo: false
+df <- data.frame(col1 = c(1, 5, 7),
+                 col2 = c(2, 4, 6),
+                 col3 = c(3, 6, 9))
+df
+```
+
+------------------------------------------------------------------------
+
+## Helpful Data Frame Functions
+
+-   `View()`: Opens a tab to view the data frame as a table
+-   `head()`: returns first six rows of dataset
+-   `names()`: returns the dataset's column names
+-   `nrow()`: returns the number of rows in the dataset
+-   `ncol()`: returns the number of columns in the dataset
+
+------------------------------------------------------------------------
+
+## Do I really have to memorize all of these functions?!
+
+-   No. There are cheatsheets! See [this cheatsheet](https://iqss.github.io/dss-workshops/R/Rintro/base-r-cheat-sheet.pdf) for Base `R`.
+
+------------------------------------------------------------------------
+
+# Operators in `R`
+
+------------------------------------------------------------------------
+
+## Operators in `R`
+
+-   Symbols that communicate what operations to perform in `R`
+-   Includes calculator symbols: `+`, `-`, `*`, `/`, `^`
+-   Includes relational symbols: `<`, `<=`, `<`, `<=`, `==`, `!=`
+-   Includes logical symbols: `&` (AND), `|` (OR), `!` (NOT)
+
+------------------------------------------------------------------------
+
+## Pipe Operator in `R`
+
+-   Symbol is `|>` (old version is `%>%`)
+
+    ::: columns
+    ::: {.column width="60%"}
+    ### Without Pipe
+
+    -   Functions are nested as arguments in `R`
+
+    -   `length(unique(df$col1))`
+
+    -   Perform the innermost function to the outermost
+    :::
+
+    ::: {.column width="40%"}
+    ### With Pipe
+
+    -   Functions are sequenced in `R`
+
+    -   `df$col1 |> unique() |> length()`
+
+    -   Take this data object, and then perform this function, and then perform this function
+    :::
+    :::
+
+------------------------------------------------------------------------
+
+# Missing Values and `R` Functions
+
+------------------------------------------------------------------------
+
+## Missing Values
+
+-   Remember that missing values still have a position in rectangular datasets
+-   Missing values get recorded as `NA` in R
+-   ...but sometimes analysts put words or numbers in their datasets to indicate missingness:
+    -   "NONE"
+    -   -999
+    -   "" \<- this is the most challenging to uncover!
+-   ...but what happens when we try to perform functions on vectors that contain missing values?
+
+------------------------------------------------------------------------
+
+## Missing Values in Math Functions
+
+We can use `na.rm = TRUE` to ignore NA values in math functions.
+
+```{r}
+vals <- c(1, 2, NA, 4, NA, 6)
+sum(vals)
+sum(vals, na.rm = TRUE)
+```
+
+------------------------------------------------------------------------
+
+## For Friday
+
+- Complete Course Infrastructure Set-up 
+
+> You won't be able to complete Friday's lab if this is not complete, so be sure to give yourself enough time if issues come up. I have office hours on Friday before class.

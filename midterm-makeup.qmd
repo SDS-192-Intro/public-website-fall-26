@@ -1,0 +1,19 @@
+---
+title: "Mid-Term Reassessment Instructions"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+As noted in the syllabus, you may have up to two questions from the mid-term reassessed in an in-person technical interview with me. This interview must be scheduled *before Spring Break*. In the interview, I will ask you a question similar to the question you would like to have reassessed, you will have about 7 minutes per question to talk through an answer. Note that I may ask follow-up questions to assess the depth of your understanding on the topic. 
+
+Each question on the exam was five points. You may earn back up to half of the missed points back based on your reassessment. So if you lost five points on one question, you may earn up to 2.5 points back after reassessing that question. If you lost three points on one question, you may earn up to 1.5 points back after reassessing that question. 
+
+## Instructions 
+
+1. Schedule a meeting with me via my booking form in Moodle.
+2. In the Comments section of the booking form, indicate which midterm questions you would like reassessed.
+3. Study up!
+4. **Bring your midterm with you to the interview.** If you don't have the midterm with you, the appointment will be cancelled. 

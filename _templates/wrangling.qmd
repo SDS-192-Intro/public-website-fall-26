@@ -1,0 +1,136 @@
+---
+title: Data Wrangling
+editor: visual
+format:
+  html:
+    embed-resources: true
+---
+
+```{r unnamed-chunk-1}
+#| warning: false
+#| message: false
+#| document: show
+
+library(tidyverse)
+
+hmda_ms_2024 <- read.csv("https://ffiec.cfpb.gov/v2/data-browser-api/view/csv?states=MS&years=2024") |>
+  filter(loan_type == 1 & 
+           lien_status == 1 & 
+           conforming_loan_limit == 'C' & 
+           derived_dwelling_category %in% c("Single Family (1-4 Units):Site-Built", 
+                                            "Single Family (1-4 Units):Manufactured") & 
+           business_or_commercial_purpose == 2 &
+           loan_purpose %in% c(1, 2)) |>
+  select(lei,
+         derived_race,
+         action_taken,
+         loan_purpose,
+         loan_amount,
+         interest_rate,
+         loan_to_value_ratio,
+         denial_reason.1,
+         denial_reason.2,
+         denial_reason.3,
+         denial_reason.4,
+         loan_term,
+         debt_to_income_ratio) |>
+  mutate(loan_purpose = recode(loan_purpose, 
+                               "1" = "Home Purchase",
+                               "2" = "Home improvement",
+                               .default = NA_character_)) |>
+  mutate(action_taken = recode(action_taken, 
+                               "1" = "Loan originated", 
+                               "2" = "Application approved but not accepted",
+                               "3" = "Application denied",
+                               "4" = "Application withdrawn by applicant",
+                               "5" = "File closed for incompleteness",
+                               "6" = "Purchased loan",
+                               "7" = "Preapproval request denied",
+                               "8" = "Preapproval request approved but not accepted",
+                               .default = NA_character_)) |>
+  mutate(denial_reason.1 = recode(denial_reason.1, 
+                                  "1" = "Debt-to-income ratio",
+                                  "2" = "Employment history",
+                                  "3" = "Credit history",
+                                  "4" = "Collateral",
+                                  "5" = "Insufficient cash (downpayment, closing costs)",
+                                  "6" = "Unverifiable information",
+                                  "7" = "Credit application incomplete",
+                                  "8" = "Mortgage insurance denied",
+                                  "9" = "Other",
+                                  "10" = "Not applicable",
+                               .default = NA_character_)) |>
+  rowwise() |>
+  mutate(denial_reason = case_when(any(!is.na(c_across(c(denial_reason.2,
+                                                         denial_reason.3,
+                                                         denial_reason.4)))) ~ "Multiple",
+      TRUE ~ denial_reason.1)) |>
+  ungroup() |>
+  mutate(loan_to_value_ratio = as.numeric(loan_to_value_ratio),
+         interest_rate = as.numeric(interest_rate),
+         loan_term = as.numeric(loan_term)) |>
+  mutate(debt_to_income_ratio = case_when(debt_to_income_ratio %in% c("36", "37", "38","39","40","41") ~ "36%-41%",
+                                          debt_to_income_ratio %in% c("42","43","44","45","46","47","48","49") ~ "42%-49%",
+                                          TRUE ~ debt_to_income_ratio)) |>
+  mutate(debt_to_income_ratio = factor(debt_to_income_ratio, levels = c("Exempt",
+                                                                        "<20%",
+                                                                        "20%-<30%",
+                                                                        "30%-<36%",
+                                                                        "36%-41%",
+                                                                        "42%-49%",
+                                                                        "50%-60%",
+                                                                        ">60%"))) |>
+  select(-c(denial_reason.1, 
+            denial_reason.2, 
+            denial_reason.3, 
+            denial_reason.4))
+```
+###### Question 1
+Send me a list of all of the lending IDs for the mortgage applications that were originated for borrowers with a debt-to-income ratio of greater than 60%.
+
+```{r unnamed-chunk-2}
+
+#Code here
+```
+###### Question 2
+Send me the lending ID and action taken for the *home purchases* with the top 10 loan-to value ratios.
+
+```{r unnamed-chunk-4}
+# Code Here
+```
+###### Question 3
+Send me a list of the loan to value ratios, loan amounts, and property values for each originated loan.
+
+```{r unnamed-chunk-6}
+# Code Here
+```
+###### Question 4
+How many `NA` values were listed in the loan to value ratio variable?
+
+```{r unnamed-chunk-8}
+# Code Here
+```
+###### Question 5
+Of applicants with a debt-to-income ratio of less than 36%, what was the mean and median interest rate of originated loans for each race?
+
+```{r unnamed-chunk-10}
+# Code Here
+```
+###### Question 6
+Which 5 lending institutions lent the most? Send me a list of their IDs, the number of loans they originated, and the total originated.
+
+```{r unnamed-chunk-12}
+# Code Here
+```
+###### Question 7
+How many loans were denied because of debt-to-income ratio for each race and debt-to-income ratio bracket? Send me a list of the race, debt-to-income ratio, and count of denied loans, sorted first by the derived race, and second by the count in descending order.
+
+```{r unnamed-chunk-14}
+# Code Here
+```
+###### Question 8
+When applicants were denied, what was the most common denial reason for each race? Send me a list of the race, top denial reason, and count of loans that were denied for that reason.
+
+```{r unnamed-chunk-16}
+# Code Here
+```

@@ -1,0 +1,299 @@
+---
+title: "APIs"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs:
+    scrollable: true
+    chalkboard:
+      theme: whiteboard
+      boardmarker-width: 5
+editor: source
+execute:
+  echo: true
+  messages: false
+  warnings: false
+---
+
+------------------------------------------------------------------------
+
+## API (Application Programming Interface)
+
+-   Allows programmers or other systems (or users) to communicate with an online data service
+-   Clients (other programmers) expose part of the data service they've used to construct their databases
+    -   This is called an *endpoint*
+    -   Clients also publish documentation about how to communicate with the endpoint
+-   Users build URLs or HTTP services to request computer-readable data from the endpoint
+  
+------------------------------------------------------------------------
+
+## HTTP and GET Requests
+
+-   Hypertext Transfer Protocol (HTTP) is what enables communication between servers hosting web pages and browsers
+-   GET requests enable us to access a resource from a server (only receives data; doesn't change it on the server)
+-   Entering [https://smith.edu](https://smith.edu/) into a browser issues a GET request to access the home page of the Smith website
+
+  
+------------------------------------------------------------------------
+
+## Response Codes
+
+::: columns
+::: {.column width="50%"}
+-   `200`: Success!
+-   `403`: Forbidden
+-   `404`: Not Found
+-   `500`: Internal Server Error
+-   `502`: Bad Gateway
+
+:::
+::: {.column width="50%"}
+
+![](https://i0.wp.com/learn.onemonth.com/wp-content/uploads/2017/08/1-10.png?w=845&ssl=1)
+
+> [https://learn.onemonth.com/what-is-a-404-page/](https://learn.onemonth.com/what-is-a-404-page/)
+
+:::
+:::
+
+
+------------------------------------------------------------------------
+
+#  Crash Course on How the Web Works
+
+------------------------------------------------------------------------
+
+## API Calls
+
+::: columns
+::: {.column width="50%"}
+
+-   Sends an HTTP request URI for a certain resource to a server
+    -   URI includes parameters about what data we wish receive and in what format (e.g. all colleges in MA in the format CSV)
+-   Servers send that information back via HTTP via response 
+
+:::
+::: {.column width="50%"}
+
+![](https://www.seobility.net/en/wiki/images/thumb/f/f1/Rest-API.png/900px-Rest-API.png)
+
+> Figure: REST API - Author: Seobility - License: [CC BY-SA 4.0](https://www.seobility.net/en/wiki/Creative_Commons_License_BY-SA_4.0)]
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+## API Keys
+
+-   Many services require you to request and reference an API key before accessing data from their API
+-   Allows systems to track abuse of the service and sometimes limit requests
+-   Usually free
+-   API key gets included in call
+
+------------------------------------------------------------------------
+
+## Motivating Example: NYC 311 Service Requests
+
+![](img/nyc311.png)
+
+------------------------------------------------------------------------
+
+## Constructing a Query
+
+Base URL is the API Endpoint:[https://data.cityofnewyork.us/resource/erm2-nwe9.csv](https://data.cityofnewyork.us/resource/erm2-nwe9.csv)
+
+![](img/endpoint.png)
+
+
+------------------------------------------------------------------------
+
+## Basic Filtering
+
+[https://data.cityofnewyork.us/resource/erm2-nwe9.csv](https://data.cityofnewyork.us/resource/erm2-nwe9.csv)
+
+-   Filters appended after a `?`
+-   Multiple filters combined with `&`
+-   `$limit=` limits the number of rows downloaded to a certain number 
+
+[https://data.cityofnewyork.us/resource/erm2-nwe9.csv?unique_key=10693408](https://data.cityofnewyork.us/resource/erm2-nwe9.csv?unique_key=10693408)
+
+[https://data.cityofnewyork.us/resource/erm2-nwe9.json?complaint_type=Obstruction&$limit=100](https://data.cityofnewyork.us/resource/erm2-nwe9.json?complaint_type=Obstruction\&\$limit=100)
+
+------------------------------------------------------------------------
+
+## API Documentation
+
+-   Indicates how to sign up for an API key
+-   Indicates possible output formats (e.g. CSV, JSON, XML, etc.)
+-   Lists field names and descriptions
+-   Provides example API calls
+-   Outlines error messages and solutions
+
+> [https://dev.socrata.com/foundry/data.cityofnewyork.us/erm2-nwe9](https://dev.socrata.com/foundry/data.cityofnewyork.us/erm2-nwe9)
+
+------------------------------------------------------------------------
+
+## Spaces and Special Characters
+
+Internet protocols don't know how to interpret spaces or other special characters (i.e. non-ASCII), so we replace those characters with special codes that they do recognize:
+
+::: columns
+::: {.column width="50%"}
+
+-   space ` `:	%20
+-   `!`:	%21
+-   `"`:	%22
+
+:::
+::: {.column width="50%"}
+-   `%`:	%25
+-   `'`:	%27
+-   `-`: %2D
+
+:::
+:::
+
+There are many resources online for identifying these. 
+
+------------------------------------------------------------------------
+
+## Example Request with Special Characters
+
+[https://data.cityofnewyork.us/resource/erm2-nwe9.csv?complaint_type=Noise%20%2D%20Commercial&$limit=200](https://data.cityofnewyork.us/resource/erm2-nwe9.csv?complaint_type=Noise%20%2D%20Commercial\&\$limit=200)
+
+![](img/url.png)
+
+
+------------------------------------------------------------------------
+
+## Reading API Output into `R`
+
+-   When API data can be output as a CSV, the URL can be provided directly into `read_csv()`
+
+```{r message=FALSE, warning=FALSE}
+library(readr)
+nyc_recent_noise <- read_csv("https://data.cityofnewyork.us/resource/erm2-nwe9.csv?complaint_type=Noise%20%2D%20Commercial&$limit=200")
+head(nyc_recent_noise)
+```
+
+
+------------------------------------------------------------------------
+
+## What is a relational database?
+
+-   Series of tables (or rectangular datasets!)
+-   Every table has an ID field for each unit of observation (row)
+-   IDs are referenced to map relations across related tables 
+-   Access data from individual tables or across multiple tables with Structured Query Language (SQL)
+
+------------------------------------------------------------------------
+
+## `dplyr` vs. `SQL`
+
+::: columns
+::: {.column width="50%"}
+
+-   `select()`
+-   `filter()`
+-   `group_by()`
+-   `arrange()`
+-   `head()`
+
+:::
+::: {.column width="50%"}
+
+-   `SELECT`
+-   `WHERE`
+-   `GROUP BY`
+-   `ORDER BY`
+-   `LIMIT`
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+## `SQL` in APIs
+
+-   Different flavors of `SQL` can be written in the URLs constructed for API calls
+-   Socrata's API provides functionality for the Socrata Query Language (SoQL) - a flavor of SQL
+  
+------------------------------------------------------------------------
+
+## `SoQL`
+
+![](img/soql.png) 
+
+------------------------------------------------------------------------
+
+## SoQL Example 1
+
+::: panel-tabset
+
+### dplyr
+
+```{r eval=FALSE}
+df |>
+  select(unique_key, created_date, incident_address) |>
+  filter(descriptor == 'Pothole') |>
+  head(100)
+```
+
+
+### SQL
+
+```
+SELECT unique_key, created_date, incident_address 
+WHERE descriptor = 'Pothole'
+LIMIT 100
+```
+
+### SoQL
+
+```{r message=FALSE, warning=FALSE}
+nyc_recent_potholes <- read_csv("https://data.cityofnewyork.us/resource/erm2-nwe9.csv?$select=unique_key,created_date,incident_address&$where=descriptor='Pothole'&$limit=100")
+head(nyc_recent_potholes)
+```
+
+:::
+
+------------------------------------------------------------------------
+
+## SoQL Example 2
+
+::: panel-tabset
+
+### dplyr
+
+```{r eval=FALSE}
+df |>
+  filter(complaint_type == 'Traffic') |>
+  group_by(descriptor) |>
+  summarize(count = n()) |>
+  arrange(desc(count))
+```
+
+
+### SQL
+
+```
+WHERE complaint_type = 'Traffic'
+SELECT descriptor, count(*)
+GROUP BY descriptor
+ORDER BY count DESC
+
+```
+
+### SoQL
+
+```{r message=FALSE, warning=FALSE}
+library(readr)
+nyc_traffic_complaints <- read_csv("https://data.cityofnewyork.us/resource/erm2-nwe9.csv?$where=complaint_type='Traffic'&$select=descriptor,count(*)&$group=descriptor&$order=count%20DESC")
+head(nyc_traffic_complaints)
+```
+
+:::
+
+
+ 

@@ -1,0 +1,222 @@
+---
+title: "Point Mapping"
+editor: visual
+---
+
+```{r}
+#| warning: false
+#| message: false
+#| echo: false
+#| document: show
+
+library(tidyverse)
+library(leaflet)
+library(sf)
+
+counties <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/a8b64e3070ca2543b904d4d92780b09e6062ced6/website/data/nbi_counties.csv")
+maintenance <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/a8b64e3070ca2543b904d4d92780b09e6062ced6/website/data/nbi_maintenance.csv")
+kinds <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/a8b64e3070ca2543b904d4d92780b09e6062ced6/website/data/nbi_kind.csv")
+
+nbi_ma <- read.delim("https://www.fhwa.dot.gov/bridge/nbi/2024/delimited/MA24.txt", sep = ",") |>
+  left_join(counties) |>
+  left_join(maintenance) |>
+  left_join(kinds) |>
+  filter(SERVICE_ON_042A == 1) |>
+  select(STRUCTURE_NUMBER_008, COUNTY_CODE_003_L, MAINTENANCE_021_L, ADT_029, STRUCTURE_KIND_043A_L, STRUCTURAL_EVAL_067, LAT_016, LONG_017) |>
+  mutate(STRUCTURE_KIND_043A_L = 
+           case_when(
+             STRUCTURE_KIND_043A_L == "Concrete continuous" ~ "Concrete",
+             STRUCTURE_KIND_043A_L == "Steel continuous" ~ "Steel",
+             STRUCTURE_KIND_043A_L == "Prestressed concrete continuous" ~ "Prestressed concrete",
+             TRUE ~ STRUCTURE_KIND_043A_L)) |>
+  mutate(LAT_016_DEG = as.numeric(substr(LAT_016, 1, 2)),
+         LAT_016_MIN = as.numeric(substr(LAT_016, 3, 4)),
+         LAT_016_SEC = as.numeric(substr(LAT_016, 5, 8)),
+         LONG_017_DEG = as.numeric(substr(LONG_017, 1, 2)),
+         LONG_017_MIN = as.numeric(substr(LONG_017, 3, 4)),
+         LONG_017_SEC = as.numeric(substr(LONG_017, 5, 8)),
+         LAT = LAT_016_DEG + (LAT_016_MIN/60) + (LAT_016_SEC/360000),
+         LONG = (LONG_017_DEG + (LONG_017_MIN/60) + (LONG_017_SEC/360000)) * -1)
+
+
+rm(counties, kinds, maintenance)
+```
+
+###### Question
+
+::: question
+Convert `nbi_ma` to an `sf` object. The CRS is 4326.
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+nbi_ma <- nbi_ma  |>
+  st_as_sf(coords = c("LONG", "LAT"), crs = 4326)
+```
+
+###### Question
+
+::: question
+Initiate a basemap of MA and add "CartoDB.Positron" provider tiles. You can use coordinates: 42.4072 (lat) -71.3824 (long) and set the zoom to 7.
+:::
+
+```{r}
+#Code here
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+leaflet() |>
+  setView(lat = 42.4072, lng = -71.3824, zoom = 7) |>
+  addProviderTiles("CartoDB.Positron") 
+```
+
+
+###### Question
+
+::: question
+Add Circle Markers of bridges to the map. 
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+leaflet() |>
+  setView(lat = 42.4072, lng = -71.3824, zoom = 7) |>
+  addProviderTiles("CartoDB.Positron") |>
+  addCircleMarkers(data = nbi_ma)
+```
+
+###### Question
+
+::: question
+Adjust the `radius`, `stroke`, and `fillOpacity`.  
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+leaflet() |>
+  setView(lat = 42.4072, lng = -71.3824, zoom = 7) |>
+  addProviderTiles("CartoDB.Positron") |>
+  addCircleMarkers(data = nbi_ma,
+                   radius = 2,
+                   fillOpacity = 0.8,
+                   stroke = FALSE)
+```
+
+###### Question
+
+::: question
+Set the `fillColor` to `ADT_029`, and swap out the different palettes. I've given you code to add a legend. Be sure to update the palette in the legend when swapping out palettes. Which palette do you think is most appropriate?
+:::
+
+```{r}
+
+pal_numeric <- colorNumeric(palette = "YlOrRd", 
+                    domain = nbi_ma$ADT_029)
+  
+pal_bin <- colorBin(palette = "YlOrRd", 
+                    domain = nbi_ma$ADT_029, 
+                    bins = 4)
+
+pal_quant <- colorQuantile(palette = "YlOrRd", 
+                    domain = nbi_ma$ADT_029, 
+                    n = 4)
+
+
+# Code Here
+
+# addLegend(data = nbi_ma,
+#             title = "Annual Daily Traffic of Bridges, 2024", 
+#             pal = pal_numeric, 
+#             values = ~ADT_029)
+  
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+leaflet() |>
+  setView(lat = 42.4072, lng = -71.3824, zoom = 7) |>
+  addProviderTiles("CartoDB.Positron") |>
+  addCircleMarkers(data = nbi_ma,
+                   radius = 2,
+                   fillOpacity = 0.8,
+                   stroke = FALSE,
+                   fillColor = ~pal_bin(ADT_029)) |>
+  addLegend(data = nbi_ma,
+            title = "Annual Daily Traffic of Bridges, 2024", 
+            pal = pal_bin, 
+            values = ~ADT_029)
+```
+
+###### Question
+
+::: question
+Set the `fillColor` to `STRUCTURAL_EVAL_067`, and swap out the different palettes. I've given you code to add a legend. Be sure to update the palette in the legend when swapping out palettes. Note how I reversed the scale. Which palette do you think is most appropriate?
+:::
+
+```{r}
+
+pal_numeric <- colorNumeric(palette = "YlOrRd", 
+                    domain = nbi_ma$STRUCTURAL_EVAL_067,
+                    reverse = TRUE)
+  
+pal_bin <- colorBin(palette = "YlOrRd", 
+                    domain = nbi_ma$STRUCTURAL_EVAL_067, 
+                    bins = 4,
+                    reverse = TRUE)
+
+pal_quant <- colorQuantile(palette = "YlOrRd", 
+                    domain = nbi_ma$STRUCTURAL_EVAL_067, 
+                    n = 4,
+                    reverse = TRUE)
+
+
+# Code Here
+
+# addLegend(data = nbi_ma,
+#             title = "Structural Evaluation of Bridges, 2024", 
+#             pal = pal_numeric, 
+#             values = ~STRUCTURAL_EVAL_067)
+  
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+leaflet() |>
+  setView(lat = 42.4072, lng = -71.3824, zoom = 7) |>
+  addProviderTiles("CartoDB.Positron") |>
+  addCircleMarkers(data = nbi_ma,
+                   radius = 2,
+                   fillOpacity = 0.8,
+                   stroke = FALSE,
+                   fillColor = ~pal_numeric(STRUCTURAL_EVAL_067)) |>
+  addLegend(data = nbi_ma,
+            title = "Structural Evaluation of Bridges, 2024", 
+            pal = pal_numeric, 
+            values = ~STRUCTURAL_EVAL_067)
+```
+

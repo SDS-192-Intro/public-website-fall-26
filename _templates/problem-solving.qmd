@@ -1,0 +1,69 @@
+---
+title: Problem Solving
+format:
+  html:
+    embed-resources: true
+editor: source
+knitr:
+  opts_chunk:
+    message: false
+---
+
+###### Question 1
+Run the codes below and check out the error messages. Review the code to fix each of the errors. Note that each subsequent code chunk relies on the previous code chunk, so you will need to fix the errors in order and run the chunks in order.
+
+```{r unnamed-chunk-3}
+#| error: true
+# Create three vectors
+a <- 1, 2, 3, 4, 5
+b <- "a", "b", "c", "d", "e"
+c <- TRUE, FALSE, TRUE, TRUE, FALSE
+```
+```{r unnamed-chunk-5}
+#| error: true
+# Add the values in the vector a
+a_added <- add(a)
+```
+```{r unnamed-chunk-7}
+#| error: true
+# Multiply the previous output by 3
+three_times_a_added <- added_a * 3
+```
+```{r unnamed-chunk-9}
+#| error: true
+# Create a dataframe with col1 and col2
+df <- data.frame(
+  col1 = c(1, 2, 3)
+  col2 = c("a", "b", "c")
+```
+```{r unnamed-chunk-11}
+#| error: true
+# Add a new column to df
+df$col3 <- c(TRUE, FALSE)
+```
+###### Question 2
+Copy and paste one line of code from this lab **as a threaded comment** on the Slack message I posted on September 7, 2022. Be sure the text is formatted as code.
+
+###### Question 3
+Access the help pages for the function `sort()`. Write code below to sort the vector `a` (which you created in an earlier step) in decreasing order.
+
+```{r unnamed-chunk-14}
+# Write code here
+```
+###### Question 4
+Navigate to [this cheatsheet](https://iqss.github.io/dss-workshops/R/Rintro/base-r-cheat-sheet.pdf) for base `R`. Imagine we collected the temperature of our home each day for the past ten days (see code below). 
+
+```{r unnamed-chunk-16}
+#Create a vector of temperatures
+temps_to_factor <- c(68, 70, 78, 75, 69, 80, 66, 66, 79)
+```
+Let's say we wanted to find how each day ranked from coolest to hottest. For instance, I wanted to know the ranking for day 1 vs. day 2 vs. day 3, and so on. Using the cheatsheet, find the function that will allow you to generate a ranking of each day's temperature. Search the help pages for this function to determine how to randomly rank two days with the same temperature. Write a comment to yourself describing how this function is different than sorting the data.
+
+```{r unnamed-chunk-17}
+# Write code here
+
+# Write comment here
+```
+###### Question 5
+Add a comment to the code chunk above, citing [this Stack Overflow](https://stackoverflow.com/questions/54017285/difference-between-sort-rank-and-order) post. Be sure to cite the post properly. You can read through the post to double check your answers.
+

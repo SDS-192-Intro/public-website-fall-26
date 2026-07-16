@@ -1,0 +1,233 @@
+---
+title: "Joining Tables"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs:
+    df-print: paged
+    scrollable: true
+    chalkboard:
+      theme: whiteboard
+      boardmarker-width: 5
+editor: source
+execute:
+  echo: true
+  messages: false
+  warnings: false
+---
+
+## Create Two Data Tables
+
+1. Separate the index card cutouts into two data tables - one with three rows and one with four rows.
+2. Each person in your group fill out the first table with:
+  a. Your Smith ID
+  b. Your first name
+  c. Your last name
+3. One person from your group rotate clockwise to the next group
+4. Fill out the second table with:
+  a. Your Smith ID
+  b. Today's date
+  c. The mood you are in
+5. The person that rotated, fill out a **second** row in the second table with:
+  a. Your Smith ID
+  b. Yesterday's date
+  c. The mood you were in yesterday
+
+------------------------------------------------------------------------
+
+## Joining Datasets
+
+- Up until this point, we have been working with data in single tables.
+- Sometimes related data can be spread across multiple tables that we wish to bring together for different kinds of analysis. 
+
+------------------------------------------------------------------------
+
+## Keys
+
+- A column shared across the tables that we can join on. 
+
+------------------------------------------------------------------------
+
+## Different Kinds of Joins
+
+- `inner_join()`
+- `left_join()`
+- `right_join()`
+- `full_join()`
+- `anti_join()`
+
+------------------------------------------------------------------------
+
+## Inner Join
+
+![](https://d33wubrfki0l68.cloudfront.net/3abea0b730526c3f053a3838953c35a0ccbe8980/7f29b/diagrams/join-inner.png)
+
+------------------------------------------------------------------------
+
+## Outer Joins
+
+```{r}
+#| echo: false
+#| out-width: "350"
+knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/9c12ca9e12ed26a7c5d2aa08e36d2ac4fb593f1e/79980/diagrams/join-outer.png")
+```
+
+------------------------------------------------------------------------
+
+## One-to-many relationships
+
+![](https://d33wubrfki0l68.cloudfront.net/6faac3e996263827cb57fc5803df6192541a9a4b/c7d74/diagrams/join-one-to-many.png)
+
+
+------------------------------------------------------------------------
+
+## Many-to-many relationships
+
+![](https://d33wubrfki0l68.cloudfront.net/d37530bbf7749f48c02684013ae72b2996b07e25/37510/diagrams/join-many-to-many.png)
+
+------------------------------------------------------------------------
+
+## Civilian Complaint Review Board
+
+> The New York City Civilian Complaint Review Board (CCRB) is an independent agency. It is empowered to receive, investigate, mediate, hear, make findings, and recommend action on complaints against New York City police officers alleging the use of excessive or unnecessary force, abuse of authority, discourtesy, or the use of offensive language. The Board’s investigative staff, composed entirely of civilian employees, conducts investigations in an impartial fashion. The Board forwards its findings to the police commissioner. (https://www.nyc.gov/site/ccrb/about/about.page)
+
+------------------------------------------------------------------------
+
+## Let's Say I Have Two Data Frames
+
+```{r}
+#| echo: false
+  
+library(tidyverse)
+library(lubridate)
+library(readxl)
+
+ccrd <- read.csv("https://data.cityofnewyork.us/resource/2mby-ccnw.csv?$limit=150000") 
+ccrd_2024 <- ccrd |>
+  mutate(incident_date = ymd(incident_date)) |>
+  filter(year(incident_date) == 2024)
+
+sqf_url <- "https://www.nyc.gov/assets/nypd/downloads/excel/analysis_and_planning/stop-question-frisk/sqf-2024.xlsx"
+temp <- tempfile()
+download.file(sqf_url, temp, mode="wb")
+sqf <- read_excel(path = temp, sheet = 1)
+sqf_2024 <- sqf
+
+ccrd_2024 |> select(complaint_id, incident_date, precinct_of_incident_occurrence, reason_for_police_contact, outcome_of_police_encounter, ccrb_complaint_disposition) |> head()
+sqf_2024 |> select(STOP_ID, STOP_FRISK_DATE, STOP_LOCATION_PRECINCT) |> head() 
+
+```
+
+---------------
+
+## ... and I want to create this plot
+
+```{r}
+#| echo: false
+ccrd_2024_a <- ccrd_2024 |>
+  group_by(precinct_of_incident_occurrence) |>
+  summarize(TOTAL_REPORTS = n()) |>
+  mutate(precinct_of_incident_occurrence = as.numeric(precinct_of_incident_occurrence))
+
+  
+sqf_2024 |>
+  group_by(STOP_LOCATION_PRECINCT) |>
+  summarize(TOTAL_STOPS = n()) |>
+  mutate(STOP_LOCATION_PRECINCT = as.numeric(STOP_LOCATION_PRECINCT)) |>
+  left_join(ccrd_2024_a, by = c("STOP_LOCATION_PRECINCT" = "precinct_of_incident_occurrence")) |>
+  ggplot(aes(x = TOTAL_STOPS, y = TOTAL_REPORTS)) +
+  geom_point(alpha = 0.5) +
+  theme_minimal() +
+  labs(title = "NYPD Stop and Frisk and Civilian Complaint Review Board Cases by Precinct, 2024",
+       x = "Total Stops per Precinct",
+       y = "Total Reports per Precinct")
+```
+
+---------------
+
+## Aggregating the Data
+
+```{r}
+sqf_2024 <- sqf_2024 |>
+  group_by(STOP_LOCATION_PRECINCT) |>
+  summarize(TOTAL_STOPS = n())
+
+ccrd_2024 <- ccrd_2024 |>
+  group_by(precinct_of_incident_occurrence) |>
+  summarize(TOTAL_REPORTS = n())
+
+sqf_2024 |> head()
+ccrd_2024 |> head()
+```
+
+
+---------------
+
+## Align Keys
+
+```{r}
+
+ccrd_2024 <- ccrd_2024 |>
+  mutate(precinct_of_incident_occurrence = as.numeric(precinct_of_incident_occurrence))
+  
+sqf_2024 <- sqf_2024 |>
+  mutate(STOP_LOCATION_PRECINCT = as.numeric(STOP_LOCATION_PRECINCT))
+
+```
+
+
+------------------------------------------------------------------------
+
+## Join Datasets
+
+```{r}
+sqf_2024 |>
+  left_join(ccrd_2024, by = c("STOP_LOCATION_PRECINCT" = "precinct_of_incident_occurrence"))
+```
+
+------------------------------------------------------------------------
+
+## What if I were to look at the same data for only December 31, 2024?
+
+```{r}
+#| echo: false
+sqf_12_31_2024 <- sqf  |>
+  mutate(STOP_LOCATION_PRECINCT = as.numeric(STOP_LOCATION_PRECINCT)) |>
+  mutate(STOP_FRISK_DATE = ymd(STOP_FRISK_DATE)) |>
+  filter(month(STOP_FRISK_DATE) == 12 & day(STOP_FRISK_DATE) == 31) |>
+  group_by(STOP_LOCATION_PRECINCT) |>
+  summarize(TOTAL_STOPS = n())
+  
+
+ccrd_12_31_2024 <- ccrd |>
+  mutate(precinct_of_incident_occurrence = as.numeric(precinct_of_incident_occurrence)) |>
+  mutate(incident_date = ymd(incident_date)) |>
+  filter(year(incident_date) == 2024 & month(incident_date) == 12 & day(incident_date) == 31) |>
+  group_by(precinct_of_incident_occurrence) |>
+  summarize(TOTAL_REPORTS = n())
+
+sqf_12_31_2024
+
+ccrd_12_31_2024
+  
+```
+
+------------------------------------------------------------------------
+
+## Different Join Types
+
+```{r}
+sqf_12_31_2024 |>
+  inner_join(ccrd_12_31_2024, by = c("STOP_LOCATION_PRECINCT" = "precinct_of_incident_occurrence"))
+
+sqf_12_31_2024 |>
+  left_join(ccrd_12_31_2024, by = c("STOP_LOCATION_PRECINCT" = "precinct_of_incident_occurrence"))
+
+sqf_12_31_2024 |>
+  right_join(ccrd_12_31_2024, by = c("STOP_LOCATION_PRECINCT" = "precinct_of_incident_occurrence"))
+
+sqf_12_31_2024 |>
+  full_join(ccrd_12_31_2024, by = c("STOP_LOCATION_PRECINCT" = "precinct_of_incident_occurrence"))
+```
+
+

@@ -1,0 +1,92 @@
+---
+title: Advanced Data Wrangling
+editor: source
+format:
+  html:
+    embed-resources: true
+---
+
+```{r unnamed-chunk-1}
+#| warning: false
+#| message: false
+#| document: show
+
+library(tidyverse)
+
+sqf_url <- "https://www1.nyc.gov/assets/nypd/downloads/zip/analysis_and_planning/stop-question-frisk/sqf-2011-csv.zip"
+temp <- tempfile()
+download.file(sqf_url, temp)
+sqf_zip <- unzip(temp, "2011.csv")
+sqf_2011 <- read.csv(sqf_zip, stringsAsFactors = FALSE) 
+sqf_2011_race_cat <- read.csv("https://raw.githubusercontent.com/lindsaypoirier/STS-101/master/Data/SQF/sqf_race_categories.csv", stringsAsFactors = FALSE) 
+rm(sqf_url)
+rm(temp)
+rm(sqf_zip)
+```
+###### Question 1
+Select all columns relating the crime suspected.
+
+```{r unnamed-chunk-2}
+#Code here
+```
+###### Question 2
+Select all of the first 5 columns, except the 4th column. 
+
+```{r unnamed-chunk-4}
+# Code Here
+```
+###### Question 3
+Send me the distinct values in the crime suspected column.
+
+```{r unnamed-chunk-6}
+# Code Here
+```
+###### Question 4
+In which rows where a suspect was frisked and searched was either contraband or a pistol found on the suspect? Add a line of code below to determine this. 
+
+```{r unnamed-chunk-8}
+sqf_2011 |>
+  select(frisked, searched, contrabn, pistol) |> 
+  head(5)
+```
+###### Question 5
+Send me all of the rows where the crime suspected contains "FEL."
+
+```{r unnamed-chunk-10}
+# Code Here
+```
+###### Question 6
+The NYPD uses the number 999 to indicate a missing age. In the code below, add a line to convert 999 to NA, using `mutate()`. 
+
+```{r unnamed-chunk-12}
+# Code Here
+
+sqf_2011 |>
+  filter(age > 100) |>
+  ggplot(aes(x = age)) +
+  geom_histogram(binwidth = 100)
+```
+###### Question 7
+Add a line to the code below to create a new column called `innocent` that is set to "Y" if both `arstmade` and `sumissue` are "N", and otherwise set to "N".
+
+```{r unnamed-chunk-14}
+sqf_2011 |>
+  select(pct, ser_num, arstmade, sumissue) #|>
+  #summarize(num_innocent = sum(innocent == "Y"))
+```
+###### Question 8
+In the following code, the percent total stops is calculated out the total stops for each city. How can I adjust the code if I wanted to calculate percent total stops out of the total stops in the entire dataset.
+
+```{r unnamed-chunk-16}
+sqf_2011 |>
+  group_by(city, race) |>
+  summarize(count = n()) |>
+  mutate(total_stops = sum(count)) |>
+  mutate(percent_total_stops = count/total_stops)
+```
+###### Question 9
+In which precinct were individuals of each race stopped the most?
+
+```{r unnamed-chunk-18}
+# Code Here
+```

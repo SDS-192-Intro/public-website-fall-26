@@ -1,0 +1,155 @@
+---
+title: 'Lab 6: Joining Datasets'
+format:
+  html:
+    embed-resources: true
+editor: source
+knitr:
+  opts_chunk:
+    message: false
+    warning: false
+---
+
+```{r import}
+#| document: show
+library(tidyverse)
+library(echor)
+
+echo_air_ca <- 
+  echoAirGetFacilityInfo(p_st = "CA", 
+                         qcolumns = "1,4,5,8,107,108,109,110") |>
+  select(-SourceID)
+
+echo_water_ca <- 
+  echoWaterGetFacilityInfo(p_st = "CA", 
+                           qcolumns = "1,4,5,9,203,204,205,206") |>
+  select(-SourceID)
+```
+```{r unnamed-chunk-1}
+#| document: show
+echo_air_dd <- echoAirGetMeta() |>
+  filter(ColumnID %in% c(1,4,5,8,107,108,109,110)) |>
+  select(ColumnID, ObjectName, Description)
+
+echo_water_dd <- echoWaterGetMeta() |>
+  filter(ColumnID %in% c(1,4,5,9,203,204,205,206)) |>
+  select(ColumnID, ObjectName, Description)
+```
+###### Question 1
+
+Reference the data dictionaries for these two data frames to determine the names of the variables that we will join on. Remember that these should be variables that we can use to uniquely identify each unit of observation across the data frames. Write code below to determine the number of unique values for the variables you identify in each of these data frames. (Hint: Remember how we counted unique values in a variable in lab 1?)
+
+
+```{r unnamed-chunk-2}
+# Write code here for echo_air_ca
+# Write code here for echo_water_ca
+```
+###### Question 2
+
+In the code below, for each of the data frames, you should group the data by `RegistryID` and then summarize by returning the `max()` value in `CurrSvFlag`, `ViolFlag`, `CurrVioFlag`, `Insp5yrFlag` for each group. Store the results in `echo_air_ca_agg` and `echo_water_ca_agg` respectively. Note how many rows in are in `echo_air_ca_agg` and `echo_water_ca_agg`. It should match the number of unique values in `RegistryID` that you calculated above. 
+ 
+
+```{r unnamed-chunk-5}
+#| eval: false
+
+echo_air_ca_agg <-
+  echo_air_ca |>
+  ______ |>             #group by RegistryID
+  _____(                #Summarize the following:
+    CurrSvFlag = _____, #Calculate max value in CurrSvFlag
+    ViolFlag = _____,   #Calculate max value in ViolFlag
+    CurrVioFlag = _____,#Calculate max value in CurrVioFlag
+    Insp5yrFlag = _____ #Calculate max value in Insp5yrFlag
+  )
+
+echo_water_ca_agg <- #Copy and adjust code above to create echo_water_ca_agg
+```
+###### Question 3
+
+Write code below to perform four kinds of joins - a left join, a right join, and inner join, and a full join. `echo_water_ca_agg` should be in the first position, and `echo_air_ca_agg` should be joined onto it. I've started that for you in the commented code below. 
+
+
+```{r unnamed-chunk-7}
+#joined_left <- echo_water_ca_agg |> 
+
+#joined_right <- echo_water_ca_agg |> 
+
+#joined_inner <- echo_water_ca_agg |> 
+
+#joined_full <- echo_water_ca_agg |> 
+```
+```{r unnamed-chunk-9}
+#| document: show
+joined_full |> head()
+```
+```{r unnamed-chunk-10}
+#| document: show
+nrow(joined_inner)
+```
+###### Question 4
+
+The three statements below are incorrect. Correct my statements below about the remaining joins. 
+
+
+```{r unnamed-chunk-11}
+#| eval: false
+
+paste(nrow(joined_full), "represents the number of Registry IDs present in echo_air_ca_agg")
+
+paste(nrow(joined_left), "represents the number of Registry IDs present in either echo_air_ca_agg or echo_water_ca_agg")
+
+paste(nrow(joined_right), "represents the number of Registry IDs present in echo_water_ca_agg")
+```
+```{r unnamed-chunk-13}
+#| document: show
+rm(joined_full, joined_left, joined_right)
+```
+###### Question 5
+
+In my code below rename the remaining columns to differentiate between the column names from the two original data frames.
+
+
+```{r unnamed-chunk-14}
+#| eval: false
+joined_inner_renamed <-
+  joined_inner |>
+  rename(
+    CurrSvFlag_water = CurrSvFlag.x,
+    ViolFlag_water = ViolFlag.x 
+    #Rename remaining columns here. Be sure to separate by comma. There are six more to go!
+  )
+```
+###### Question 6
+
+Now that we have a cleaned up data frame, use a data wrangling verb to subset the data frame to the rows where a `RegistryID` has a *current violation* to both the Clean Water Act and Clean Air Act. Repeat these steps to determine which `RegistryID`s have a *significant violation* to both Acts. I recommend running this on `joined_inner_renamed`. 
+
+Once you've run these codes, open both `echo_air_ca` and `echo_water_ca` by clicking on the data frames in your environment. Search for a few of the `RegistryID`s that appeared in your analysis to identify the names and locations of the facilities. 
+
+
+```{r unnamed-chunk-16}
+# Write wrangling code here for current violations. 
+
+# Write wrangling code here for significant violations. 
+```
+###### Question 7
+
+Using my code as an example, determine how many times facility 110000483619 appears in `echo_air_ca` and how many times it appears in `echo_water_ca`. How many times would this facility show up if we were to perform a many-to-many inner join for these two data frames? Write your response as a comment in the code chunk. 
+
+
+```{r unnamed-chunk-20}
+#Write code here for echo_air_ca!
+
+#Write code here for echo_water_ca!
+
+#Write comment here!
+```
+###### Question 8
+
+Write code below to perform two `anti_join()`s. The first should tell me which facilities are regulated by the Clean Air Act and *not* the Clean Water Act, and the second should tell me which facilities are regulated by the Clean Water Act and *not* the Clean Air Act. 
+
+
+```{r unnamed-chunk-22}
+#not_clean_water <- Write code here!
+
+#not_clean_air <- Write code here!
+```

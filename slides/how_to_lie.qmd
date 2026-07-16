@@ -1,0 +1,345 @@
+---
+title: "How to Lie with Maps"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs:
+    scrollable: true
+    chalkboard:
+      theme: whiteboard
+      boardmarker-width: 5
+editor: source
+execute:
+  echo: false
+  messages: false
+  warnings: false
+---
+
+## For Today
+
+-   Strategies for Lying with Maps
+
+------------------------------------------------------------------------
+
+## All maps lie! 
+
+```{r out.width= 300}
+knitr::include_graphics("https://press.uchicago.edu/.imaging/mte/ucp/medium/dam/ucp/books/jacket/978/02/26/43/9780226435923.jpg/jcr:content/9780226435923.jpg")
+```
+
+------------------------------------------------------------------------
+
+## Acknowledgements
+
+Today's lecture is almost entirely structured based on:
+
+Deluca, Eric, and Sara Nelson. 2017. "7. Lying With Maps." In Mapping, Society, and Technology, edited by Steven Manson. Minneapolis, Minnesota: University of Minnesota Libraries Publishing.
+ [https://open.lib.umn.edu/mapping/chapter/7-lying-with-maps/](https://open.lib.umn.edu/mapping/chapter/7-lying-with-maps/).
+
+------------------------------------------------------------------------
+
+## Projections
+
+::: columns
+::: {.column width="50%"}
+
+![](https://upload.wikimedia.org/wikipedia/commons/6/61/Equal_Earth_projection_SW.jpg)
+
+:::
+::: {.column width="50%"}
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Mercator_projection_Square.JPG/1280px-Mercator_projection_Square.JPG)
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Symbolization
+
+::: columns
+::: {.column width="50%"}
+
+![](img/northampton-map.png)
+
+:::
+::: {.column width="50%"}
+
+
+![](img/northampton-map2.png)
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+
+## Cartograms
+
+![](https://www.viewsoftheworld.net/wp-content/uploads/2017/03/HappyPlanetIndexMap2016.png)
+
+> Benjamin Hennig, [https://www.viewsoftheworld.net/](https://www.viewsoftheworld.net/)
+
+
+------------------------------------------------------------------------
+
+## Normalization
+
+Adjusting raw counts of data in order to make them comparable relative to one another; often involves turning counts into a percentage or ratio
+
+```{r}
+#| include: false
+
+library(tidyverse)
+library(tidycensus)
+library(sf)
+census_poverty_county <- get_acs(geography = "county",
+              variables = 'B17001_002',
+              state = 25, # Replace with State FIPS code
+              year = 2020, 
+              geometry = TRUE,
+              summary_var = 'B17001_001') %>%
+  st_transform(4326)
+```
+
+::: columns
+::: {.column width="50%"}
+
+```{r}
+#| include: false
+library(leaflet)
+pal_numeric <- colorNumeric(palette = "YlOrRd",
+                          domain = census_poverty_county$estimate)
+leaflet() %>%
+  setView(lat = 42.4, lng = -70, zoom = 6) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(
+    data = census_poverty_county,
+    fillColor = ~pal_numeric(estimate),
+    fillOpacity = 0.7,
+    stroke = 0) %>%
+  addLegend(title = "Income below Poverty Level <br/>in Last 12 Months, 2020", 
+              data = census_poverty_county,
+              pal = pal_numeric, 
+              values = ~estimate)
+```
+
+```{r out.width= 500}
+knitr::include_graphics("img/norm1.png")
+```
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| include: false
+census_poverty_county <- 
+  census_poverty_county %>%
+  mutate(percent_pov = estimate/summary_est)
+pal_numeric <- colorNumeric(palette = "YlOrRd",
+                          domain = census_poverty_county$percent_pov)
+leaflet() %>%
+  setView(lat = 42.4, lng = -70, zoom = 6) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(
+    data = census_poverty_county,
+    fillColor = ~pal_numeric(percent_pov),
+    fillOpacity = 0.7,
+    stroke = 0) %>%
+  addLegend(title = "% Pop Income below Poverty Level <br/>in Last 12 Months, 2020", 
+    data = census_poverty_county,
+    pal = pal_numeric, 
+    values = ~percent_pov)
+```
+
+```{r out.width= 500}
+knitr::include_graphics("img/norm2.png")
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Classification
+
+```{r}
+#| include: false
+census_poverty_tracts <- get_acs(geography = "tract",
+              variables = 'B17001_002',
+              state = 25, # Replace with State FIPS code
+              year = 2020, 
+              geometry = TRUE,
+              summary_var = 'B17001_001') %>%
+  st_transform(4326)
+```
+
+::: columns
+::: {.column width="50%"}
+
+Binning creates equal interval breaks, and classifies the data into the intervals.
+
+```{r}
+#| include: false
+census_poverty_tracts <- 
+  census_poverty_tracts %>%
+  mutate(percent_pov = estimate/summary_est)
+pal_bin <- colorBin(palette = "YlOrRd",
+                          domain = census_poverty_tracts$percent_pov,
+                    bins = 4)
+leaflet("width=90%, height=70%") %>%
+  setView(lat = 42.4, lng = -70, zoom = 6) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(
+    data = census_poverty_tracts,
+    fillColor = ~pal_bin(percent_pov),
+    fillOpacity = 0.7,
+    stroke = 0) %>%
+  addLegend(title = "% Pop Income below Poverty Level <br/>in Last 12 Months, 2020", 
+    data = census_poverty_tracts,
+    pal = pal_bin, 
+    values = ~percent_pov, 
+    position = "topright")
+```
+
+```{r out.width= 500}
+knitr::include_graphics("img/class1.png")
+```
+
+
+:::
+
+::: {.column width="50%"}
+
+Quantiles creates breaks so that there are the same number of observations classified into each bin. 
+
+```{r}
+#| include: false
+census_poverty_tracts <- 
+  census_poverty_tracts %>%
+  mutate(percent_pov = estimate/summary_est)
+pal_quantile <- colorQuantile(palette = "YlOrRd",
+                          domain = census_poverty_tracts$percent_pov,
+                          n = 4)
+leaflet("width=90%, height=70%") %>%
+  setView(lat = 42.4, lng = -70, zoom = 6) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(
+    data = census_poverty_tracts,
+    fillColor = ~pal_quantile(percent_pov),
+    fillOpacity = 0.7,
+    stroke = 0) %>%
+  addLegend(title = "% Pop Income below Poverty Level <br/>in Last 12 Months, 2020", 
+    data = census_poverty_tracts,
+    pal = pal_quantile, 
+    values = ~percent_pov, 
+    position = "topright")
+```
+
+```{r out.width= 500}
+knitr::include_graphics("img/class2.png")
+```
+:::
+:::
+
+
+------------------------------------------------------------------------
+
+## Aggregation
+
+-   Ecological fallacy: Assuming that a value calculated for a group is equivalent to the values for individual members of the group
+
+::: columns
+::: {.column width="50%"}
+
+```{r}
+#| include: false
+census_poverty_tracts_middlesex <- 
+  census_poverty_tracts %>%
+  filter(str_detect(NAME, "Middlesex"))
+pal_numeric <- colorNumeric(palette = "YlOrRd",
+                          domain = census_poverty_tracts_middlesex$percent_pov)
+leaflet("width=90%, height=70%") %>%
+  setView(lat = 42.4, lng = -70, zoom = 9) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(
+    data = census_poverty_tracts_middlesex,
+    fillColor = ~pal_numeric(percent_pov),
+    fillOpacity = 0.7,
+    stroke = 0) %>%
+  addLegend(title = "% Pop Income below Poverty Level <br/>in Last 12 Months, 2020", 
+    data = census_poverty_tracts_middlesex,
+    pal = pal_numeric, 
+    values = ~percent_pov, 
+    position = "topright")
+```
+
+```{r out.width= 500}
+knitr::include_graphics("img/agg1.png")
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| include: false
+pal_numeric <- colorNumeric(palette = "YlOrRd",
+                          domain = census_poverty_county$percent_pov)
+leaflet("width=90%, height=70%") %>%
+  setView(lat = 42.4, lng = -70, zoom = 9) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(
+    data = census_poverty_county,
+    fillColor = ~pal_numeric(percent_pov),
+    fillOpacity = 0.7,
+    stroke = 0) %>%
+  addLegend(title = "% Pop Income below Poverty Level <br/>in Last 12 Months, 2020", 
+    data = census_poverty_county,
+    pal = pal_numeric, 
+    values = ~percent_pov, 
+    position = "topright")
+```
+
+
+```{r out.width= 500}
+knitr::include_graphics("img/agg2.png")
+```
+:::
+:::
+
+
+------------------------------------------------------------------------
+
+## Zonation
+
+::: columns
+::: {.column width="50%"}
+
+-   Modifiable Aerial Unit Problem
+-   The boundaries we aggregate data into are often arbitrary (i.e. not meaningful for the analysis)
+    -   If I'm studying air quality effects of a facility on surrounding populations, air pollution doesn't stop at a zip code even if I aggregate my data by zip code.
+-   Drawing boundaries in a different way would produce different results.
+
+:::
+
+::: {.column width="50%"}
+
+![](https://upload.wikimedia.org/wikipedia/commons/a/ab/Maup_rate_numbers.png)
+
+:::
+:::
+
+
+------------------------------------------------------------------------
+
+
+## Gerrymandering
+
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bGLRJ12uqmk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+------------------------------------------------------------------------
+
+# Prison-based Gerrymandering
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xhxWkal1J58" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

@@ -1,0 +1,284 @@
+---
+title: 'Lab 3: Plotting Frequencies and Distributions'
+format:
+  html:
+    embed-resources: true
+editor: source
+knitr:
+  opts_chunk:
+    message: false
+---
+
+```{r unnamed-chunk-1}
+#| warning: false
+#| document: show
+library(tidyverse)
+library(RColorBrewer)
+
+hmda_ms_2024 <- read.csv("https://ffiec.cfpb.gov/v2/data-browser-api/view/csv?states=MS&years=2024") |>
+  filter(loan_type == 1 & 
+           lien_status == 1 & 
+           conforming_loan_limit == 'C' & 
+           derived_dwelling_category %in% c("Single Family (1-4 Units):Site-Built", 
+                                            "Single Family (1-4 Units):Manufactured") & 
+           business_or_commercial_purpose == 2 &
+           loan_purpose %in% c(1, 2)) |>
+  select(lei,
+         county_code,
+         derived_ethnicity,
+         derived_race,
+         derived_sex,
+         action_taken,
+         loan_purpose,
+         loan_amount,
+         interest_rate,
+         property_value,
+         loan_to_value_ratio,
+         denial_reason.1,
+         denial_reason.2,
+         denial_reason.3,
+         denial_reason.4,
+         income,
+         debt_to_income_ratio) |>
+  mutate(loan_purpose = recode(loan_purpose, 
+                               "1" = "Home Purchase",
+                               "2" = "Home improvement",
+                               .default = NA_character_)) |>
+  mutate(action_taken = recode(action_taken, 
+                               "1" = "Loan originated", 
+                               "2" = "Application approved but not accepted",
+                               "3" = "Application denied",
+                               "4" = "Application withdrawn by applicant",
+                               "5" = "File closed for incompleteness",
+                               "6" = "Purchased loan",
+                               "7" = "Preapproval request denied",
+                               "8" = "Preapproval request approved but not accepted",
+                               .default = NA_character_)) |>
+  mutate(denial_reason.1 = recode(denial_reason.1, 
+                                  "1" = "Debt-to-income ratio",
+                                  "2" = "Employment history",
+                                  "3" = "Credit history",
+                                  "4" = "Collateral",
+                                  "5" = "Insufficient cash (downpayment, closing costs)",
+                                  "6" = "Unverifiable information",
+                                  "7" = "Credit application incomplete",
+                                  "8" = "Mortgage insurance denied",
+                                  "9" = "Other",
+                                  "10" = "Not applicable",
+                               .default = NA_character_)) |>
+  rowwise() |>
+  mutate(denial_reason = case_when(any(!is.na(c_across(c(denial_reason.2,
+                                                         denial_reason.3,
+                                                         denial_reason.4)))) ~ "Multiple",
+      TRUE ~ denial_reason.1)) |>
+  ungroup() |>
+  mutate(loan_to_value_ratio = as.numeric(loan_to_value_ratio),
+         property_value = as.numeric(property_value)) |>
+  mutate(debt_to_income_ratio = case_when(debt_to_income_ratio %in% c("36", "37", "38","39","40","41") ~ "36%-41%",
+                                          debt_to_income_ratio %in% c("42","43","44","45","46","47","48","49") ~ "42%-49%",
+                                          TRUE ~ debt_to_income_ratio)) |>
+  mutate(debt_to_income_ratio = factor(debt_to_income_ratio, levels = c("Exempt",
+                                                                        "<20%",
+                                                                        "20%-<30%",
+                                                                        "30%-<36%",
+                                                                        "36%-41%",
+                                                                        "42%-49%",
+                                                                        "50%-60%",
+                                                                        ">60%"))) |>
+  select(-c(denial_reason.1, 
+            denial_reason.2, 
+            denial_reason.3, 
+            denial_reason.4))
+
+```
+###### Question 1
+In the code below, create a bar plot that visualizes how many home loans were for home purchases vs. the number for home improvements. Determine the variable that should appear on the x-axis, along with the geom function that can be used to create a bar plot. Fill in the blanks to ensure your plot has the appropriate context.
+
+```{r unnamed-chunk-2}
+#| eval: false
+hmda_ms_2024 |>
+  ggplot(aes(x = _____)) +
+  _____() +
+  labs(title = "Home Mortgage Disclosure Act Applications, [FILL GEOGRAPHY], [FILL YEAR]",
+       x = "[FILL X-AXIS VARIABLE]",
+       y = "Count of [FILL WHAT's BEING COUNTED?]") +
+  theme_minimal()
+```
+###### Question 2
+Create a plot below that counts the number of applicants of each race. Be sure to give it a descriptive title and labels covering all 5 essential components of data context. You can use the code you wrote above as a template to get you started. You'll probably notice that the labels of your plot overlap. You can add `+ coord_flip()` to the end of your code to flip the plot so that the bars are horizontal rather than vertical. This should help with legibility.
+
+```{r unnamed-chunk-4}
+#| eval: false
+
+# Create plot here
+```
+###### Question 3
+In the code below, create a histogram that visualizes the distribution of loan amounts. Determine the variable that should appear on the x-axis, along with the geom function that can be used to create a histogram. Set the binwidth to create numeric intervals of 100000. Fill in the blanks to ensure your plot has the appropriate context.
+
+```{r unnamed-chunk-6}
+#| eval: false
+hmda_ms_2024  |> 
+  ggplot(aes(x = _____)) +
+  _____(binwidth = _____) +
+  labs(title = "Home Mortgage Disclosure Act Applications, [FILL GEOGRAPHY], [FILL YEAR]",
+       x = "[FILL X-AXIS VARIABLE]",
+       y = "Count of [FILL WHAT's BEING COUNTED?]",
+       caption = str_wrap("This histogram displays the distribution of home loan amounts requested by Mississippi applicants in 2024. The plot shows that the majority of applicants requested loans under $250,000. Since the average home loan size in the U.S. in 2024 was $252,505, this indicates that average requested home loan sizes in MS were smaller in comparison to the country as a whole.", 120)) +
+  theme_minimal()
+```
+###### Question 4
+Create a plot below that shows the distribution of loan to value ratios (in intervals of 10). Be sure to give it a descriptive title and labels covering all 5 essential components of data context. Also add a caption to describe the percentage of a loan's property that borrowers most often request when applying for a loan.
+
+You can use the code you wrote above as a template to get you started. Note that there were 20 outlier loans where borrowers requested more than double property's value. There was even one loan where the applicant requested 14 times the property's value. All of these loans were denied. Below I've given you some code to filter out these outliers in order to make the plot more legible. 
+
+```{r unnamed-chunk-8}
+#| eval: false
+
+hmda_ms_2024 |>
+  filter(loan_to_value_ratio < 200) |>
+# Fill remaining lines here
+```
+###### Question 5
+Create a stacked barplot below that counts both the race of the applicants and the action taken in regards to the loan. Be sure to give it a descriptive title and labels covering all 5 essential components of data context. I've given you some code below to move the legend to the bottom of the plot, to reduce the legend size, and to set the number of rows that appear in the legend. 
+
+```{r unnamed-chunk-10}
+#| eval: false
+
+hmda_ms_2024 |>
+# Fill remaining lines here
+  coord_flip() +
+  theme(legend.position = "bottom",
+        legend.text = element_text(size = 6), 
+        legend.title = element_text(size = 8),
+        legend.key.size = unit(0.4, "cm")) +
+  guides(fill=guide_legend(nrow=4))
+  
+```
+###### Question 6
+Copy the plot that you created above into the code chunk below, and then adjust the *position* of the bars to "fill" in order to normalize their height. Add a caption that summarizes your findings. 
+
+```{r unnamed-chunk-12}
+#| eval: false
+
+# Create plot here
+  
+```
+###### Question 7
+Fill in the code below to create a boxplot that visualizes how the distributions of requested loan amounts differed across race. Add a caption that summarizes your findings.  
+
+```{r unnamed-chunk-14}
+#| eval: false
+
+hmda_ms_2024 |>
+  ggplot(aes(x = derived_race, __________)) +
+  __________ +
+  coord_flip() +
+  labs(title = "Home Mortgage Disclosure Act Applications, Mississippi, 2024",
+       x = "Race of Applicant",
+       y = _________,
+       caption = _________) +
+  theme_minimal() 
+  
+```
+```{r unnamed-chunk-16}
+#| document: show
+hmda_denial_by_race <-
+  hmda_ms_2024 |>
+  group_by(derived_race) |>
+  summarize(total_denied = sum(action_taken == "Application denied"),
+            percent_denied = sum(action_taken == "Application denied")/n())
+
+hmda_denial_by_race_sex <-
+  hmda_ms_2024 |>
+  filter(derived_race != "Free Form Text Only") |> #There were only 3 denials with free form text for race in MS in 2024, and they have been removed here for plot legibility
+  group_by(derived_race, derived_sex) |>
+  summarize(total_denied = sum(action_taken == "Application denied"),
+            percent_denied = sum(action_taken == "Application denied")/n())
+
+hmda_denial_by_race
+hmda_denial_by_race_sex
+
+```
+###### Question 8
+In the code below, fill in the blanks to set the height of each bar to the percent of individuals in a particular race whose mortgage was denied. Select a geom function to create a column chart. Be sure to fill in the correct labels.
+
+```{r unnamed-chunk-17}
+#| eval: false
+
+hmda_denial_by_race |>
+  ggplot(aes(x = derived_race, _______)) +
+  _______ +
+  labs(title = "Home Mortgage Disclosure Act Applications, Mississippi, 2024",
+       x = "Race of Applicant",
+       y = "___________",
+       caption = str_wrap("This column plot visualizes the denial rates of home mortgage applications in MS in 2024. The plot shows that Black or African American applicants, American Indian or Alaska Native applicants, or applicants of 2 or more minority races were all denied mortgage at double the rate of White applicants. This may indicate disparities in lending practices.", 120)) +
+  theme_minimal() +
+  coord_flip()
+  
+```
+###### Question 9
+Copy your code above, replacing the `hmda_denial_by_race` data frame with `hmda_denial_by_race_sex`. Using the `fill` aesthetic, add the variable for describing the applicants' sex to the plot. Set the position of the columns to `"dodge"`, and be sure to add a label for the `fill` aesthetic. Adjust the caption to summarize your findings.
+
+```{r unnamed-chunk-19}
+#| eval: false
+
+# Create plot here
+  
+```
+###### Question 10
+Create a plot below that visualizes how many applicants *of each race* were denied mortgages *for each denial reason*. Be sure to give it a descriptive title and labels covering all 5 essential components of data context. You may wish to borrow some of your previous code to adjust the plot for legibility. I've given you some code below to filter the data frame to just those mortgage applications that were denied.
+
+```{r unnamed-chunk-21}
+#| eval: false
+
+hmda_ms_2024 |>
+  filter(action_taken == "Application denied") |>
+#Fill remaining lines here
+
+  
+```
+###### Question 11
+Below I've given you some code to produce a plot that visualizes the percent of mortgage applications that resulted in each action (e.g. loan originated, denied, etc.), broken out by the debt-to-income ratio of the applicant. Referring to last week's lab, add a line to this code to facet this plot by race. For which races was the denial rate higher for applicants with a lower than 50% debt-to-income ratio? Adjust the fact and interpretation presented in the caption with your response.
+
+```{r unnamed-chunk-23}
+#| eval: true
+
+hmda_ms_2024 |>
+  ggplot(aes(x = debt_to_income_ratio, fill = action_taken)) +
+  geom_bar(position = "fill") +
+  coord_flip() +
+  #Add line to facet here
+  labs(title = "Home Mortgage Disclosure Act Applications, Mississippi, 2024",
+       x = "Debt-to-Income Ratio",
+       y = "Percent of Mortgage Applications",
+       fill = "Action Taken", 
+       caption = str_wrap("This bar plot visualizes the percent of mortgage applications that resulted in each action, broken out by the debt-to-income ratio of the applicant. From this plot, we can see that most applicants with a debt-to-income ratio of 50% or higher were denied loans, and most applicants with a debt-to-income ratio of lower than 50% had their loans originated. This shows that banks are less likely to lend to applicants with higher debt-to-income ratios.",width = 120)) +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        legend.text = element_text(size = 8), 
+        legend.title = element_text(size = 8),
+        legend.key.size = unit(0.4, "cm"),
+        plot.caption = element_text(size = 8)) +
+  guides(fill=guide_legend(nrow = 3))
+  
+```
+###### Question 12
+Below I've given you some code to produce a plot that visualizes how the distributions of interest rates differed across debt-to-income ratios when loans were approved. Referring to last week's lab, add a line to this code to facet this plot by race. For which races were the interest rates higher even with lower debt-to-income ratios?  Adjust the fact and interpretation presented in the caption with your response.
+
+
+```{r unnamed-chunk-25}
+#| eval: true
+
+hmda_ms_2024 |>
+  mutate(interest_rate = as.numeric(interest_rate)) |>
+  filter(action_taken == "Loan originated") |>
+  ggplot(aes(x = debt_to_income_ratio, y = interest_rate)) +
+  geom_boxplot() +
+  coord_flip() +
+  labs(title = "Home Mortgage Disclosure Act Applications, Mississippi, 2024",
+       x = "Debt-to-Income Ratio",
+       y = "Interest Rate",
+       caption = str_wrap("These boxplots visualize the distribution of interest rates for loans originated in MS in 2024, broken out by the debt-to-income ratio of the applicant. From this plot, we can see that the median interest rate for borrowers with a debt-to-income ratio of under 50% was around 7%. Median interest rates increased for borrowers with a debt-to-income ratio of over 50%. This shows that a high debt-to-income ratio may be one factor contributing to higher interest rates.",width = 120)) +
+  theme_minimal() 
+  
+```

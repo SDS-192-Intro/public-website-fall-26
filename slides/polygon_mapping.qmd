@@ -1,0 +1,371 @@
+---
+title: "Polygon Mapping in `R`"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs:
+    scrollable: true
+    chalkboard:
+      theme: whiteboard
+      boardmarker-width: 5
+editor: source
+execute:
+  echo: true
+  messages: false
+  warnings: false
+---
+
+ 
+
+## For Today
+
+-   Mapping Geographic Boundaries
+-   Importing and Mapping Shapefiles
+-   Chloropleth Maps
+-   Project 3 Assigned
+
+------------------------------------------------------------------------
+
+# Learning Check: What function do we use to encode a data frame with geometry based on lat/long data?
+
+------------------------------------------------------------------------
+
+# Learning Check: What function do we use convert to a new CRS?
+
+------------------------------------------------------------------------
+
+# Learning Check: What CRS does leaflet expect data to be in? 
+
+------------------------------------------------------------------------
+
+## Mapping Polygons
+
+-   Not all cartographic data is encoded as a latitude and longitude! Some cartographic data is encoded as regularly or irregularly shaped polygons
+-   Can demarcate:
+    -   Administrative boundaries (e.g. census tracts, zip codes, states), 
+    -   Feature boundaries (e.g. buildings, bodies of water, etc.)
+    -   Buffers (e.g. areas at a specified distance from a point source)
+
+------------------------------------------------------------------------
+
+
+## Administrative Boundaries: US Census
+
+![](img/tracts.png)
+
+
+------------------------------------------------------------------------
+
+## Administrative Boundaries: US Census
+
+![](https://static.socialexplorer.com/pub/help/wp-content/uploads/2013/11/geo_diagram.png)
+
+------------------------------------------------------------------------
+
+## Administrative Boundaries: US Census
+
+![](img/census.png)
+
+
+------------------------------------------------------------------------
+
+## Administrative Boundary Soup
+
+![](img/boundaries.png)
+
+
+[NYC Boundaries Map](https://boundaries.beta.nyc/)
+
+------------------------------------------------------------------------
+
+## Feature Boundaries
+
+![](img/prison_boundaries.png)
+
+------------------------------------------------------------------------
+
+## Feature Boundaries
+
+![](img/water_boundaries.png)
+
+------------------------------------------------------------------------
+
+
+## Shapefiles
+
+-   File for storing geospatial feature data
+-   Actually a series of files (.shp, .shx, and .dbf) that must **all** be present in the directory for the shapefile to import. 
+-   Imported file ends in `.shp` and contains feature geometry 
+
+------------------------------------------------------------------------
+
+## Importing Shapefiles
+
+-   Function `st_read()` from `sf` package used to read in shapefiles
+
+::: columns
+::: {.column width="50%"}
+
+![](img/files.png)
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+library(sf)
+nyc_cd <- st_read("../data/nycd_25b/nycd.shp")
+```
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Importing Shapefiles
+
+```{r}
+nyc_cd |> head(4)
+```
+
+------------------------------------------------------------------------
+
+## Mapping Polygons with Leaflet
+
+
+```{r}
+#| echo: false
+
+library(leaflet)
+nyc_cd <- nyc_cd |>
+  st_transform(4326)
+leaflet(width = "100%") |>
+  setView(lat = 40.7, lng = -74.0, zoom = 10) |> 
+  addProviderTiles("CartoDB.Positron") |>
+  addPolygons(data = nyc_cd)
+```
+
+------------------------------------------------------------------------
+
+## Mapping Polygons with Leaflet
+
+
+```{r}
+#| eval: false
+
+library(leaflet)
+nyc_cd <- nyc_cd |>
+  st_transform(4326)
+leaflet(width = "100%") |>
+  setView(lat = 40.7, lng = -74.0, zoom = 10) |> 
+  addProviderTiles("CartoDB.Positron") |>
+  addPolygons(data = nyc_cd)
+```
+
+
+------------------------------------------------------------------------
+
+## Chloropleth Maps
+
+-   Presents a numeric variable aggregated by a geospatial unit
+-   Represents the value of the aggregated numeric variable via intensity of color 
+    -   Values presented via a sequential or diverging palette 
+    
+------------------------------------------------------------------------
+
+## Mapping Population: How to Join?
+
+::: panel-tabset
+
+### Pop Data 
+
+```{r}
+library(tidyverse)
+cd_pop <- read_csv("https://data.cityofnewyork.us/resource/xi7c-iiu2.csv?$select=borough,cd_number,_2010_population%20as%20population_2010")
+
+cd_pop |> 
+  select(borough,cd_number) |> 
+  head(5)
+```
+
+### CD Data
+
+```{r}
+nyc_cd |> 
+  select(BoroCD) |> 
+  head(5)
+```
+
+
+:::
+
+------------------------------------------------------------------------
+
+## Cleaning Geographic ID Fields
+
+```{r}
+cd_pop <- cd_pop |>
+  mutate(borough_num = case_when( 
+    borough == "Manhattan" ~ 1,
+    borough == "Bronx" ~ 2,
+    borough == "Brooklyn" ~ 3,
+    borough == "Queens" ~ 4,
+    borough == "Staten Island" ~ 5)) |>
+  mutate(cd = str_pad(cd_number, 2, side="left", "0")) |>
+  mutate(BoroCD = paste0(borough_num, cd) |> as.numeric())
+
+nyc_cd <- 
+  nyc_cd |>
+  left_join(cd_pop, by = c("BoroCD" = "BoroCD"))
+```
+
+------------------------------------------------------------------------
+
+## NYC Commmunity District Chloropleth: Numeric
+
+
+```{r}
+#| echo: false
+
+library(RColorBrewer)
+pal_num <- colorNumeric(palette = "YlOrRd", 
+                        domain = nyc_cd$population_2010)
+
+leaflet(width = "100%") |>
+  setView(lat = 40.7, lng = -74.0, zoom = 10) |> 
+  addProviderTiles("CartoDB.Positron") |>
+  addPolygons(data = nyc_cd,
+              fillColor = ~pal_num(population_2010), 
+              stroke = FALSE,
+              fillOpacity = 0.5) |>
+  addLegend(data = nyc_cd, 
+            values = ~population_2010,
+            pal = pal_num,
+            title = "Population")
+```
+
+------------------------------------------------------------------------
+
+## NYC Commmunity District Chloropleth: Numeric 
+
+```{r}
+#| eval: false
+
+library(RColorBrewer)
+pal_num <- colorNumeric(palette = "YlOrRd", 
+                        domain = nyc_cd$population_2010)
+
+leaflet(width = "100%") |>
+  setView(lat = 40.7, lng = -74.0, zoom = 10) |> 
+  addProviderTiles("CartoDB.Positron") |>
+  addPolygons(data = nyc_cd,
+              fillColor = ~pal_num(population_2010), 
+              stroke = FALSE,
+              fillOpacity = 0.5) |>
+  addLegend(data = nyc_cd, 
+            values = ~population_2010,
+            pal = pal_num,
+            title = "Population")
+```
+
+------------------------------------------------------------------------
+
+## NYC Commmunity District Chloropleth: Bin
+
+
+```{r}
+#| echo: false
+
+library(RColorBrewer)
+pal_bin <- colorBin(palette = "YlOrRd", 
+                        domain = nyc_cd$population_2010, bins = 4)
+
+leaflet(width = "100%") |>
+  setView(lat = 40.7, lng = -74.0, zoom = 10) |> 
+  addProviderTiles("CartoDB.Positron") |>
+  addPolygons(data = nyc_cd,
+              fillColor = ~pal_bin(population_2010), 
+              stroke = FALSE,
+              fillOpacity = 0.5) |>
+  addLegend(data = nyc_cd, 
+            values = ~population_2010,
+            pal = pal_bin,
+            title = "Population")
+```
+
+------------------------------------------------------------------------
+
+## NYC Commmunity District Chloropleth: Bin
+
+```{r}
+#| eval: false
+
+library(RColorBrewer)
+pal_bin <- colorBin(palette = "YlOrRd", 
+                        domain = nyc_cd$population_2010, n = 4)
+
+leaflet(width = "100%") |>
+  setView(lat = 40.7, lng = -74.0, zoom = 10) |> 
+  addProviderTiles("CartoDB.Positron") |>
+  addPolygons(data = nyc_cd,
+              fillColor = ~pal_bin(population_2010), 
+              stroke = FALSE,
+              fillOpacity = 0.5) |>
+  addLegend(data = nyc_cd, 
+            values = ~population_2010,
+            pal = pal_bin,
+            title = "Population")
+```
+
+
+------------------------------------------------------------------------
+
+## NYC Commmunity District Chloropleth: Quantile
+
+
+```{r}
+#| echo: false
+
+library(RColorBrewer)
+pal_quant <- colorQuantile(palette = "YlOrRd", 
+                        domain = nyc_cd$population_2010, n = 4)
+
+leaflet(width = "100%") |>
+  setView(lat = 40.7, lng = -74.0, zoom = 10) |> 
+  addProviderTiles("CartoDB.Positron") |>
+  addPolygons(data = nyc_cd,
+              fillColor = ~pal_quant(population_2010), 
+              stroke = FALSE,
+              fillOpacity = 0.5) |>
+  addLegend(data = nyc_cd, 
+            values = ~population_2010,
+            pal = pal_quant,
+            title = "Population")
+```
+
+------------------------------------------------------------------------
+
+## NYC Commmunity District Chloropleth: Quantile
+
+```{r}
+#| eval: false
+
+library(RColorBrewer)
+pal_quant <- colorQuantile(palette = "YlOrRd", 
+                        domain = nyc_cd$population_2010, n = 4)
+
+leaflet(width = "100%") |>
+  setView(lat = 40.7, lng = -74.0, zoom = 10) |> 
+  addProviderTiles("CartoDB.Positron") |>
+  addPolygons(data = nyc_cd,
+              fillColor = ~pal_quant(population_2010), 
+              stroke = FALSE,
+              fillOpacity = 0.5) |>
+  addLegend(data = nyc_cd, 
+            values = ~population_2010,
+            pal = pal_quant,
+            title = "Population")
+```
+
+
+

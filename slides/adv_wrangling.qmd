@@ -1,0 +1,84 @@
+---
+title: "Advanced Data Wrangling"
+subtitle: "SDS 192: Introduction to Data Science"
+author: "Professor Lindsay Poirier"
+format: 
+  revealjs:
+    scrollable: true
+    chalkboard:
+      theme: whiteboard
+      boardmarker-width: 5
+editor: source
+execute:
+  echo: true
+  messages: false
+  warnings: false
+---
+
+
+
+## Helper Functions for `select()`
+
+- `select(contains("abc"))` : select columns containing string
+- `select(starts_with("abc"))` : select columns starting with string
+- `select(ends_with("abc))` : select columns ending with string
+- `select(-col_name)` : select all columns except this column
+- `select(x:y)` : select columns with indexes x:y
+
+-----------
+
+## Filtering to Distinct Values
+
+- `distinct()` : filter to rows with distinct values
+- `slice(x:y)` : filter to rows in index x:y
+
+-----------
+
+## Boolean Filter Operators
+
+- `==` 
+- `<`, `>`, `<=`, `>=`
+- `&`
+- `|`
+- `!`
+- `is.na()`
+- `%in%`
+
+-----------
+
+## Filtering by Strings
+
+- `filter(str_detect(col_name, "abc"))` : filter to rows where string is detected
+
+-----------
+
+## Convert Missing Values to NAs
+
+- `mutate(new_col_name = na_if(col_name, x)` : if a value in `col_name` is `x` convert it to `NA` in the new column
+- `mutate(new_col_name = na_if(col_name, " ")` : if a value in `col_name` is `" "` convert it to `NA` in the new column
+- `mutate(new_col_name = na_if(col_name, "NA")` : if a value in `col_name` is `"NA"` convert it to `NA` in the new column
+- `mutate(new_col_name = na_if(col_name, "NULL")` : if a value in `col_name` is `"NULL"` convert it to `NA` in the new column
+
+
+----------
+
+## Mutate with Vectorized if-else
+
+- Sometimes we want to set a value in a column based on the conditions of a value in another column. 
+- Using `case_when()` we can assign values based on conditions, and then assign a final value when no conditions are met.
+
+```
+  mutate(new_col_name = case_when(col_name == "Y" ~ "Yes", 
+                                  col_name == "N" ~ "No",
+                                  TRUE ~ NA)
+```
+
+-----------
+
+## Ungrouping
+
+- Grouping changes the metadata of the data frame so that subsequent functions are applied *to each group*.
+- Sometimes we want to apply a function to each group and then apply subsequent functions to the whole data frame. 
+- `ungroup()` removes the grouping metadata. 
+
+-----------
