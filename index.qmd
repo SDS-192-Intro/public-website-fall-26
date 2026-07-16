@@ -48,10 +48,10 @@ I can best support students in this course when I can readily keep tabs on our c
 
 Meeting with me outside of class is a great opportunity for us to chat about what you're learning in the course, clarify expectations on assignments, and review work in progress. I also love when students drop in to office hours to request book recommendations, discuss career or research paths, or just to say hi! 
 
-There are two ways to meet with me. If you would like to have a one-on-one private conversation, I ask that you schedule an appointment with me via the [booking form on Moodle](https://moodle.smith.edu/mod/url/view.php?id=1334056). For support on class topics, you may drop-in during my regularly scheduled office hours.
+There are two ways to meet with me. If you would like to have a one-on-one private conversation, I ask that you schedule an appointment with me via the [booking form on Moodle](https://moodle.smith.edu/mod/url/view.php?id=1465856). For support on class topics, you may drop-in during my regularly scheduled office hours.
 
--   Wednesday, 2:45 PM - 3:45 PM, McConnell 214
--   Friday, 11:15 AM - 12:15 PM, McConnell 214
+-   Wednesday, 11:00 AM - 12:00 PM, McConnell 214
+-   Friday, 11:00 AM - 12:00 PM, McConnell 214
 
 :::
 
@@ -98,7 +98,7 @@ If you must miss a class entirely, you should contact a peer to discuss what was
 
 ### Extensions
 
-There is an automatic 24-hour **grace period** on all *lab and project assignments*. There will be no penalties for submitting the project within this 24-hour period, and you do not need to inform me that you intend to take the extra time. You can also request up to a 72-hour **extension** on any project or lab assignment, as long *as you make that request at least 48 hours before the original assignment due date*. You can request an extension by filling out the [Extension Request form](https://moodle.smith.edu/mod/questionnaire/view.php?id=1334055) on Moodle, and I will confirm your extension on Slack. Beyond this, late assignments will not be accepted without an accommodation from a class dean or from the ARC.
+There is an automatic 24-hour **grace period** on all *lab and project assignments*. There will be no penalties for submitting the project within this 24-hour period, and you do not need to inform me that you intend to take the extra time. You can also request up to a 72-hour **extension** on any project or lab assignment, as long *as you make that request at least 48 hours before the original assignment due date*. You can request an extension by filling out the [Extension Request form](https://moodle.smith.edu/mod/questionnaire/view.php?id=1465855) on Moodle, and I will confirm your extension on Slack. Beyond this, late assignments will not be accepted without an accommodation from a class dean or from the ARC.
   
 Note that this policy does not apply to reading assignments/Perusall annotations. *Reading assignments/Perusall annotations need to be completed by the due date for credit.*
 
@@ -194,7 +194,7 @@ College life is stressful, and life outside of college can be overwhelming. It i
 
 ### Trigger Warnings
 
-A trigger is a topic or image that can precipitate an intense emotional response. When common triggering topics are to be covered in this course, I will do my best to provide a trigger warning in advance of the discussion. However, I can't always anticipate triggers. With this in mind I've set up [an anonymous form](https://moodle.smith.edu/mod/questionnaire/view.php?id=1334054), available on Moodle, where you can indicate topics for which you would like me to provide a warning.
+A trigger is a topic or image that can precipitate an intense emotional response. When common triggering topics are to be covered in this course, I will do my best to provide a trigger warning in advance of the discussion. However, I can't always anticipate triggers. With this in mind I've set up [an anonymous form](https://moodle.smith.edu/mod/questionnaire/view.php?id=1465854), available on Moodle, where you can indicate topics for which you would like me to provide a warning.
 :::
 
 ## Infrastructure

@@ -11,14 +11,15 @@ editor: source
 
 library(tidyverse)
 
-sqf_url <- "https://www1.nyc.gov/assets/nypd/downloads/zip/analysis_and_planning/stop-question-frisk/sqf-2011-csv.zip"
-temp <- tempfile()
-download.file(sqf_url, temp)
-sqf_zip <- unzip(temp, "2011.csv")
+#sqf_url <- "https://www1.nyc.gov/assets/nypd/downloads/zip/analysis_and_planning/stop-question-frisk/sqf-2011-csv.zip"
+#temp <- tempfile()
+#download.file(sqf_url, temp)
+#sqf_zip <- unzip(temp, "2011.csv")
+sqf_zip <- unzip("../data/sqf-2011-csv.zip", "2011.csv")
 sqf_2011 <- read.csv(sqf_zip, stringsAsFactors = FALSE) 
 sqf_2011_race_cat <- read.csv("https://raw.githubusercontent.com/lindsaypoirier/STS-101/master/Data/SQF/sqf_race_categories.csv", stringsAsFactors = FALSE) 
-rm(sqf_url)
-rm(temp)
+#rm(sqf_url)
+#rm(temp)
 rm(sqf_zip)
 ```
 

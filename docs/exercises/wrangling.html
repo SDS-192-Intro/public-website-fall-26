@@ -187,20 +187,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(debt_to_income_ratio <span class="sc">==</span> <span class="st">"&gt;60%"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(lei)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2,344 × 1
+<pre><code># A tibble: 2,343 × 1
    lei                 
    &lt;chr&gt;               
- 1 549300DNWSJUNAWUM003
- 2 549300DMYENRV818D594
- 3 549300DMYENRV818D594
- 4 549300JPGMCMBEJEK584
- 5 5493000V86JDJLM0OV13
- 6 5493000V86JDJLM0OV13
- 7 5493000V86JDJLM0OV13
- 8 5493000V86JDJLM0OV13
- 9 5493000V86JDJLM0OV13
-10 549300L7HZ4C5U35BO37
-# ℹ 2,334 more rows</code></pre>
+ 1 7H6GLXDRUGQFU57RNE97
+ 2 7H6GLXDRUGQFU57RNE97
+ 3 7H6GLXDRUGQFU57RNE97
+ 4 7H6GLXDRUGQFU57RNE97
+ 5 SS1TRMSN6BRNMOREEV51
+ 6 549300Q3ROEQU3D1IW91
+ 7 549300Q3ROEQU3D1IW91
+ 8 549300Q3ROEQU3D1IW91
+ 9 549300Q3ROEQU3D1IW91
+10 549300Q3ROEQU3D1IW91
+# ℹ 2,333 more rows</code></pre>
 </div>
 </div>
 </section>
@@ -248,20 +248,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">property_value =</span> loan_amount <span class="sc">/</span> (loan_to_value_ratio<span class="sc">/</span><span class="dv">100</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(loan_to_value_ratio, loan_amount, property_value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 34,284 × 3
+<pre><code># A tibble: 34,261 × 3
    loan_to_value_ratio loan_amount property_value
                  &lt;dbl&gt;       &lt;dbl&gt;          &lt;dbl&gt;
- 1                80        265000        331250 
- 2                80        205000        256250 
- 3                95        145000        152632.
- 4                90        485000        538889.
- 5                68.3      215000        315000.
- 6                NA        665000            NA 
- 7                95         75000         78947.
- 8                NA        315000            NA 
- 9                NA        215000            NA 
-10                80        145000        181250 
-# ℹ 34,274 more rows</code></pre>
+ 1                  NA      355000            NA 
+ 2                  NA      545000            NA 
+ 3                  NA      485000            NA 
+ 4                  80      315000        393750 
+ 5                  75      365000        486667.
+ 6                  95      645000        678947.
+ 7                  NA      535000            NA 
+ 8                  NA      395000            NA 
+ 9                  NA      745000            NA 
+10                  74      275000        371622.
+# ℹ 34,251 more rows</code></pre>
 </div>
 </div>
 </section>
@@ -278,7 +278,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(loan_to_value_ratio)) <span class="sc">|&gt;</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 19247</code></pre>
+<pre><code>[1] 19227</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>hmda_ms_2024 <span class="sc">|&gt;</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_na =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(loan_to_value_ratio)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -286,7 +286,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code># A tibble: 1 × 1
   total_na
      &lt;int&gt;
-1    19247</code></pre>
+1    19227</code></pre>
 </div>
 </div>
 </section>
@@ -309,13 +309,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   derived_race                              mean_interest median_interest
   &lt;chr&gt;                                             &lt;dbl&gt;           &lt;dbl&gt;
 1 2 or more minority races                           8.37            8.22
-2 American Indian or Alaska Native                   7.81            7.19
+2 American Indian or Alaska Native                   7.90            7.25
 3 Asian                                              6.70            6.62
-4 Black or African American                          8.81            8.73
+4 Black or African American                          8.81            8.72
 5 Free Form Text Only                              NaN              NA   
 6 Joint                                              7.59            7.04
 7 Native Hawaiian or Other Pacific Islander         10.8            11.4 
-8 Race Not Available                                 7.30            6.88
+8 Race Not Available                                 7.31            6.88
 9 White                                              7.50            7   </code></pre>
 </div>
 </div>
@@ -406,19 +406,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 `.groups` argument.</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 9 × 3
+<pre><code># A tibble: 10 × 3
 # Groups:   derived_race [9]
-  derived_race                              denial_reason        count
-  &lt;chr&gt;                                     &lt;chr&gt;                &lt;int&gt;
-1 2 or more minority races                  Credit history          15
-2 American Indian or Alaska Native          Multiple                18
-3 Asian                                     Debt-to-income ratio    19
-4 Black or African American                 Multiple              2025
-5 Free Form Text Only                       Credit history           2
-6 Joint                                     Multiple                43
-7 Native Hawaiian or Other Pacific Islander Multiple                 5
-8 Race Not Available                        Multiple               213
-9 White                                     Multiple              1424</code></pre>
+   derived_race                              denial_reason        count
+   &lt;chr&gt;                                     &lt;chr&gt;                &lt;int&gt;
+ 1 2 or more minority races                  Credit history          15
+ 2 American Indian or Alaska Native          Multiple                18
+ 3 Asian                                     Debt-to-income ratio    19
+ 4 Asian                                     Multiple                19
+ 5 Black or African American                 Multiple              2025
+ 6 Free Form Text Only                       Credit history           2
+ 7 Joint                                     Multiple                43
+ 8 Native Hawaiian or Other Pacific Islander Multiple                 5
+ 9 Race Not Available                        Multiple               213
+10 White                                     Multiple              1424</code></pre>
 </div>
 </div>
 

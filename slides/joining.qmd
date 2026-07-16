@@ -107,10 +107,11 @@ ccrd_2024 <- ccrd |>
   mutate(incident_date = ymd(incident_date)) |>
   filter(year(incident_date) == 2024)
 
-sqf_url <- "https://www.nyc.gov/assets/nypd/downloads/excel/analysis_and_planning/stop-question-frisk/sqf-2024.xlsx"
-temp <- tempfile()
-download.file(sqf_url, temp, mode="wb")
-sqf <- read_excel(path = temp, sheet = 1)
+#sqf_url <- "https://www.nyc.gov/assets/nypd/downloads/excel/analysis_and_planning/stop-question-frisk/sqf-2024.xlsx"
+#temp <- tempfile(fileext = ".xlsx")
+#download.file(sqf_url, temp, mode="wb", method="curl")
+#sqf <- read_excel(path = temp, sheet = 1)
+sqf <- read_xlsx(path = "../data/sqf-2024.xlsx", sheet = 1)
 sqf_2024 <- sqf
 
 ccrd_2024 |> select(complaint_id, incident_date, precinct_of_incident_occurrence, reason_for_police_contact, outcome_of_police_encounter, ccrb_complaint_disposition) |> head()

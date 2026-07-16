@@ -7040,5 +7040,299 @@
     "title": "APIs",
     "section": "SoQL Example 2",
     "text": "SoQL Example 2\n\ndplyrSQLSoQL\n\n\n\ndf |&gt;\n  filter(complaint_type == 'Traffic') |&gt;\n  group_by(descriptor) |&gt;\n  summarize(count = n()) |&gt;\n  arrange(desc(count))\n\n\n\nWHERE complaint_type = 'Traffic'\nSELECT descriptor, count(*)\nGROUP BY descriptor\nORDER BY count DESC\n\n\n\n\nlibrary(readr)\nnyc_traffic_complaints &lt;- read_csv(\"https://data.cityofnewyork.us/resource/erm2-nwe9.csv?$where=complaint_type='Traffic'&$select=descriptor,count(*)&$group=descriptor&$order=count%20DESC\")\nhead(nyc_traffic_complaints)\n\n# A tibble: 5 × 2\n  descriptor                  count\n  &lt;chr&gt;                       &lt;dbl&gt;\n1 Congestion/Gridlock         40342\n2 Truck Route Violation       12925\n3 Drag Racing                 12596\n4 Chronic Speeding            11576\n5 Chronic Stoplight Violation  5071"
+  },
+  {
+    "objectID": "schedule.html#september-09-2026",
+    "href": "schedule.html#september-09-2026",
+    "title": "Schedule",
+    "section": "September 09, 2026",
+    "text": "September 09, 2026\n\nWhat is Data Science?\n\nDue TodayFurther Resources\n\n\n\n\n\n Course slides here\n Spinelli Center\n Getting Started with Slack"
+  },
+  {
+    "objectID": "schedule.html#september-11-2026",
+    "href": "schedule.html#september-11-2026",
+    "title": "Schedule",
+    "section": "September 11, 2026",
+    "text": "September 11, 2026\n\nData Fundamentals\n\nDue TodayFurther Resources\n\n\n Fill out First Day of Class Questionnaire in Moodle\n Contact me if you will be using a Chromebook\n Create a GitHub account if you don’t have one\n Accept SDS 192 Labs Assignment\n\n\n Course slides here\n Exercise here"
+  },
+  {
+    "objectID": "schedule.html#september-14-2026",
+    "href": "schedule.html#september-14-2026",
+    "title": "Schedule",
+    "section": "September 14, 2026",
+    "text": "September 14, 2026\n\nIntroduction to R\n\nDue TodayFurther Resources\n\n\n Getting Started , Ismay, Chester and Albert Y. Kim (2021). Modern Dive: Statistical Inference via Data Science. CRC Press. (Visited on Jan. 14, 2022). Read in Perusall\n Complete Syllabus Quiz in Perusall\n\n\n Course slideshere\n Exercise Instructions here\n Exercise Templatehere"
+  },
+  {
+    "objectID": "schedule.html#september-16-2026",
+    "href": "schedule.html#september-16-2026",
+    "title": "Schedule",
+    "section": "September 16, 2026",
+    "text": "September 16, 2026\n\nLab: Understanding Datasets\n\nDue TodayFurther Resources\n\n\n Complete Course Infrastructure Set-Up\n\n\n Lab 1 Template\n Lab 1 Instructions"
+  },
+  {
+    "objectID": "schedule.html#september-18-2026",
+    "href": "schedule.html#september-18-2026",
+    "title": "Schedule",
+    "section": "September 18, 2026",
+    "text": "September 18, 2026\n\nIntroduction to Project 1\n\nDue TodayFurther Resources"
+  },
+  {
+    "objectID": "schedule.html#september-21-2026",
+    "href": "schedule.html#september-21-2026",
+    "title": "Schedule",
+    "section": "September 21, 2026",
+    "text": "September 21, 2026\n\nGrammar of Graphics\n\nDue TodayFurther Resources\n\n\n 2. Data Visualization , Baumer, Benjamin S., Daniel T. Kaplan, and Nicholas J. Horton (2021). Modern Data Science with R. 2nd. CRC Press. (Visited on Jan. 14, 2022). Read in Perusall\n\n\n Course slides here\n Exercise Instructions here\n ggplot2 cheatsheet"
+  },
+  {
+    "objectID": "schedule.html#september-23-2026",
+    "href": "schedule.html#september-23-2026",
+    "title": "Schedule",
+    "section": "September 23, 2026",
+    "text": "September 23, 2026\n\nVisualization Conventions\n\nDue TodayFurther Resources\n\n\n Lab 1 Due\n\n\n Course slides here\n Exercise Instructions here\n Exercise Template\n ggplot2 cheatsheet"
+  },
+  {
+    "objectID": "schedule.html#september-25-2026",
+    "href": "schedule.html#september-25-2026",
+    "title": "Schedule",
+    "section": "September 25, 2026",
+    "text": "September 25, 2026\n\nLab: Designing Effective Data Visualizations\n\nDue TodayFurther Resources\n\n\n\n\n\n ggplot2 cheatsheet\n Lab 2 Instructions"
+  },
+  {
+    "objectID": "schedule.html#september-28-2026",
+    "href": "schedule.html#september-28-2026",
+    "title": "Schedule",
+    "section": "September 28, 2026",
+    "text": "September 28, 2026\n\nFrequency Plots\n\nDue TodayFurther Resources\n\n\n 2. Data Visualization , Ismay, Chester and Albert Y. Kim (2021). Modern Dive: Statistical Inference via Data Science. CRC Press. (Visited on Jan. 14, 2022). Read in Perusall\n Project 1 Assigned\n\n\n Course slides here\n Exercise Instructions here\n Exercise Template\n ggplot2 cheatsheet"
+  },
+  {
+    "objectID": "schedule.html#september-30-2026",
+    "href": "schedule.html#september-30-2026",
+    "title": "Schedule",
+    "section": "September 30, 2026",
+    "text": "September 30, 2026\n\nBoxplots\n\nDue TodayFurther Resources\n\n\n Lab 2 Due\n\n\n Course slides here\n MP 1 Assignment\n ggplot2 cheatsheet"
+  },
+  {
+    "objectID": "schedule.html#october-02-2026",
+    "href": "schedule.html#october-02-2026",
+    "title": "Schedule",
+    "section": "October 02, 2026",
+    "text": "October 02, 2026\n\nLab: Visualizing Data\n\nDue TodayFurther Resources\n\n\n\n\n\n ggplot2 cheatsheet"
+  },
+  {
+    "objectID": "schedule.html#october-05-2026",
+    "href": "schedule.html#october-05-2026",
+    "title": "Schedule",
+    "section": "October 05, 2026",
+    "text": "October 05, 2026\n\nIntroduction to git and GitHub\n\nDue TodayFurther Resources\n\n\n Bryan, Jennifer (2018). “Excuse Me, Do You Have a Moment to Talk About Version Control?” In: The American Statistician 72.1. Publisher: Taylor & Francis _eprint: https://doi.org/10.1080/00031305.2017.1399928, pp. 20-27. (Visited on Jan. 14, 2022). Read in Perusall\n\n\n Course slides here\n ggplot2 cheatsheet\n Lab 3 Instructions"
+  },
+  {
+    "objectID": "schedule.html#october-07-2026",
+    "href": "schedule.html#october-07-2026",
+    "title": "Schedule",
+    "section": "October 07, 2026",
+    "text": "October 07, 2026\n\nIntroduction to Open Source\n\nDue TodayFurther Resources\n\n\n Lab 3 Due\n\n\n Course slides here\n git Sandbox\n Example Open Source project\n Choosing a license"
+  },
+  {
+    "objectID": "schedule.html#october-09-2026",
+    "href": "schedule.html#october-09-2026",
+    "title": "Schedule",
+    "section": "October 09, 2026",
+    "text": "October 09, 2026\n\nLab: Collaborating via GitHub\n\nDue TodayFurther Resources\n\n\n\n\n\n Lab 4 Instructions"
+  },
+  {
+    "objectID": "schedule.html#october-12-2026",
+    "href": "schedule.html#october-12-2026",
+    "title": "Schedule",
+    "section": "October 12, 2026",
+    "text": "October 12, 2026\n\nNo Class\n\nDue TodayFurther Resources"
+  },
+  {
+    "objectID": "schedule.html#october-14-2026",
+    "href": "schedule.html#october-14-2026",
+    "title": "Schedule",
+    "section": "October 14, 2026",
+    "text": "October 14, 2026\n\nData Wrangling Verbs\n\nDue TodayFurther Resources\n\n\n 3. Data Wrangling , Ismay, Chester and Albert Y. Kim (2021). Modern Dive: Statistical Inference via Data Science. CRC Press. (Visited on Jan. 14, 2022). Read in Perusall\n\n\n Course slides here\n dplyr Cheatsheet"
+  },
+  {
+    "objectID": "schedule.html#october-16-2026",
+    "href": "schedule.html#october-16-2026",
+    "title": "Schedule",
+    "section": "October 16, 2026",
+    "text": "October 16, 2026\n\nData Wrangling in R\n\nDue TodayFurther Resources\n\n\n Lab 4 Due\n\n\n Exericse Instructionshere\n Exercise Templatehere\n dplyr Cheatsheet"
+  },
+  {
+    "objectID": "schedule.html#october-19-2026",
+    "href": "schedule.html#october-19-2026",
+    "title": "Schedule",
+    "section": "October 19, 2026",
+    "text": "October 19, 2026\n\nLab: Data Wrangling\n\nDue TodayFurther Resources\n\n\n Project 1 Due\n\n\n dplyr Cheatsheet\n Lab 5 Instructions"
+  },
+  {
+    "objectID": "schedule.html#october-21-2026",
+    "href": "schedule.html#october-21-2026",
+    "title": "Schedule",
+    "section": "October 21, 2026",
+    "text": "October 21, 2026\n\nReview\n\nDue TodayFurther Resources\n\n\n\n\n\n Course slides are here\n Midterm Review here\n Exercise Instructions here\n Exercise Template here"
+  },
+  {
+    "objectID": "schedule.html#october-23-2026",
+    "href": "schedule.html#october-23-2026",
+    "title": "Schedule",
+    "section": "October 23, 2026",
+    "text": "October 23, 2026\n\nIntroduction to FEC Data\n\nDue TodayFurther Resources\n\n\n Project 2 Assigned\n Lab 5 Due"
+  },
+  {
+    "objectID": "schedule.html#october-26-2026",
+    "href": "schedule.html#october-26-2026",
+    "title": "Schedule",
+    "section": "October 26, 2026",
+    "text": "October 26, 2026\n\nMid-Term Exam\n\nDue TodayFurther Resources\n\n\n In-Class Midterm Exam"
+  },
+  {
+    "objectID": "schedule.html#october-28-2026",
+    "href": "schedule.html#october-28-2026",
+    "title": "Schedule",
+    "section": "October 28, 2026",
+    "text": "October 28, 2026\n\nJoining Datasets\n\nDue TodayFurther Resources\n\n\n 5. Data wrangling on multiple tables , Baumer, Benjamin S., Daniel T. Kaplan, and Nicholas J. Horton (2021). Modern Data Science with R. 2nd. CRC Press. (Visited on Jan. 14, 2022). Read in Perusall\n\n\n Course slides are here\n dplyr Cheatsheet\n Midterm reassessment instructions here"
+  },
+  {
+    "objectID": "schedule.html#october-30-2026",
+    "href": "schedule.html#october-30-2026",
+    "title": "Schedule",
+    "section": "October 30, 2026",
+    "text": "October 30, 2026\n\nLab: Joining Datasets\n\nDue TodayFurther Resources\n\n\n\n\n\n Lab 6 Instructions"
+  },
+  {
+    "objectID": "schedule.html#november-02-2026",
+    "href": "schedule.html#november-02-2026",
+    "title": "Schedule",
+    "section": "November 02, 2026",
+    "text": "November 02, 2026\n\nReshaping Datasets\n\nDue TodayFurther Resources\n\n\n 6. Tidy Data , Baumer, Benjamin S., Daniel T. Kaplan, and Nicholas J. Horton (2021). Modern Data Science with R. 2nd. CRC Press. (Visited on Jan. 14, 2022). Read in Perusall\n 26. Parsing dates and times , list() Read in Perusall\n\n\n Course slides are here\n tidyr Cheatsheet"
+  },
+  {
+    "objectID": "schedule.html#november-04-2026",
+    "href": "schedule.html#november-04-2026",
+    "title": "Schedule",
+    "section": "November 04, 2026",
+    "text": "November 04, 2026\n\nTidying Datasets\n\nDue TodayFurther Resources\n\n\n Lab 6 Due\n\n\n Course slides are here\n tidyr Cheatsheet"
+  },
+  {
+    "objectID": "schedule.html#november-06-2026",
+    "href": "schedule.html#november-06-2026",
+    "title": "Schedule",
+    "section": "November 06, 2026",
+    "text": "November 06, 2026\n\nLab: Pivoting and Tidying Datasets\n\nDue TodayFurther Resources\n\n\n\n\n\n tidyr Cheatsheet\n Lab 7 Instructions"
+  },
+  {
+    "objectID": "schedule.html#november-09-2026",
+    "href": "schedule.html#november-09-2026",
+    "title": "Schedule",
+    "section": "November 09, 2026",
+    "text": "November 09, 2026\n\nWriting Functions\n\nDue TodayFurther Resources\n\n\n 7. Iteration , Baumer, Benjamin S., Daniel T. Kaplan, and Nicholas J. Horton (2021). Modern Data Science with R. 2nd. CRC Press. (Visited on Jan. 14, 2022). Read in Perusall\n\n\n Course slides are here\n Exericse Instructionshere\n Exercise Templatehere"
+  },
+  {
+    "objectID": "schedule.html#november-11-2026",
+    "href": "schedule.html#november-11-2026",
+    "title": "Schedule",
+    "section": "November 11, 2026",
+    "text": "November 11, 2026\n\nIteration\n\nDue TodayFurther Resources\n\n\n Lab 7 Due\n\n\n Course slides are here\n purrr cheatsheet"
+  },
+  {
+    "objectID": "schedule.html#november-13-2026",
+    "href": "schedule.html#november-13-2026",
+    "title": "Schedule",
+    "section": "November 13, 2026",
+    "text": "November 13, 2026\n\nLab: Programming in R\n\nDue TodayFurther Resources\n\n\n\n\n\n purrr cheatsheet\n Lab 8 Instructions"
+  },
+  {
+    "objectID": "schedule.html#november-16-2026",
+    "href": "schedule.html#november-16-2026",
+    "title": "Schedule",
+    "section": "November 16, 2026",
+    "text": "November 16, 2026\n\nMap Projections and Spatial Thinking\n\nDue TodayFurther Resources\n\n\n 17. Working with geospatial data (17.1-17.3) , Baumer, Benjamin S., Daniel T. Kaplan, and Nicholas J. Horton (2021). Modern Data Science with R. 2nd. CRC Press. (Visited on Jan. 14, 2022). Read in Perusall"
+  },
+  {
+    "objectID": "schedule.html#november-18-2026",
+    "href": "schedule.html#november-18-2026",
+    "title": "Schedule",
+    "section": "November 18, 2026",
+    "text": "November 18, 2026\n\nIntroduction to Leaflet\n\nDue TodayFurther Resources\n\n\n Project 2 Due\n Lab 8 Due\n\n\n Course slides are here\n Exericse Instructionshere\n Exercise Templatehere\n Leaflet Guide"
+  },
+  {
+    "objectID": "schedule.html#november-20-2026",
+    "href": "schedule.html#november-20-2026",
+    "title": "Schedule",
+    "section": "November 20, 2026",
+    "text": "November 20, 2026\n\nLab: Mapping Point Data in Leaflet\n\nDue TodayFurther Resources\n\n\n\n\n\n MP3 Template Your team name should be a string with your team members’ last names.\n Leaflet Guide\n Lab 9 Instructions"
+  },
+  {
+    "objectID": "schedule.html#november-23-2026",
+    "href": "schedule.html#november-23-2026",
+    "title": "Schedule",
+    "section": "November 23, 2026",
+    "text": "November 23, 2026\n\nPolygon Mapping in Leaflet\n\nDue TodayFurther Resources\n\n\n 17. Working with geospatial data (17.4-17.8) , Baumer, Benjamin S., Daniel T. Kaplan, and Nicholas J. Horton (2021). Modern Data Science with R. 2nd. CRC Press. (Visited on Jan. 14, 2022). Read in Perusall\n Project 3 Assigned\n\n\n Course slides are here\n Leaflet Guide"
+  },
+  {
+    "objectID": "schedule.html#november-25-2026",
+    "href": "schedule.html#november-25-2026",
+    "title": "Schedule",
+    "section": "November 25, 2026",
+    "text": "November 25, 2026\n\nNo Class\n\nDue TodayFurther Resources"
+  },
+  {
+    "objectID": "schedule.html#november-27-2026",
+    "href": "schedule.html#november-27-2026",
+    "title": "Schedule",
+    "section": "November 27, 2026",
+    "text": "November 27, 2026\n\nNo Class\n\nDue TodayFurther Resources"
+  },
+  {
+    "objectID": "schedule.html#november-30-2026",
+    "href": "schedule.html#november-30-2026",
+    "title": "Schedule",
+    "section": "November 30, 2026",
+    "text": "November 30, 2026\n\nHow to Lie with Maps\n\nDue TodayFurther Resources\n\n\n Lab 9 Due\n\n\n Course slides are here\n Exericse Instructionshere\n Leaflet Guide"
+  },
+  {
+    "objectID": "schedule.html#december-02-2026",
+    "href": "schedule.html#december-02-2026",
+    "title": "Schedule",
+    "section": "December 02, 2026",
+    "text": "December 02, 2026\n\nLab: Mapping Polygon Data with Leaflet\n\nDue TodayFurther Resources\n\n\n\n\n\n Leaflet Guide\n Lab 10 Instructions"
+  },
+  {
+    "objectID": "schedule.html#december-04-2026",
+    "href": "schedule.html#december-04-2026",
+    "title": "Schedule",
+    "section": "December 04, 2026",
+    "text": "December 04, 2026\n\nReview\n\nDue TodayFurther Resources\n\n\n\n\n\n Final Review here"
+  },
+  {
+    "objectID": "schedule.html#december-07-2026",
+    "href": "schedule.html#december-07-2026",
+    "title": "Schedule",
+    "section": "December 07, 2026",
+    "text": "December 07, 2026\n\nWorking with APIs\n\nDue TodayFurther Resources"
+  },
+  {
+    "objectID": "schedule.html#december-09-2026",
+    "href": "schedule.html#december-09-2026",
+    "title": "Schedule",
+    "section": "December 09, 2026",
+    "text": "December 09, 2026\n\nLab: Working with APIs\n\nDue TodayFurther Resources\n\n\n Lab 10 Due\n\n\n Course slides are here"
+  },
+  {
+    "objectID": "schedule.html#december-11-2026",
+    "href": "schedule.html#december-11-2026",
+    "title": "Schedule",
+    "section": "December 11, 2026",
+    "text": "December 11, 2026\n\nWork on Group Projects in Class\n\nDue TodayFurther Resources"
+  },
+  {
+    "objectID": "schedule.html#december-14-2026",
+    "href": "schedule.html#december-14-2026",
+    "title": "Schedule",
+    "section": "December 14, 2026",
+    "text": "December 14, 2026\n\nWrap-up\n\nDue TodayFurther Resources\n\n\n Project 3 Due"
   }
 ]
