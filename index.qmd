@@ -211,7 +211,7 @@ All course readings and recorded lectures will be available on Perusall. You can
 
 ### GitHub
 
-I will be using GitHub Classroom to distribute several course assignments, including labs and projects. You will submit assignments by pushing changes to template documents to a private GitHub repository. I will provide guidance on how to do this early in the semester.
+I will be using Classroom 50, a tool for managing the distribution of GitHub-based assignments, to distribute several course assignments, including labs and projects. You will submit assignments by pushing changes to template documents to a private GitHub repository. I will provide guidance on how to do this early in the semester.
 
 ## RStudio/RStudio Server
 
