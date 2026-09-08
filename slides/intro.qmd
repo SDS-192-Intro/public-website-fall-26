@@ -153,7 +153,7 @@ Demonstration: Find the class year for which students on average drink the most 
 
 ------------------------------------------------------------------------
 
-## For Monday
+## For Next Class
 
 -   Install Slack Desktop and set notifications
 -   Fill out first day of class questionnaire
