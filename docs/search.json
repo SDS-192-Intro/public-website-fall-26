@@ -4414,7 +4414,7 @@
     "href": "slides/data_fundamentals.html#exercise",
     "title": "Data Fundamentals",
     "section": "Exercise",
-    "text": "Exercise\nComing Soon!"
+    "text": "Exercise\nSee Course Schedule"
   },
   {
     "objectID": "slides/data_fundamentals.html#for-wednesday",
@@ -7341,5 +7341,12 @@
     "title": "Introductions",
     "section": "For Next Class",
     "text": "For Next Class\n\nInstall Slack Desktop and set notifications\nFill out first day of class questionnaire\nCreate a GitHub account if you don’t have one\nAccept SDS 192 Labs Assignment in Moodle\nLet me know if you will be using a Chromebook, asap"
+  },
+  {
+    "objectID": "slides/data_fundamentals.html#for-next-class",
+    "href": "slides/data_fundamentals.html#for-next-class",
+    "title": "Data Fundamentals",
+    "section": "For Next Class",
+    "text": "For Next Class\n\nComplete Reading Quiz and Syllabus Quiz in Perusall"
   }
 ]

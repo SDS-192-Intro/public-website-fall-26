@@ -175,10 +175,10 @@ knitr::include_graphics("img/rec_data2.png")
 
 ## Exercise
 
-Coming Soon!
+See Course Schedule
 
 ------------------------------------------------------------------------
 
-## For Wednesday
+## For Next Class
 
 -   Complete Reading Quiz and Syllabus Quiz in Perusall
