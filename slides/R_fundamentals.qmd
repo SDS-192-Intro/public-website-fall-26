@@ -360,8 +360,8 @@ sum(vals, na.rm = TRUE)
 
 ------------------------------------------------------------------------
 
-## For Friday
+## For Next Class
 
 - Complete Course Infrastructure Set-up 
 
-> You won't be able to complete Friday's lab if this is not complete, so be sure to give yourself enough time if issues come up. I have office hours on Friday before class.
+> You won't be able to complete Friday's lab if this is not complete, so be sure to give yourself enough time if issues come up. I have office hours before this is due in class.
