@@ -44,7 +44,7 @@ nyc_urban_ranger %>%
   ggplot(aes(x = reorder(Species.Description, Count), y = Count)) +
   geom_col() +
   coord_flip() +
-  labs(title="Top 10 Most Common Species for which NYC Urban Park Rangers Assistance is Requested, 2018-2024", x = "Species", y = "Count") +
+  labs(title="Top 10 Most Common Species for which NYC Urban Park Rangers Assistance is Requested, 2018-2025", x = "Species", y = "Count") +
   theme_minimal() +
   theme(plot.title = element_text(size=8))
 

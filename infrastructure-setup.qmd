@@ -16,38 +16,36 @@ If at any point in this set-up you get stuck, there are many ways you can get he
 4. If git is not installed, follow instructions in chapter 7 at https://happygitwithr.com/
 5. Edit your git config by following these instructions: 
 
-<p><a href="https://muse.ai/v/JLaUt3v-Configure-Git">Edit gitconfig file</a> from David Keyes.</p>
+<p><a href="https://rfortherestofus.com/2021/02/how-to-use-git-github-with-r">Edit gitconfig file </a> from David Keyes. (Navigate to Header "Configure Git")</p>
 
 6. Create a personal access token by following these instructions, and **be absolutely, positively, undeniably sure to set the expiration to 150 days**: 
 
-<p><a href="https://muse.ai/v/evn3xvX-Create-a-Personal-Access-Token-PAT-on-GitHub">Create a Personal Access Token (PAT) on GitHub</a> from David Keyes.</p>
+<p><a href="https://rfortherestofus.com/2021/02/how-to-use-git-github-with-r">Create a Personal Access Token (PAT) on GitHub</a> from David Keyes. (Navigate to Header "Create a Personal Access Token")</p>
 
 7. Store your personal access token by following these instructions: 
 
-<p><a href="https://muse.ai/v/NUGdUDd-Store-Personal-Access-Token-to-Connect-RStudio-and-GitHub">Store Personal Access Token to Connect RStudio and GitHub</a> from David Keyes.</p>
+<p><a href="https://rfortherestofus.com/2021/02/how-to-use-git-github-with-r">Store Personal Access Token to Connect RStudio and GitHub</a> from David Keyes. (Navigate to Header "Store Personal Access Token to Connect RStudio and GitHub")</p>
 
 8. Copy the URL for your SDS 192 Lab GitHub repo. It should look like this: https://github.com/SDS-192-Intro/sds-192-lab-submissions-YOUR_USER_NAME
 9. Create a project in RStudio from this GitHub repo by following the instructions starting at 26 seconds of this video:
 
-<p><a href="https://muse.ai/v/Way9iir-How-to-Connect-RStudio-Projects-with-GitHub-Repositories-GitHub-First">How to Connect RStudio Projects with GitHub Repositories: GitHub First</a> from David Keyes.</p>
+<p><a href="https://rfortherestofus.com/2021/02/how-to-use-git-github-with-r">How to Connect RStudio Projects with GitHub Repositories: GitHub First</a> from David Keyes. (Navigate to Header "Github First")</p>
 
-10. Install the rmarkdown package in RStudio by entering the following lines of code in the Console Pane of RStudio (lower left hand corer on initial install).  
+10. Install the rmarkdown package in RStudio by entering the following lines of code in the Console Pane of RStudio (Your console pane is in the lower left hand corner on initial install).  
 
 ```
 install.packages("rmarkdown")
 library(rmarkdown)
 ```
 
-![RStudio Panels](images/rstudio_panels.png)
-
 11. On the initial install, the Files tab will be in the lower right hand corner of RStudio. Open README.md, and then add your name to the body of the README file. Click Save.
 
 12. Commit your code by following the instructions in this video starting at 14 seconds: 
 
-<p><a href="https://muse.ai/v/GrXBX2t-Make-a-Commit-and-View-More-History">Make a Commit and View More History</a> from David Keyes.</p>
+<p><a href="https://rfortherestofus.com/2021/02/how-to-use-git-github-with-r">Make a Commit and View More History</a> from David Keyes. (Navigate to Header "Make a Commit and View More History")</p>
 
 13. Push your code to GitHub.com by following the instructions in this video starting at 27 seconds:
 
-<p><a href="https://muse.ai/v/UJmQE7i-General-Workflow-Push">General Workflow: Push</a> from David Keyes.</p>
+<p><a href="https://rfortherestofus.com/2021/02/how-to-use-git-github-with-r">General Workflow: Push</a> from David Keyes. (Navigate to Header "Push")</p>
 
 14. Navigate to https://github.com/SDS-192-Intro/sds-192-lab-submissions-YOUR_USER_NAME and double check to make sure the README file has your name listed. 
