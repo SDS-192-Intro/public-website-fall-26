@@ -1,7 +1,12 @@
 ---
-title: "SDS 192: Introduction to Data Science"
+title: "Syllabus"
 author: "Lindsay Poirier"
 date: "Last updated on `r Sys.Date()`"
+format:
+  pdf:
+    toc: false
+    number-sections: true
+    colorlinks: true
 ---
 
 # Syllabus
@@ -75,7 +80,7 @@ Also note that your grade may be impacted if you have more than 3 unexcused abse
 ::: callout-tip
 ## Spinelli Center
 
-Smith's [Spinelli Center](https://www.smith.edu/qlc/tutoring.html) offers a number of resources to support SDS students. Spinelli Center Data Assistants will visit our classroom regularly to support you through lab work. The Center also offers [drop-in tutoring hours](https://www.smith.edu/academics/integrative-learning/spinelli-center-quantitative-learning/tutoring#statistical-and-data-sciences-8) Sunday through Thursday 7-9 PM. Finally, you can drop-in to Seelye 207D or schedule an appointment with the Data Research and Statistics Counselor (Brody Miller). To schedule an appointment, email [qlctutor\@smith.edu](mailto:qlctutor@smith.edu).
+Smith's [Spinelli Center](https://www.smith.edu/qlc/tutoring.html) offers a number of resources to support SDS students. Spinelli Center Data Assistants will visit our classroom regularly to support you through lab work. The Center also offers [drop-in tutoring hours](https://www.smith.edu/academics/integrative-learning/spinelli-center-quantitative-learning/tutoring#statistical-and-data-sciences-8) Sunday through Thursday 7-9 PM. Finally, you can drop-in to Seelye 207D or schedule an appointment with the Data Research and Statistics Counselor (Kenneth Jeong). To schedule an appointment, email [qlctutor\@smith.edu](mailto:qlctutor@smith.edu).
 :::
 
 ## Policies
