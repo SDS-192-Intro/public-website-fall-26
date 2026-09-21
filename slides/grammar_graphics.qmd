@@ -18,11 +18,10 @@ execute:
 
 ## For Today
 
--   Perusall quiz debriefing
 -   What is a data visualization?
 -   Taxonomy of Data Visualizations
 -   Visualization Conventions and Critiques
--   Work on Problem Solving Lab in Class
+-   Exercise
 
 ------------------------------------------------------------------------
 
@@ -60,6 +59,7 @@ execute:
 
 ```{r}
 #| echo: false
+#| message: false
 library(tidyverse)
 library(RColorBrewer)
 nyc_urban <- read_csv("https://data.cityofnewyork.us/api/views/fuhs-xmg2/rows.csv", name_repair = make.names) |>
@@ -82,7 +82,7 @@ nyc_urban %>%
   ggplot(aes(x = Duration.of.Response, y = X..of.Animals)) +
   geom_point(alpha = 0.2, size = 6) +
   theme_minimal() +
-  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2018-2021",
+  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2019-2025",
        x = "Duration of Response",
        y = "Number of Animals") +
   theme(text = element_text(size = font_size))
@@ -102,7 +102,7 @@ nyc_urban %>%
   geom_bar(stat = "identity", width = 1) +
   coord_polar("y", start=0) +
   theme_void() +
-  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2018-2021") +
+  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2019-2025") +
   theme(text = element_text(size = font_size))
 ```
 
@@ -119,7 +119,7 @@ nyc_urban %>%
   ggplot(aes(x = Species.Status)) + 
   geom_bar() +
   theme_minimal() +
-  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2018-2021",
+  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2019-2025",
        x = "Species Status",
        y = "Count of Reponses") +
   theme(text = element_text(size = font_size))
@@ -139,7 +139,7 @@ nyc_urban %>%
   ggplot(aes(x = Date.and.time.of.Ranger.response, y = Animal.Class, shape = Age )) + 
   geom_point(alpha = 0.5, size = 3) +
   theme_minimal() +
-  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2018-2021",
+  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2019-2025",
        x = "Date and Time of Response",
        y = "Animal Class",
        shape = "Age") +
@@ -160,7 +160,7 @@ nyc_urban %>%
   ggplot(aes(x = Date.and.time.of.Ranger.response, y = Animal.Class, size = X..of.Animals)) + 
   geom_point(alpha = 0.5) +
   theme_minimal() +
-  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2018-2021",
+  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2019-2025",
        x = "Date and Time of Response",
        y = "Animal Class",
        size = "# of Animals") +
@@ -183,7 +183,7 @@ nyc_urban %>%
   ggplot(aes(x = Year, y = Count, col = Call.Source, group = Call.Source)) + 
   geom_line() +
   theme_minimal() +
-  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2018-2021",
+  labs(title = "Urban Park Ranger Response in Marine Park, NYC, 2019-2025",
        x = "Year",
        y = "Count of Responses",
        col = "Call Source") +
