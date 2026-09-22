@@ -7,7 +7,7 @@ editor: visual
 ---
 
 ###### Question 1
-Navigate to [GitHub Classroom](https://classroom.github.com/a/28PT6Nnm) to accept the assignment. For this assignment, you will work with your Project 1 team members. You can find your group number at [CATME.org](catme.org).
+Navigate to [GitHub Classroom](https://classroom.github.com/a/bu5mw8t0) to accept the assignment. For this assignment, you will work with your Project 1 team members. You can find your group number at [CATME.org](catme.org).
 
 ###### Question 2
 All group members should clone the repo to their RStudio environment. To do so, copy the repo's URL at GitHub.com. You will want to make sure you are in the main project folder when you copy this URL; it won't work if you've clicked through to any of the files. Then in RStudio click on File \> New Project \> Version Control \> Git, and paste the copied URL into the window that appears. Note what you see in the RStudio files pane after cloning the repo.
@@ -78,18 +78,18 @@ Select the issue associated with this pull request, and then click "Confirm Merg
 ###### Question 14
 One of your partners should navigate to the GitHub.com repository. Click on the file README.md. Click the pencil icon to edit the file. Replace the text: ADD NAME 1 HERE ADD NAME 2 HERE, and so on with your names. Scroll to the bottom of the page and commit changes noting in the message that your names were added.
 
-Other partner: Return to RStudio. **Do not pull changes yet.** Open github-practice.Rmd. On line 40 change the `ncol()` function to `dim()`. Save the file. Stage and commit your changes. Click the green upward arrow to push your changes. You should get an error that looks like this.
+Other partner: Return to RStudio. **Do not pull changes yet.** Open github-practice.Rmd. On line 39 change the `names()` function to `colnames()`. Save the file. Stage and commit your changes. Click the green upward arrow to push your changes. You should get an error that looks like this.
 
 ![](img/push-error.png){fig-alt="This shows the text that we see when we get a push error. It says hint: Updates were rejected because the remote contains work that you do hint: not have locally. This is usually caused by another repository pushing hint: to the same ref. You may want to first integrate the remote changes hint: (e.g., 'git pull ...') before pushing again."}
 
 Follow the steps above to resolve the error.
 
 ###### Question 15
-One of your partners should navigate to the GitHub.com repository. Click on the file github-practice.Rmd. Click the pencil icon to edit the file. Replace the code on line 47 with the following: `colnames(pioneer_valley_2013).`
+One of your partners should navigate to the GitHub.com repository. Click on the file github-practice.Rmd. Click the pencil icon to edit the file. Replace the code on line 39 with the following: `dim(pioneer_valley_2013).`
 
 Scroll to the bottom of the page and commit changes noting in the message how you updated the function.
 
-Other partner: Return to RStudio. **Do not pull changes yet.** Open github-practice.Rmd. Replace the code on line 47 with the following: `ncol(pioneer_valley_2013)`
+Other partner: Return to RStudio. **Do not pull changes yet.** Open github-practice.Rmd. Replace the code on line 39 with the following: `ncol(pioneer_valley_2013)`
 
 Save the file. Click the blue downward button to Pull changes. You should get an error that looks like this.
 
@@ -107,11 +107,11 @@ To fix this one your partners should open the file with the conflict. In this ca
 ```         
     <<<<<<< HEAD
 
-    ncol(pioneer_valley_2013)
+    [...code]
 
     =======
 
-    colnames(pioneer_valley_2013)
+    [...code]
 
     >>>>>>> ee175895783b64e0e1f696d9456be4c4c7c3f3bf
 ```

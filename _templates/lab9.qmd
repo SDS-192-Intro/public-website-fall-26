@@ -154,7 +154,6 @@ Your maps should look like mine below.
 Below explain the following: Why do the colors appear differently on each map? Which map best represents the distribution of values in `X107..TOTAL.RELEASES`?
 
 
-
 ###### Question 11
 
 Now, we are going to add popups on the map. Copy and paste the code from the previous step into the code chunk below. Then do the following:
@@ -167,6 +166,6 @@ Your popups should look like mine in the map below.
 
 
 
-```{r unnamed-chunk-21}
+```{r unnamed-chunk-22}
 # Copy previous map here!
 ```

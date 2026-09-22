@@ -13,14 +13,15 @@ format:
 
 library(tidyverse)
 
-sqf_url <- "https://www1.nyc.gov/assets/nypd/downloads/zip/analysis_and_planning/stop-question-frisk/sqf-2011-csv.zip"
-temp <- tempfile()
-download.file(sqf_url, temp)
-sqf_zip <- unzip(temp, "2011.csv")
+#sqf_url <- "https://www1.nyc.gov/assets/nypd/downloads/zip/analysis_and_planning/stop-question-frisk/sqf-2011-csv.zip"
+#temp <- tempfile()
+#download.file(sqf_url, temp)
+#sqf_zip <- unzip(temp, "2011.csv")
+sqf_zip <- unzip("../data/sqf-2011-csv.zip", "2011.csv")
 sqf_2011 <- read.csv(sqf_zip, stringsAsFactors = FALSE) 
 sqf_2011_race_cat <- read.csv("https://raw.githubusercontent.com/lindsaypoirier/STS-101/master/Data/SQF/sqf_race_categories.csv", stringsAsFactors = FALSE) 
-rm(sqf_url)
-rm(temp)
+#rm(sqf_url)
+#rm(temp)
 rm(sqf_zip)
 ```
 ###### Question 1
@@ -70,8 +71,8 @@ sqf_2011 |>
 Add a line to the code below to create a new column called `innocent` that is set to "Y" if both `arstmade` and `sumissue` are "N", and otherwise set to "N".
 
 ```{r unnamed-chunk-14}
-sqf_2011 |>
-  select(pct, ser_num, arstmade, sumissue) #|>
+#sqf_2011 |>
+  #select(pct, ser_num, arstmade, sumissue) #|>
   #summarize(num_innocent = sum(innocent == "Y"))
 ```
 ###### Question 8

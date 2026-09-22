@@ -158,8 +158,7 @@ What percentage of stops in 2011 resulted in a frisk per race? What percentage o
 
 Below, in 2-3 sentences, summarize what you learn from reviewing the summary statistics from the code above. What does this tell us about the constitutionality of 2011 stop and frisk activity in NYC?
 
-
-```{r unnamed-chunk-22}
+```{r unnamed-chunk-23}
 #| document: show
 #If you finish early, I encourage you to attempt to plot some of this data below using `ggplot()`!
 ```
