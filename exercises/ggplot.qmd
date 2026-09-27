@@ -45,6 +45,20 @@ Check the column names for `pioneer_valley_census_data`. View what column names 
 # Write code here
 ```
 
+```{r}
+#| document: solutions
+#| echo: false
+
+ggplot(data = pioneer_valley_census_data, 
+       mapping = aes(x = MINORITY_PERCENT,
+                     y = CEN_MEDFAMINC)) +
+  geom_point(size = 0.5) +
+  labs(title = "Pioneer Valley...",
+       x = "Percent of Pop...",
+       y = "Median Family Income") +
+  theme_minimal()
+```
+
 ###### Question
 
 ::: question
@@ -55,6 +69,21 @@ Recreate this image using the `ggplot()` function.
 
 ```{r}
 #Code here.
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+ggplot(data = pioneer_valley_census_data, 
+       mapping = aes(x = COMMUNITY,
+                     y = CEN_PERC_HHINC_200000_PLUS)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "Pioneer Valley...",
+       x = "Municipality",
+       y = "% Household Income...") +
+  theme_minimal()
 ```
 
 ###### Question
@@ -70,6 +99,21 @@ Recreate this image using the `ggplot()` function.
 #Code here.
 ```
 
+```{r}
+#| document: solutions
+#| echo: false
+
+ggplot(data = pioneer_valley_census_data, 
+       mapping = aes(x = COMMUNITY,
+                     y = CEN_PERC_HHINC_200000_PLUS)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "Pioneer Valley...",
+       x = "Municipality",
+       y = "% Household Income...") +
+  theme_minimal()
+```
+
 ###### Question
 
 ::: question
@@ -80,6 +124,22 @@ Recreate this image using the `ggplot()` function.
 
 ```{r}
 #Code here.
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+ggplot(data = pioneer_valley_census_data, 
+       mapping = aes(x = CAR_AGE_HOUSEHOLDER,
+                     y = ELDERLY_LIVEALONE,
+                     col = COUNTY)) +
+  geom_point(alpha = 0.5) +
+  labs(title = "Pioneer Valley...",
+       x = "% Elderly...",
+       y = "% Elderly...",
+       col = "County") +
+  theme_minimal()
 ```
 
 ###### Question
