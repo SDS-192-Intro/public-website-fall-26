@@ -4897,14 +4897,14 @@
     "href": "slides/frequency.html#for-today",
     "title": "Plotting Frequencies",
     "section": "For Today",
-    "text": "For Today\n\nFill out CATME Survey\nHistograms\nBar plots\nMultivariate Frequencies"
+    "text": "For Today\n\nHistograms\nBar plots\nMultivariate Frequencies"
   },
   {
     "objectID": "slides/frequency.html#lets-create-the-following-data-frame-to-motivate-todays-lecture.",
     "href": "slides/frequency.html#lets-create-the-following-data-frame-to-motivate-todays-lecture.",
     "title": "Plotting Frequencies",
     "section": "Let’s create the following data frame to motivate today’s lecture.",
-    "text": "Let’s create the following data frame to motivate today’s lecture."
+    "text": "Let’s create the following data frame to motivate today’s lecture.\n\nlibrary(tidyverse)\ncounties &lt;- read_csv(\"https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/a8b64e3070ca2543b904d4d92780b09e6062ced6/website/data/nbi_counties.csv\")\nroute_prefixes &lt;- read_csv(\"https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/a8b64e3070ca2543b904d4d92780b09e6062ced6/website/data/nbi_route_pre.csv\")\nmaintenance &lt;- read_csv(\"https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/a8b64e3070ca2543b904d4d92780b09e6062ced6/website/data/nbi_maintenance.csv\")\nkinds &lt;- read_csv(\"https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/a8b64e3070ca2543b904d4d92780b09e6062ced6/website/data/nbi_kind.csv\")\n\nnbi_ma &lt;- read.delim(\"https://www.fhwa.dot.gov/bridge/nbi/2024/delimited/MA24.txt\", sep = \",\") |&gt;\n  left_join(counties) |&gt;\n  left_join(route_prefixes) |&gt;\n  left_join(maintenance) |&gt;\n  left_join(kinds) |&gt;\n  filter(SERVICE_ON_042A == 1) |&gt;\n  select(STRUCTURE_NUMBER_008, COUNTY_CODE_003_L, ROUTE_PREFIX_005B_L, MAINTENANCE_021_L, YEAR_BUILT_027, ADT_029, STRUCTURE_KIND_043A_L, STRUCTURAL_EVAL_067, BRIDGE_IMP_COST_094) |&gt;\n  mutate(STRUCTURE_KIND_043A_L = \n           case_when(\n             STRUCTURE_KIND_043A_L == \"Concrete continuous\" ~ \"Concrete\",\n             STRUCTURE_KIND_043A_L == \"Steel continuous\" ~ \"Steel\",\n             STRUCTURE_KIND_043A_L == \"Prestressed concrete continuous\" ~ \"Prestressed concrete\",\n             TRUE ~ STRUCTURE_KIND_043A_L)) |&gt;\n  mutate(BRIDGE_IMP_COST_094 = BRIDGE_IMP_COST_094 * 1000)\n\nnbi_hampshire &lt;- nbi_ma |&gt; filter(COUNTY_CODE_003_L == \"Hampshire\")\n\nrm(counties, kinds, maintenance, route_prefixes)"
   },
   {
     "objectID": "slides/frequency.html#histogram",
@@ -4939,49 +4939,49 @@
     "href": "slides/frequency.html#distribution-in-ma-bridges-years-built",
     "title": "Plotting Frequencies",
     "section": "Distribution in MA Bridge’s Years Built",
-    "text": "Distribution in MA Bridge’s Years Built"
+    "text": "Distribution in MA Bridge’s Years Built\n\nggplot(nbi_ma, aes(x = YEAR_BUILT_027)) +\n  geom_histogram()  +\n  theme(text = element_text(size = 20))"
   },
   {
     "objectID": "slides/frequency.html#bidwidth-vs.-bins",
     "href": "slides/frequency.html#bidwidth-vs.-bins",
     "title": "Plotting Frequencies",
     "section": "Bidwidth vs. Bins",
-    "text": "Bidwidth vs. Bins\n\n\n\nBinwidth indicates the width of the buckets we’d like to categorize our data into.\nBins indicates the number of bins to create.\nWe choose one or the other when creating histograms."
+    "text": "Bidwidth vs. Bins\n\n\n\nBinwidth indicates the width of the buckets we’d like to categorize our data into.\nBins indicates the number of bins to create.\nWe choose one or the other when creating histograms.\n\n\n\nggplot(nbi_ma, \n       aes(x = YEAR_BUILT_027)) +\n  geom_histogram(binwidth = 10, \n                 color = \"white\")"
   },
   {
     "objectID": "slides/frequency.html#how-would-we-describe-this-plot",
     "href": "slides/frequency.html#how-would-we-describe-this-plot",
     "title": "Plotting Frequencies",
     "section": "How would we describe this plot?",
-    "text": "How would we describe this plot?"
+    "text": "How would we describe this plot?\n\nggplot(nbi_ma, aes(x = YEAR_BUILT_027)) +\n  geom_histogram(binwidth = 10, color = \"white\") +\n  labs(title = \"Distribution in the Years MA Bridges were Built, 2021\", \n       x = \"Year Built\",\n       y = \"Number of Bridges\")"
   },
   {
     "objectID": "slides/frequency.html#faceting-a-histogram",
     "href": "slides/frequency.html#faceting-a-histogram",
     "title": "Plotting Frequencies",
     "section": "Faceting a Histogram",
-    "text": "Faceting a Histogram"
+    "text": "Faceting a Histogram\n\nggplot(nbi_ma, aes(x = YEAR_BUILT_027)) +\n  geom_histogram(binwidth = 10, color = \"white\") +\n  labs(title = \"Distribution in the Years MA Bridges were Built, 2021\", \n       x = \"Year Built\",\n       y = \"Number of Bridges\") +\n  facet_wrap(vars(ROUTE_PREFIX_005B_L))"
   },
   {
     "objectID": "slides/frequency.html#frequency-of-structure-kinds",
     "href": "slides/frequency.html#frequency-of-structure-kinds",
     "title": "Plotting Frequencies",
     "section": "Frequency of Structure Kinds",
-    "text": "Frequency of Structure Kinds"
+    "text": "Frequency of Structure Kinds\n\nggplot(nbi_ma, aes(x = STRUCTURE_KIND_043A_L)) +\n  geom_bar()"
   },
   {
     "objectID": "slides/frequency.html#labels-for-this-plot",
     "href": "slides/frequency.html#labels-for-this-plot",
     "title": "Plotting Frequencies",
     "section": "Labels for this Plot",
-    "text": "Labels for this Plot"
+    "text": "Labels for this Plot\n\nggplot(nbi_ma, aes(x = STRUCTURE_KIND_043A_L)) +\n  geom_bar() +\n  coord_flip() +\n  labs(title = \"Frequency of Different Kinds of MA Bridge Structures, 2021\", \n       x = \"Structure Kind\",\n       y = \"Number of Bridges\")"
   },
   {
     "objectID": "slides/frequency.html#stacked-bar-plot",
     "href": "slides/frequency.html#stacked-bar-plot",
     "title": "Plotting Frequencies",
     "section": "Stacked Bar Plot",
-    "text": "Stacked Bar Plot"
+    "text": "Stacked Bar Plot\n\nggplot(nbi_ma, aes(x = STRUCTURE_KIND_043A_L, fill = ROUTE_PREFIX_005B_L)) +\n  geom_bar() +\n  coord_flip() +\n  labs(title = \"Frequency of Different Kinds of MA Bridge Structures, 2021\", \n       x = \"Structure Kind\",\n       y = \"Number of Bridges\",\n       fill = \"Route Prefix\") +\n  scale_fill_brewer(palette = 'Set3')"
   },
   {
     "objectID": "slides/frequency.html#learning-check-why-not-this",
@@ -4995,14 +4995,14 @@
     "href": "slides/frequency.html#dodging",
     "title": "Plotting Frequencies",
     "section": "Dodging",
-    "text": "Dodging"
+    "text": "Dodging\n\nggplot(nbi_ma, aes(x = STRUCTURE_KIND_043A_L, fill = ROUTE_PREFIX_005B_L)) +\n  geom_bar(position = \"dodge\") +\n  coord_flip() +\n  labs(title = \"Frequency of Different Kinds of MA Bridge Structures, 2021\", \n       x = \"Structure Kind\",\n       y = \"Number of Bridges\",\n       fill = \"Route Prefix\") +\n  scale_fill_brewer(palette = 'Set3')"
   },
   {
     "objectID": "slides/frequency.html#converting-to-percentages",
     "href": "slides/frequency.html#converting-to-percentages",
     "title": "Plotting Frequencies",
     "section": "Converting to Percentages",
-    "text": "Converting to Percentages"
+    "text": "Converting to Percentages\n\nggplot(nbi_ma, aes(x = STRUCTURE_KIND_043A_L, fill = ROUTE_PREFIX_005B_L)) +\n  geom_bar(position = \"fill\") +\n  coord_flip() +\n  labs(title = \"Frequency of Different Kinds of MA Bridge Structures, 2021\", \n       x = \"Structure Kind\",\n       y = \"Number of Bridges\",\n       fill = \"Route Prefix\") +\n  scale_fill_brewer(palette = 'Set3')"
   },
   {
     "objectID": "exercises/frequency.html",
@@ -7355,5 +7355,12 @@
     "title": "R Fundamentals",
     "section": "For Next Class",
     "text": "For Next Class\n\nComplete Course Infrastructure Set-up\n\n\nYou won’t be able to complete Friday’s lab if this is not complete, so be sure to give yourself enough time if issues come up. I have office hours before this is due in class."
+  },
+  {
+    "objectID": "slides/frequency.html#framework-for-reading-plots",
+    "href": "slides/frequency.html#framework-for-reading-plots",
+    "title": "Plotting Frequencies",
+    "section": "Framework for Reading Plots",
+    "text": "Framework for Reading Plots\n\nDescribe the plot and the variables displayed on it\nArticulate at least one fact from the plot\nInterpret the signifance of that fact"
   }
 ]

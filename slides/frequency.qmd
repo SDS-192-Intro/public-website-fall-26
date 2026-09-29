@@ -6,11 +6,14 @@ format:
   revealjs:
     scrollable: true
 editor: source
+execute: 
+  warning: false
+  message: false
+  echo: true
 ---
 
 ## For Today
 
--   Fill out CATME Survey
 -   Histograms
 -   Bar plots
 -   Multivariate Frequencies
@@ -185,6 +188,15 @@ ggplot(nbi_ma, aes(x = YEAR_BUILT_027)) +
 
 
 ------------------------------------------------------------------------
+
+## Framework for Reading Plots
+
+1. Describe the plot and the variables displayed on it
+2. Articulate at least one fact from the plot
+3. Interpret the signifance of that fact
+
+------------------------------------------------------------------------
+
 
 
 ## Bidwidth vs. Bins
