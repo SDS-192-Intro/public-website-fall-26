@@ -17,9 +17,79 @@ execute:
 
 ## For Today
 
+-   Weighted Frequencies
 -   Measures of Central Tendency and Dispersion
 -   Boxplots
--   Project 1 Assigned
+
+------------------------------------------------------------------------
+
+## Survey Weights
+
+-   Most surveys are not total population surveys
+-   Instead, they take a sample of a data from a total population
+-   The sample doesn't always represent the total population, even when selected randomly
+    -   People in hard to reach areas may be undercounted
+    -   Sometimes ratios of demographics of participants do not match ratios of demographics of that community
+-   Survey weight represents the theoretical number of people that a survey response represents within the total population
+-   If response weight = 144, this indicates that the survey collectors estimate that this survey response represents about 144 people in the total population
+
+------------------------------------------------------------------------
+
+## Import Data from General Social Survey
+
+```{r}
+library(tidyverse)
+library(gssr)
+library(RColorBrewer)
+options(scipen = 999)
+
+gss24 <- gss_get_yr(2024) |>
+  select(year, id, region, natroad, wtssps, coninc, polviews, wtssnrps) |>
+  mutate(natroad = case_when(natroad == 1 ~ "TOO LITTLE",
+                             natroad == 2 ~ "ABOUT RIGHT",
+                             natroad == 3 ~ "TOO MUCH"),
+         natroad = factor(natroad, levels = c("TOO LITTLE", "ABOUT RIGHT", "TOO MUCH"))) |>
+  filter(!is.na(natroad), !is.na(polviews))
+```
+
+------------------------------------------------------------------------
+
+::: columns
+::: {.column width="50%"}
+
+### Unweighted 
+
+```{r}
+gss24 |>
+  ggplot(aes(x = natroad, fill = as.factor(polviews))) +
+  geom_bar(position = "fill") +
+  theme_minimal() +
+  coord_flip() +
+  scale_fill_brewer(palette = 'RdBu', direction = -1) +
+  labs(title = "US General Social Survey, 2024",
+       x = "Are we spending ... on highways and bridges?",
+       fill = "Political Views")
+```
+
+:::
+
+::: {.column width="50%"}
+
+### Weighted
+
+```{r}
+gss24 |>
+  ggplot(aes(x = natroad, fill = as.factor(polviews), weight = wtssnrps)) +
+  geom_bar(position = "fill") +
+  theme_minimal() +
+  coord_flip()  +
+  scale_fill_brewer(palette = 'RdBu', direction = -1) +
+  labs(title = "US General Social Survey, 2024",
+       x = "Are we spending ... on highways and bridges?",
+       fill = "Political Views")
+```
+:::
+:::
 
 ------------------------------------------------------------------------
 
@@ -27,7 +97,7 @@ execute:
 
 ------------------------------------------------------------------------
 
-## Let's create the following data frame to motivate today's lecture.
+## Import NBI Data
 
 ```{r}
 library(tidyverse)
@@ -508,7 +578,6 @@ ggplot(nbi_hampshire, aes(x = ADT_029, y = ROUTE_PREFIX_005B_L)) +
 
 > How many are there? What do they indicate? Do you assume they are errors in teh data? Or do they represent extremes that are important for us to take into consideration? 
 
-
 ```{r}
 #| echo: false
 ggplot(nbi_hampshire, aes(x = ADT_029, y = ROUTE_PREFIX_005B_L)) +
@@ -585,6 +654,39 @@ ggplot(nbi_hampshire, aes(x = ADT_029, y = ROUTE_PREFIX_005B_L)) +
 ```
 
 ------------------------------------------------------------------------
+
+
+::: columns
+::: {.column width="50%"}
+
+### Unweighted 
+
+```{r}
+gss24 |>
+  ggplot(aes(x = natroad, y = coninc)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "US General Social Survey, 2024",
+       x = "Are we spending ... on highways and bridges?")
+```
+
+:::
+
+::: {.column width="50%"}
+
+### Weighted
+
+```{r}
+gss24 |>
+  ggplot(aes(x = natroad, y = coninc, weight = wtssnrps)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "US General Social Survey, 2024",
+       x = "Are we spending ... on highways and bridges?")
+```
+:::
+:::
+
 
 
 
