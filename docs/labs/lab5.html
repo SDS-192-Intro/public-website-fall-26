@@ -303,16 +303,17 @@ Tip
 </ol>
 <div class="cell" data-messages="false" data-document="show">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>sqf_url <span class="ot">&lt;-</span> <span class="st">"https://www1.nyc.gov/assets/nypd/downloads/zip/analysis_and_planning/stop-question-frisk/sqf-2011-csv.zip"</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> <span class="fu">tempfile</span>()</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(sqf_url, temp)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>sqf_zip <span class="ot">&lt;-</span> <span class="fu">unzip</span>(temp, <span class="st">"2011.csv"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sqf_2011 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(sqf_zip, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>) </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>sqf_2011_race_cat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/lindsaypoirier/STS-101/master/Data/SQF/sqf_race_categories.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>) </span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(sqf_url)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(temp)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(sqf_zip)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">HTTPUserAgent =</span> <span class="st">"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>sqf_url <span class="ot">&lt;-</span> <span class="st">"https://www.nyc.gov/assets/nypd/downloads/zip/analysis_and_planning/stop-question-frisk/sqf-2011-csv.zip"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> <span class="fu">tempfile</span>()</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(sqf_url, temp)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sqf_zip <span class="ot">&lt;-</span> <span class="fu">unzip</span>(temp, <span class="st">"2011.csv"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>sqf_2011 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(sqf_zip, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>) </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>sqf_2011_race_cat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/lindsaypoirier/STS-101/master/Data/SQF/sqf_race_categories.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>) </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(sqf_url)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(temp)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(sqf_zip)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="2" type="1">
 <li>We will analyze data for all stops in 2011. This data can be found <a href="https://www1.nyc.gov/site/nypd/stats/reports-analysis/stopfrisk.page">here</a>. However, we’re only going to be considering a subset of the columns. Review the data dictionary for the columns we’re using in this analysis.</li>
@@ -586,7 +587,7 @@ Tip
 </div>
 <section id="section-7" class="level7">
 <p class="heading"></p>
-<p>As a final consideration, we are going to calculate some summary statistics to further our understanding of the discriminatory ways in which this practice was being carried out. To so so, we are going to look at a racial breakdown of which stops resulted in an arrest/summons, and which frisks resulted in a weapon found.</p>
+<p>Now to round out our replication of the NYCLU study we are going to calculate some summary statistics to further our understanding of the discriminatory ways in which this practice was being carried out. To do so, we are going to look at a racial breakdown of which stops resulted in an arrest/summons, and which frisks resulted in a weapon found.</p>
 </section>
 </section>
 <section id="question-8" class="level6">
@@ -606,8 +607,6 @@ Tip
 <div class="question">
 <p>Below, in 2-3 sentences, summarize what you learn from reviewing the summary statistics from the code above. What does this tell us about the constitutionality of 2011 stop and frisk activity in NYC?</p>
 </div>
-<section id="section-9" class="level7">
-<p class="heading"></p>
 <div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -625,13 +624,9 @@ Ethical Considerations
 <p>What are some of the consequences of the incompleteness and/or one-sided nature of this dataset? How should we think about and communicate its flaws vs its value? How might this data collection program be redesigned so as to represent more diverse perspectives? Share your ideas on our <code>sds-192-discussions</code> Slack channel.</p>
 </div>
 </div>
-<div class="cell" data-document="show">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#If you finish early, I encourage you to attempt to plot some of this data below using `ggplot()`!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 
 
 
-</section>
 </section>
 </section>
 

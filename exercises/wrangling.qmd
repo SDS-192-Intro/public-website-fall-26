@@ -1,6 +1,6 @@
 ---
 title: "Data Wrangling"
-editor: visual
+editor: source
 ---
 
 ```{r}
@@ -97,6 +97,7 @@ Send me a list of all of the lending IDs for the mortgage applications that were
 
 ```{r}
 #| document: solutions
+#| echo: false
 
 hmda_ms_2024 |>
   filter(debt_to_income_ratio == ">60%") |>
@@ -114,6 +115,7 @@ Send me the lending ID and action taken for the *home purchases* with the top 10
 ```
 
 ```{r}
+#| echo: false
 #| document: solutions
 
 hmda_ms_2024 |>
@@ -134,6 +136,7 @@ Send me a list of the loan to value ratios, loan amounts, and property values fo
 ```
 
 ```{r}
+#| echo: false
 #| document: solutions
 
 hmda_ms_2024 |>
@@ -152,6 +155,7 @@ How many `NA` values were listed in the loan to value ratio variable?
 ```
 
 ```{r}
+#| echo: false
 #| document: solutions
 
 hmda_ms_2024 |>
@@ -173,6 +177,7 @@ Of applicants with a debt-to-income ratio of less than 36%, what was the mean an
 ```
 
 ```{r}
+#| echo: false
 #| document: solutions
 
 hmda_ms_2024 |>
@@ -193,6 +198,7 @@ Which 5 lending institutions lent the most? Send me a list of their IDs, the num
 ```
 
 ```{r}
+#| echo: false
 #| document: solutions
 
 hmda_ms_2024 |>
@@ -215,6 +221,7 @@ How many loans were denied because of debt-to-income ratio for each race and deb
 ```
 
 ```{r}
+#| echo: false
 #| document: solutions
 
 hmda_ms_2024 |>
@@ -235,6 +242,7 @@ When applicants were denied, what was the most common denial reason for each rac
 ```
 
 ```{r}
+#| echo: false
 #| document: solutions
 
 hmda_ms_2024 |>
