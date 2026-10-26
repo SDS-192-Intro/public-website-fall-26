@@ -16,24 +16,6 @@ execute:
   warnings: false
 ---
 
-## Create Two Data Tables
-
-1. Separate the index card cutouts into two data tables - one with three rows and one with four rows.
-2. Each person in your group fill out the first table with:
-  a. Your Smith ID
-  b. Your first name
-  c. Your last name
-3. One person from your group rotate clockwise to the next group
-4. Fill out the second table with:
-  a. Your Smith ID
-  b. Today's date
-  c. The mood you are in
-5. The person that rotated, fill out a **second** row in the second table with:
-  a. Your Smith ID
-  b. Yesterday's date
-  c. The mood you were in yesterday
-
-------------------------------------------------------------------------
 
 ## Joining Datasets
 

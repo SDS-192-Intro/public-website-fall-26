@@ -1,6 +1,6 @@
 ---
 title: Data Wrangling
-editor: visual
+editor: source
 format:
   html:
     embed-resources: true

@@ -7,7 +7,7 @@ editor: visual
 ---
 
 ###### Question 1
-Navigate to [GitHub Classroom](https://classroom.github.com/a/bu5mw8t0) to accept the assignment. For this assignment, you will work with your Project 1 team members. You can find your group number at [CATME.org](catme.org).
+One group member should navigate to [Classroom 50](https://classroom50.org/SDS-192-Intro/sds-192-intro/assignments/github-practice/accept) to accept the assignment. For this assignment, you will work with your Project 1 team members. Add your teammate(s) as a collaborator to the assignment.
 
 ###### Question 2
 All group members should clone the repo to their RStudio environment. To do so, copy the repo's URL at GitHub.com. You will want to make sure you are in the main project folder when you copy this URL; it won't work if you've clicked through to any of the files. Then in RStudio click on File \> New Project \> Version Control \> Git, and paste the copied URL into the window that appears. Note what you see in the RStudio files pane after cloning the repo.
