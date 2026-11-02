@@ -33,12 +33,12 @@ library(DT)
 
 echo_air_ca <- 
   echoAirGetFacilityInfo(p_st = "CA", 
-                         qcolumns = "1,4,5,8,107,108,109,110") |>
+                         qcolumns = "1,4,5,8,109,110,111,112") |>
   select(-SourceID)
 
 echo_water_ca <- 
   echoWaterGetFacilityInfo(p_st = "CA", 
-                           qcolumns = "1,4,5,9,203,204,205,206") |>
+                           qcolumns = "1,4,5,9,205,206,207,208") |>
   select(-SourceID)
 
 echo_air_ca_agg <-
