@@ -37,7 +37,7 @@ library(DT)
 
 echo_air_ca <- 
   echoAirGetFacilityInfo(p_st = "CA", 
-                         qcolumns = "1,3,4,5,7,8,15,22,107,108,109,110") |>
+                         qcolumns = "1,3,4,5,7,8,15,22,109,110,111,112") |>
   select(-SourceID)
 
 ```
