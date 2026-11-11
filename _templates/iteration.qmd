@@ -1,0 +1,43 @@
+---
+title: Iteration
+editor: source
+format:
+  html:
+    embed-resources: true
+---
+
+```{r unnamed-chunk-1}
+#| message: false
+#| warning: false
+#| document: show
+
+library(tidyverse)
+
+pit <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/main/website/data/pit_2015_2020.csv") |>
+  filter(State != "Total") |>
+  filter(!if_any(2:117, is.na))
+```
+###### Question 1
+
+Summarize the total homeless count across all columns containing "Male" and "Female."
+
+
+```{r unnamed-chunk-2}
+# Code Here
+```
+###### Question 2
+
+Write a function that finds the state with the highest Unsheltered Homesless population in a given year. Iterate the function over all years in dataset.
+
+
+```{r unnamed-chunk-5}
+# Code Here
+```
+###### Question 3
+
+Write a function that determines which racial group had the highest unsheltered homeless population each year in each state. Iterate the function over all states. 
+
+
+```{r unnamed-chunk-7}
+# Code Here
+```

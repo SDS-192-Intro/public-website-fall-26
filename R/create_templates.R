@@ -15,6 +15,7 @@ write_lab_template("exercises/R_fundamentals.qmd", "_templates")
 write_lab_template("exercises/wrangling.qmd", "_templates")
 write_lab_template("exercises/adv_wrangling.qmd", "_templates")
 write_lab_template("exercises/functions.qmd", "_templates")
+write_lab_template("exercises/iteration.qmd", "_templates")
 write_lab_template("exercises/point_mapping.qmd", "_templates")
 
 write_lab_solutions("labs/lab1.qmd", "_solutions")

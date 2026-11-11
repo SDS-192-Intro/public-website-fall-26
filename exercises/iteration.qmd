@@ -1,0 +1,124 @@
+---
+title: "Iteration"
+editor: source
+---
+
+
+
+```{r}
+#| message: false
+#| warning: false
+#| document: show
+
+library(tidyverse)
+
+pit <- read_csv("https://raw.githubusercontent.com/sds-192-intro-fall22/sds-192-public-website-quarto/main/website/data/pit_2015_2020.csv") |>
+  filter(State != "Total") |>
+  filter(!if_any(2:117, is.na))
+```
+###### Question
+
+::: question
+
+Summarize the total homeless count across all columns containing "Male" and "Female."
+
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+
+pit |>
+  summarize(across(contains(c("Male", "Female")), sum))
+```
+
+########
+
+```{r}
+pit <-
+  pit |>
+  pivot_longer(-State, names_to = "Measure", values_to = "Count") |>
+  separate(Measure, into = c("Shel_Unshel", "Demographic"), sep = " - ") |>
+  separate(Demographic, into = c("Demographic", "Year"), sep = ", ") |>
+  filter(Demographic %in% c("Black or African American", 
+  "Asian", 
+  "American Indian or Alaska Native", 
+  "Native Hawaiian or Other Pacific Islander", 
+  "White", 
+  "Multiple Races"))
+```
+
+
+###### Question
+
+::: question
+
+Write a function that finds the state with the highest Unsheltered Homesless population in a given year. Iterate the function over all years in dataset.
+
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+
+identify_most_unhoused_state <- function(year) {
+  x <- pit |> 
+    filter(Shel_Unshel == "Unsheltered Homeless" & Year == year) |>
+    group_by(State) |>
+    summarize(Count = sum(Count)) |>
+    arrange(desc(Count)) |>
+    head(1) |>
+    select(State) |>
+    pull()
+  
+  return(x)
+}
+
+year <- pit |> select(Year) |> distinct() |> pull()
+
+map_chr(year, identify_most_unhoused_state)
+```
+
+
+###### Question
+
+::: question
+
+Write a function that determines which racial group had the highest unsheltered homeless population each year in each state. Iterate the function over all states. 
+
+:::
+
+```{r}
+# Code Here
+```
+
+```{r}
+#| document: solutions
+#| echo: false
+
+
+determine_racial_group <- function(state_name) {
+  x <- pit |> 
+    filter(Shel_Unshel == "Unsheltered Homeless" & State == state_name) |>
+    group_by(Year) |>
+    filter(Count == max(Count)) |>
+    select(State, Year, Demographic)
+  
+  return(x)
+}
+
+states <- pit |> select(State) |> distinct() |> pull()
+
+map_df(states, determine_racial_group)
+```
+
